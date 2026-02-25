@@ -140,6 +140,16 @@ body{margin:0;font-family:ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,
 }
 .modal .close svg{width:18px;height:18px;stroke:rgba(232,238,252,.85);fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;}
 
+
+/* Mobile tightening for calendar */
+@media (max-width: 420px){
+  .daycell{min-height:70px;padding:9px 8px;}
+  .daycell .meta{margin-top:6px;gap:3px;}
+  .daycell .meta .q{display:none;}
+  .daycell .meta .t{font-size:12px;}
+  .daycell .badge{top:8px;right:8px;padding:5px 8px;font-size:10px;}
+}
+
 </style>
 </head>
 <body>
@@ -170,47 +180,34 @@ body{margin:0;font-family:ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,
       <div class="brand">
         <img src="logo.png" alt="VIMACOM" />
       </div>
-      <div style="display:flex;align-items:center;gap:10px;">
-        <div class="pill" id="periodPill">Período: —</div>
-        <button class="iconbtn" id="btnHoje" title="Hoje">
-          <svg viewBox="0 0 24 24"><path d="M8 7V3"/><path d="M16 7V3"/><path d="M4 11h16"/><path d="M5 21h14a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2z"/></svg>
-        </button>
-      </div>
+      
+<div style="display:flex;align-items:center;gap:10px;">
+  <button class="iconbtn" id="homePrevMonth" title="Mês anterior">
+    <svg viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg>
+  </button>
+  <div class="pill" id="periodPill">Mês: —</div>
+  <button class="iconbtn" id="homeNextMonth" title="Próximo mês">
+    <svg viewBox="0 0 24 24"><path d="M9 6l6 6-6 6"/></svg>
+  </button>
+</div>
+
     </div>
 
-    <div class="home-cards">
-      <div class="home-card">
-        <div class="k">A pagar hoje</div>
-        <div class="v" id="kpiHoje">—</div>
-        <div class="s"><span class="muted" id="kpiHojeN">—</span> títulos</div>
-      </div>
+    
+<div class="home-cards">
+  <div class="home-card" id="cardTotalMes" style="cursor:pointer;">
+    <div class="k">Total a pagar (mês selecionado)</div>
+    <div class="v" id="kpiMesValor">—</div>
+    <div class="s"><span class="muted" id="kpiMesKg">—</span> kg no período</div>
+  </div>
 
-      <div class="home-card">
-        <div class="k">Próximos 7 dias</div>
-        <div class="v" id="kpi7">—</div>
-        <div class="s"><span class="muted" id="kpi7N">—</span> títulos</div>
-      </div>
+  <div class="home-card">
+    <div class="k">Fornecedores</div>
+    <div class="s" style="margin-top:6px;color:var(--muted);">Toque em um fornecedor para ver os títulos do mês.</div>
+    <div class="hlist" style="margin-top:10px;" id="supplierCards"></div>
+  </div>
+</div>
 
-      <div class="home-card">
-        <div class="k">Total do mês</div>
-        <div class="v" id="kpiMes">—</div>
-        <div class="s"><span class="muted" id="kpiMesN">—</span> títulos</div>
-      </div>
-
-      <div class="home-card">
-        <div class="k">Em aberto (período)</div>
-        <div class="v" id="kpiAberto">—</div>
-        <div class="s"><span class="muted" id="kpiAbertoN">—</span> títulos</div>
-      </div>
-    </div>
-
-    <div class="section">
-      <div style="display:flex;align-items:flex-end;justify-content:space-between;margin:12px 0 8px;">
-        <div style="font-weight:800;font-size:14px;">Próximos vencimentos</div>
-        <div style="font-size:12px;color:var(--muted);">Vencimento • Valor</div>
-      </div>
-      <div class="hlist" id="nextList"></div>
-    </div>
   </div>
 
   <!-- ====== VIEW: LISTA / CALENDÁRIO (POR DIA) ====== -->
@@ -295,6 +292,59 @@ body{margin:0;font-family:ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,
           <div class="s">Esta tela está pronta. No próximo passo a gente liga ela na sua base mensal (GERENCIAL_MENSAL) igual no módulo Vendas.</div>
         </div>
       </div>
+    </div>
+  </div>
+
+  <!-- ====== VIEW: FORNECEDOR (detalhe) ====== -->
+  <div class="view" id="view-c-fornecedor">
+    <div class="topbar">
+      <div style="display:flex;align-items:center;gap:10px;">
+        <button class="iconbtn" id="btnFornecedorBack" title="Voltar">
+          <svg viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg>
+        </button>
+        <div>
+          <div style="font-weight:950;font-size:18px;line-height:1.05;" id="fornNome">Fornecedor</div>
+          <div style="color:var(--muted);font-size:12px;margin-top:2px;" id="fornSub">—</div>
+        </div>
+      </div>
+      <div class="pill" id="fornMesPill">Mês: —</div>
+    </div>
+
+    <div class="section">
+      <div class="grid-kpi">
+        <div class="kpi">
+          <div class="label">A pagar (mês)</div>
+          <div class="value" id="fornPagarMes">—</div>
+        </div>
+        <div class="kpi">
+          <div class="label">Kg (mês)</div>
+          <div class="value" id="fornKgMes">—</div>
+        </div>
+        <div class="kpi">
+          <div class="label">Pago (mês)</div>
+          <div class="value" id="fornPagoMes">—</div>
+        </div>
+        <div class="kpi">
+          <div class="label">Vencido (mês)</div>
+          <div class="value" id="fornVencidoMes">—</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div style="display:flex;align-items:flex-end;justify-content:space-between;margin:12px 0 8px;">
+        <div style="font-weight:800;font-size:14px;">Títulos do mês (vencimento)</div>
+        <div style="font-size:12px;color:var(--muted);">Venc • Valor</div>
+      </div>
+      <div class="hlist" id="fornTitulosMes"></div>
+    </div>
+
+    <div class="section">
+      <div style="display:flex;align-items:flex-end;justify-content:space-between;margin:12px 0 8px;">
+        <div style="font-weight:800;font-size:14px;">Compras (resumo)</div>
+        <div style="font-size:12px;color:var(--muted);">Data • Total</div>
+      </div>
+      <div class="hlist" id="fornCompras"></div>
     </div>
   </div>
 
@@ -1118,6 +1168,14 @@ const fmtBRL = (n) => {
   if (n==null || isNaN(n)) return "—";
   return n.toLocaleString("pt-BR",{style:"currency",currency:"BRL"});
 };
+const fmtBRLCompact = (n) => {
+  if (n==null || isNaN(n)) return "—";
+  const abs = Math.abs(n);
+  const sign = n < 0 ? "-" : "";
+  if (abs >= 1_000_000) return `${sign}R$ ${(abs/1_000_000).toLocaleString("pt-BR",{maximumFractionDigits:1})}M`;
+  if (abs >= 1_000) return `${sign}R$ ${(abs/1_000).toLocaleString("pt-BR",{maximumFractionDigits:0})}k`;
+  return `R$ ${abs.toLocaleString("pt-BR",{maximumFractionDigits:0})}`;
+};
 const sameDay = (a,b) => a && b && a.getFullYear()===b.getFullYear() && a.getMonth()===b.getMonth() && a.getDate()===b.getDate();
 
 /* =======================
@@ -1148,6 +1206,7 @@ function gerarTitulos(compra){
       titulo_id: `${compra.compra_id}-${i+1}`,
       compra_id: compra.compra_id,
       parcela: i+1,
+      parcelas_total: n,
       vencimento: venc,
       valor: vals[i] ?? valorPadrao,
       fornecedor: compra.fornecedor || "—",
@@ -1155,7 +1214,8 @@ function gerarTitulos(compra){
       data_compra: String(compra.data_compra||"").slice(0,10),
       qtd_peso_kg: Number(compra.qtd_peso_kg||0),
       preco_unit: Number(compra.preco_unit||0),
-      status
+      status,
+      parcelas_total: n
     });
   }
   return out;
@@ -1280,7 +1340,7 @@ function renderCalendar(q=""){
         <div class="d">${d.getDate()}</div>
         <div class="badge">${meta.qtd}</div>
         <div class="meta">
-          <div class="t">${fmtBRL(meta.total)}</div>
+          <div class="t">${fmtBRLCompact(meta.total)}</div>
           <div class="q">${meta.qtd} títulos</div>
         </div>
       `;
@@ -1341,78 +1401,234 @@ function closeDayModal(){
 }
 
 function setPeriodPills(){
+  const p1 = document.getElementById("periodPill");
+  const p2 = document.getElementById("periodPill2");
   if (!TITULOS.length){
-    document.getElementById("periodPill").textContent = "Período: —";
-    document.getElementById("periodPill2").textContent = "Período: —";
+    if (p1) p1.textContent = "Mês: —";
+    if (p2) p2.textContent = "Período: —";
     return;
   }
+
+  // Range geral (usado na tela Compras)
   const min = TITULOS[0].vencimento;
   const max = TITULOS[TITULOS.length-1].vencimento;
   const txt = (min===max) ? min : `${min} → ${max}`;
-  document.getElementById("periodPill").textContent = `Período: ${txt}`;
-  document.getElementById("periodPill2").textContent = `Período: ${txt}`;
-}
+  if (p2) p2.textContent = `Período: ${txt}`;
 
-function calcKPIs(){
-  const today = new Date(); today.setHours(0,0,0,0);
-  const in7 = new Date(today); in7.setDate(in7.getDate()+7);
-
-  const open = TITULOS.filter(t => (t.status!=="PAGO"));
-  const hoje = open.filter(t => sameDay(parseISO(t.vencimento), today));
-  const next7 = open.filter(t => {
-    const d = parseISO(t.vencimento);
-    return d && d>=today && d<=in7;
-  });
-
-  // mês do "today"
-  const mesOpen = open.filter(t => {
-    const d = parseISO(t.vencimento);
-    return d && d.getFullYear()===today.getFullYear() && d.getMonth()===today.getMonth();
-  });
-
-  const sum = (arr) => arr.reduce((a,x)=>a+(Number(x.valor)||0),0);
-
-  document.getElementById("kpiHoje").textContent = fmtBRL(sum(hoje));
-  document.getElementById("kpiHojeN").textContent = hoje.length;
-
-  document.getElementById("kpi7").textContent = fmtBRL(sum(next7));
-  document.getElementById("kpi7N").textContent = next7.length;
-
-  document.getElementById("kpiMes").textContent = fmtBRL(sum(mesOpen));
-  document.getElementById("kpiMesN").textContent = mesOpen.length;
-
-  document.getElementById("kpiAberto").textContent = fmtBRL(sum(open));
-  document.getElementById("kpiAbertoN").textContent = open.length;
-
-  // próximos vencimentos (top 10)
-  const next = open
-    .filter(t => {
-      const d = parseISO(t.vencimento);
-      return d && d>=today;
-    })
-    .slice(0,10);
-
-  const nextList = document.getElementById("nextList");
-  nextList.innerHTML = next.length ? "" : `<div class="home-card"><div class="k">Sem dados</div><div class="s">Cole sua base diária em <b>COMPRAS_BASE</b> no arquivo.</div></div>`;
-  for (const t of next){
-    const r = document.createElement("div");
-    r.className = "hrow";
-    r.innerHTML = `
-      <div>
-        <div class="m">${t.vencimento}</div>
-        <div style="color:var(--muted);font-size:12px;margin-top:4px;line-height:1.25;">
-          ${t.fornecedor} • ${t.produto} • ${t.parcela}
-        </div>
-      </div>
-      <div class="nums">
-        <div class="line1">${fmtBRL(Number(t.valor)||0)}</div>
-        <div class="line2">${t.status}</div>
-      </div>
-    `;
-    nextList.appendChild(r);
+  // Mês selecionado (usado na Home)
+  if (CAL_MONTHS && CAL_MONTHS.length){
+    const cur = CAL_MONTHS[Math.max(0, Math.min(CAL_INDEX, CAL_MONTHS.length-1))];
+    if (p1) p1.textContent = `Mês: ${monthLabel(cur.y, cur.m)}`;
+  } else {
+    if (p1) p1.textContent = "Mês: —";
   }
 }
 
+function calcKPIs(){
+  // KPIs e cards por fornecedor (baseado no mês selecionado do calendário, por vencimento)
+  const today = new Date(); today.setHours(0,0,0,0);
+
+  const open = TITULOS.filter(t => (String(t.status||"").toUpperCase()!=="PAGO"));
+
+  // mês ativo (se não existir, usa mês atual)
+  const now = new Date(); now.setHours(0,0,0,0);
+  let y = now.getFullYear(), m = now.getMonth();
+  if (CAL_MONTHS && CAL_MONTHS.length){
+    const cur = CAL_MONTHS[Math.max(0, Math.min(CAL_INDEX, CAL_MONTHS.length-1))];
+    y = cur.y; m = cur.m;
+  }
+
+  const inMonth = open.filter(t => {
+    const d = parseISO(t.vencimento);
+    return d && d.getFullYear()===y && d.getMonth()===m;
+  });
+
+  const sumValor = (arr)=>arr.reduce((a,x)=>a+(Number(x.valor)||0),0);
+  const sumKg = (arr)=>arr.reduce((a,x)=>{
+    const kg = Number(x.qtd_peso_kg||0);
+    const tot = Number(x.parcelas_total||1) || 1;
+    return a + (kg / tot);
+  },0);
+
+  const totalMesValor = sumValor(inMonth);
+  const totalMesKg = sumKg(inMonth);
+
+  const kpiMesValor = document.getElementById("kpiMesValor");
+  const kpiMesKg = document.getElementById("kpiMesKg");
+  if (kpiMesValor) kpiMesValor.textContent = fmtBRL(totalMesValor);
+  if (kpiMesKg) kpiMesKg.textContent = `${totalMesKg.toLocaleString("pt-BR",{maximumFractionDigits:0})} kg`;
+
+  // Cards por fornecedor
+  const byFornecedor = new Map();
+  for (const t of inMonth){
+    const key = String(t.fornecedor||"—");
+    const cur = byFornecedor.get(key) || {fornecedor:key, valor:0, kg:0, n:0};
+    cur.valor += Number(t.valor)||0;
+    const kg = Number(t.qtd_peso_kg||0);
+    const tot = Number(t.parcelas_total||1) || 1;
+    cur.kg += (kg / tot);
+    cur.n += 1;
+    byFornecedor.set(key, cur);
+  }
+  const suppliers = Array.from(byFornecedor.values()).sort((a,b)=>b.valor-a.valor);
+
+  const supplierCards = document.getElementById("supplierCards");
+  if (supplierCards){
+    supplierCards.innerHTML = suppliers.length ? "" : `<div class="home-card"><div class="k">Sem dados</div><div class="s">Cole sua base diária em <b>COMPRAS_BASE</b>.</div></div>`;
+    for (const s of suppliers){
+      const r = document.createElement("div");
+      r.className = "hrow";
+      r.style.cursor = "pointer";
+      r.innerHTML = `
+        <div>
+          <div class="m">${s.fornecedor}</div>
+          <div style="color:var(--muted);font-size:12px;margin-top:4px;line-height:1.25;">
+            ${s.n} títulos • ${s.kg.toLocaleString("pt-BR",{maximumFractionDigits:0})} kg
+          </div>
+        </div>
+        <div class="nums">
+          <div class="line1">${fmtBRL(s.valor)}</div>
+          <div class="line2">Total do mês</div>
+        </div>
+      `;
+      r.addEventListener("click", ()=>{
+        openFornecedor(s.fornecedor);
+      });
+      supplierCards.appendChild(r);
+    }
+  }
+
+  // Card total (clique abre Compras sem filtro)
+  const cardTotalMes = document.getElementById("cardTotalMes");
+  if (cardTotalMes){
+    cardTotalMes.onclick = ()=>{
+      const q = document.getElementById("q");
+      if (q) q.value = "";
+      showView("view-c-compras");
+      renderComprasList("");
+    };
+  }
+}
+
+
+let CURRENT_FORNECEDOR = null;
+
+function getMesSelecionado(){
+  const now = new Date(); now.setHours(0,0,0,0);
+  let y = now.getFullYear(), m = now.getMonth();
+  if (CAL_MONTHS && CAL_MONTHS.length){
+    const cur = CAL_MONTHS[Math.max(0, Math.min(CAL_INDEX, CAL_MONTHS.length-1))];
+    y = cur.y; m = cur.m;
+  }
+  return {y,m};
+}
+
+function openFornecedor(nome){
+  CURRENT_FORNECEDOR = String(nome||"");
+  renderFornecedor();
+  showView("view-c-fornecedor");
+}
+
+function renderFornecedor(){
+  const nome = CURRENT_FORNECEDOR;
+  const {y,m} = getMesSelecionado();
+  const pill = document.getElementById("fornMesPill");
+  if (pill) pill.textContent = `Mês: ${monthLabel(y,m)}`;
+
+  const fornNome = document.getElementById("fornNome");
+  if (fornNome) fornNome.textContent = nome || "Fornecedor";
+
+  const all = TITULOS.filter(t => String(t.fornecedor||"")===nome);
+  const inMonth = all.filter(t => {
+    const d = parseISO(t.vencimento);
+    return d && d.getFullYear()===y && d.getMonth()===m;
+  });
+
+  const sum = (arr)=>arr.reduce((a,x)=>a+(Number(x.valor)||0),0);
+  const sumKg = (arr)=>arr.reduce((a,x)=>{
+    const kg = Number(x.qtd_peso_kg||0);
+    const tot = Number(x.parcelas_total||1) || 1;
+    return a + (kg / tot);
+  },0);
+
+  const pago = inMonth.filter(t => String(t.status||"").toUpperCase()==="PAGO");
+  const aberto = inMonth.filter(t => String(t.status||"").toUpperCase()!=="PAGO");
+
+  const today = new Date(); today.setHours(0,0,0,0);
+  const vencido = aberto.filter(t => {
+    const d = parseISO(t.vencimento);
+    return d && d < today;
+  });
+
+  const pagarMes = sum(aberto);
+  const pagoMes = sum(pago);
+  const vencidoMes = sum(vencido);
+  const kgMes = sumKg(inMonth);
+
+  const elPagar = document.getElementById("fornPagarMes");
+  const elPago = document.getElementById("fornPagoMes");
+  const elVenc = document.getElementById("fornVencidoMes");
+  const elKg = document.getElementById("fornKgMes");
+  if (elPagar) elPagar.textContent = fmtBRL(pagarMes);
+  if (elPago) elPago.textContent = fmtBRL(pagoMes);
+  if (elVenc) elVenc.textContent = fmtBRL(vencidoMes);
+  if (elKg) elKg.textContent = `${kgMes.toLocaleString("pt-BR",{maximumFractionDigits:0})} kg`;
+
+  const sub = document.getElementById("fornSub");
+  if (sub){
+    sub.textContent = `${inMonth.length} títulos no mês • ${fmtBRL(sum(inMonth))} (pago + aberto)`;
+  }
+
+  // Lista de títulos do mês
+  const list = document.getElementById("fornTitulosMes");
+  if (list){
+    const sorted = inMonth.slice().sort((a,b)=>(a.vencimento||"").localeCompare(b.vencimento||"") || (Number(a.parcela||0)-Number(b.parcela||0)));
+    list.innerHTML = sorted.length ? "" : `<div class="home-card"><div class="k">Sem títulos</div><div class="s">Não há vencimentos desse fornecedor em ${monthLabel(y,m)}.</div></div>`;
+    for (const t of sorted){
+      const r = document.createElement("div");
+      r.className = "hrow";
+      r.innerHTML = `
+        <div>
+          <div class="m">${t.vencimento}</div>
+          <div style="color:var(--muted);font-size:12px;margin-top:4px;line-height:1.25;">
+            ${t.produto} • Parc: ${t.parcela}
+          </div>
+        </div>
+        <div class="nums">
+          <div class="line1">${fmtBRL(Number(t.valor)||0)}</div>
+          <div class="line2">${t.status}</div>
+        </div>
+      `;
+      list.appendChild(r);
+    }
+  }
+
+  // Compras (resumo) a partir de COMPRAS_BASE
+  const comprasEl = document.getElementById("fornCompras");
+  if (comprasEl){
+    const compras = (COMPRAS_BASE||[]).filter(c => String(c.fornecedor||"")===nome);
+    compras.sort((a,b)=>String(a.data_compra||"").localeCompare(String(b.data_compra||"")));
+    comprasEl.innerHTML = compras.length ? "" : `<div class="home-card"><div class="k">Sem compras</div><div class="s">Nenhuma compra cadastrada para este fornecedor.</div></div>`;
+    for (const c of compras.slice(0,60)){
+      const total = Number(c.valor_total ?? (Number(c.qtd_peso_kg||0) * Number(c.preco_unit||0)));
+      const r = document.createElement("div");
+      r.className = "hrow";
+      r.innerHTML = `
+        <div>
+          <div class="m">${String(c.data_compra||"").slice(0,10) || "—"}</div>
+          <div style="color:var(--muted);font-size:12px;margin-top:4px;line-height:1.25;">
+            ${c.produto || "—"} • ${Number(c.qtd_peso_kg||0).toLocaleString("pt-BR",{maximumFractionDigits:0})} kg • ${c.condicao_pgto || "—"}
+          </div>
+        </div>
+        <div class="nums">
+          <div class="line1">${fmtBRL(total)}</div>
+          <div class="line2">Compra</div>
+        </div>
+      `;
+      comprasEl.appendChild(r);
+    }
+  }
+}
 function renderComprasList(q=""){
   renderCalendar(q);
   const term = String(q||"").trim().toLowerCase();
@@ -1542,28 +1758,55 @@ function doLogin(){
 document.getElementById("loginBtn").addEventListener("click", doLogin);
 document.getElementById("loginPassword").addEventListener("keydown", (e)=>{ if (e.key==="Enter") doLogin(); });
 
-document.getElementById("btnHoje").addEventListener("click", ()=>{
-  calcKPIs();
-});
+const _btnHoje = document.getElementById("btnHoje");
+if (_btnHoje){ _btnHoje.addEventListener("click", ()=>{ calcKPIs(); }); }
 
 initNav();
+
+const _fornBack = document.getElementById("btnFornecedorBack");
+if (_fornBack){ _fornBack.addEventListener("click", ()=>{ showView("view-c-home"); }); }
 
 // Calendar navigation + modal
 document.getElementById("calPrev").addEventListener("click", ()=>{
   if (!CAL_MONTHS.length) return;
   CAL_INDEX = Math.max(0, CAL_INDEX-1);
+  setPeriodPills();
+  calcKPIs();
   renderCalendar(document.getElementById("q").value);
+  if (document.getElementById("view-c-fornecedor")?.classList.contains("active")) renderFornecedor();
 });
 document.getElementById("calNext").addEventListener("click", ()=>{
   if (!CAL_MONTHS.length) return;
   CAL_INDEX = Math.min(CAL_MONTHS.length-1, CAL_INDEX+1);
+  setPeriodPills();
+  calcKPIs();
   renderCalendar(document.getElementById("q").value);
+  if (document.getElementById("view-c-fornecedor")?.classList.contains("active")) renderFornecedor();
 });
 document.getElementById("dayModalClose").addEventListener("click", closeDayModal);
 document.getElementById("dayModalBack").addEventListener("click", closeDayModal);
 document.addEventListener("keydown", (e)=>{ if (e.key==="Escape") closeDayModal(); });
 
-
+const _homePrev = document.getElementById("homePrevMonth");
+if (_homePrev){
+  _homePrev.addEventListener("click", ()=>{
+    if (!CAL_MONTHS.length) return;
+    CAL_INDEX = Math.max(0, CAL_INDEX-1);
+    setPeriodPills();
+    calcKPIs();
+    if (document.getElementById("view-c-fornecedor")?.classList.contains("active")) renderFornecedor();
+  });
+}
+const _homeNext = document.getElementById("homeNextMonth");
+if (_homeNext){
+  _homeNext.addEventListener("click", ()=>{
+    if (!CAL_MONTHS.length) return;
+    CAL_INDEX = Math.min(CAL_MONTHS.length-1, CAL_INDEX+1);
+    setPeriodPills();
+    calcKPIs();
+    if (document.getElementById("view-c-fornecedor")?.classList.contains("active")) renderFornecedor();
+  });
+}
 document.getElementById("q").addEventListener("input", (e)=>{
   renderComprasList(e.target.value);
 });
