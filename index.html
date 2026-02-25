@@ -19,9 +19,19 @@ body{margin:0;font-family:ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,
 .pill{font-size:12px;color:var(--muted);border:1px solid var(--line);padding:8px 10px;border-radius:999px;background:rgba(18,26,43,.6);}
 .iconbtn{width:40px;height:40px;border-radius:14px;border:1px solid var(--line);background:rgba(18,26,43,.6);display:inline-flex;align-items:center;justify-content:center;cursor:pointer;box-shadow:var(--shadow);}
 .iconbtn svg{width:20px;height:20px;stroke:rgba(232,238,252,.85);fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;}
+
+.iconbtn{color:rgba(232,238,252,.88);font-size:22px;font-weight:900;line-height:1;}
+.iconbtn:disabled{opacity:.35;cursor:not-allowed;}
+.kpi.other .value{font-size:16px;}
+.kpi.other .label{font-size:12px;}
 .section{margin-top:16px;}
 .home-cards{margin-top:14px;display:flex;flex-direction:column;gap:14px;}
 .home-card{background:rgba(18,26,43,.72);border:1px solid var(--line);border-radius:22px;padding:16px 16px;box-shadow:var(--shadow);}
+
+/* Clickable cards */
+.clickable{cursor:pointer;}
+.clickable:hover{transform:translateY(-1px);}
+.clickable:active{transform:translateY(0);}
 .home-card .k{color:var(--muted);font-size:13px;}
 .home-card .v{font-size:26px;font-weight:950;letter-spacing:.2px;margin-top:6px;}
 .home-card .s{color:rgba(232,238,252,.85);font-size:13px;margin-top:8px;}
@@ -201,6 +211,11 @@ body{margin:0;font-family:ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,
     <div class="s"><span class="muted" id="kpiMesKg">—</span> kg no período</div>
   </div>
 
+  <div class="home-card" id="cardSemana" style="cursor:pointer;">
+    <div class="k">Pagamentos da semana</div>
+    <div class="v" id="kpiSemanaValor">—</div>
+  </div>
+
   <div class="home-card">
     <div class="k">Fornecedores</div>
     <div class="s" style="margin-top:6px;color:var(--muted);">Toque em um fornecedor para ver os títulos do mês.</div>
@@ -273,30 +288,42 @@ body{margin:0;font-family:ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,
 
   <!-- ====== VIEW: CUSTO OP (placeholder para ligar depois) ====== -->
   <div class="view" id="view-c-custo">
-    <div class="topbar">
-      <div style="font-weight:900;font-size:22px;">Custo Op.</div>
-      <div class="pill" id="custoPill">Mês: —</div>
-    </div>
-
-    <div class="section">
-      <div class="grid-kpi">
-        <div class="kpi"><div class="label">Custo Operação</div><div class="value" id="kCustoOp">—</div></div>
-        <div class="kpi"><div class="label">Custo / Kg</div><div class="value" id="kCustoKg">—</div></div>
-        <div class="kpi"><div class="label">Resultado Oper.</div><div class="value" id="kResOp">—</div></div>
-        <div class="kpi"><div class="label">Previsibilidade</div><div class="value" id="kPrev">—</div></div>
-      </div>
-
-      <div class="section" style="margin-top:14px;">
-        <div class="home-card">
-          <div class="k">Nota</div>
-          <div class="s">Esta tela está pronta. No próximo passo a gente liga ela na sua base mensal (GERENCIAL_MENSAL) igual no módulo Vendas.</div>
-        </div>
-      </div>
+  <div class="topbar" style="gap:10px;">
+    <div style="font-weight:900;font-size:22px;">Custo Op.</div>
+    <div style="margin-left:auto;display:flex;align-items:center;gap:10px;">
+      <button class="iconbtn" id="custoPrevBtn" title="Mês anterior" aria-label="Mês anterior">‹</button>
+      <div class="pill" id="custoMonthPill">Mês: —</div>
+      <button class="iconbtn" id="custoNextBtn" title="Próximo mês" aria-label="Próximo mês">›</button>
     </div>
   </div>
 
-  <!-- ====== VIEW: FORNECEDOR (detalhe) ====== -->
-  <div class="view" id="view-c-fornecedor">
+  <div class="section">
+    <div class="home-card clickable" id="custoTotalCard" role="button" tabindex="0" aria-label="Detalhar contas do custo">
+      <div class="k" style="font-size:13px;opacity:.95;">Custo total (Pago)</div>
+      <div class="value" id="custoTotalPago" style="font-size:34px;font-weight:900;margin-top:6px;">—</div>
+      <div class="s" style="margin-top:6px;">
+        Custo/kg vendido: <span id="custoKgTotal">—</span> • Peso: <span id="pesoVendido">—</span>
+      </div>
+    </div>
+
+    <div class="section" style="margin-top:16px;">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;">
+        <div style="font-weight:800;">Contas que compõem o custo/kg</div>
+        <div style="font-size:12px;color:var(--muted);">Pago • Custo/kg</div>
+      </div>
+      <div class="grid-kpi" id="contasCompoemGrid"></div>
+    </div>
+
+    <div class="section" style="margin-top:16px;">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;">
+        <div style="font-weight:800;">Outras contas (informativo)</div>
+        <div style="font-size:12px;color:var(--muted);">Pago • A pagar</div>
+      </div>
+      <div class="grid-kpi" id="contasOutrasGrid"></div>
+    </div>
+  </div>
+</div>
+<div class="view" id="view-c-fornecedor">
     <div class="topbar">
       <div style="display:flex;align-items:center;gap:10px;">
         <button class="iconbtn" id="btnFornecedorBack" title="Voltar">
@@ -321,7 +348,7 @@ body{margin:0;font-family:ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,
           <div class="value" id="fornKgMes">—</div>
         </div>
         <div class="kpi">
-          <div class="label">Pago (mês)</div>
+          <div class="label">A vencer (mês)</div>
           <div class="value" id="fornPagoMes">—</div>
         </div>
         <div class="kpi">
@@ -390,6 +417,37 @@ body{margin:0;font-family:ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,
   </div>
 </div>
 
+
+<div class="modal" id="custoModal" aria-hidden="true">
+  <div class="back" id="custoModalBack"></div>
+  <div class="sheet" role="dialog" aria-modal="true" aria-labelledby="custoModalTitle">
+    <div class="top">
+      <div>
+        <div class="h" id="custoModalTitle">—</div>
+        <div class="sub" id="custoModalSub">—</div>
+      </div>
+      <button class="close" id="custoModalClose" aria-label="Fechar">
+        <svg viewBox="0 0 24 24"><path d="M18 6 6 18"/><path d="M6 6l12 12"/></svg>
+      </button>
+    </div>
+
+    <div class="home-card" style="margin:6px 2px 14px;">
+      <div class="k" style="font-size:13px;opacity:.95;">Resumo do mês</div>
+      <div class="s" style="margin-top:6px;display:flex;gap:10px;flex-wrap:wrap;">
+        <div><b>Total pago:</b> <span id="custoModalTotalPago">—</span></div>
+        <div><b>Total a pagar:</b> <span id="custoModalTotalAPagar">—</span></div>
+        <div><b>Custo/kg:</b> <span id="custoModalCustoKg">—</span> • <b>Peso:</b> <span id="custoModalPeso">—</span></div>
+      </div>
+    </div>
+
+    <div style="display:flex;align-items:center;justify-content:space-between;margin:8px 2px 8px;">
+      <div style="font-weight:800;">Contas que compõem o custo/kg</div>
+      <div style="font-size:12px;color:var(--muted);">Pago • A pagar • Custo/kg</div>
+    </div>
+    <div class="kpi-grid" id="custoModalCompoemGrid"></div>
+</div>
+</div>
+
 <script>
 /* =======================
    1) CONFIG
@@ -417,8 +475,7 @@ const COMPRAS_BASE = [
     "venc_2": "2026-02-27",
     "valor_2": 94000.0,
     "venc_3": "2026-03-04",
-    "valor_3": 94000.0,
-    "status": "PARCIAL"
+    "valor_3": 94000.0
   },
   {
     "compra_id": 2,
@@ -436,8 +493,7 @@ const COMPRAS_BASE = [
     "venc_2": "2026-03-11",
     "valor_2": 94000.0,
     "venc_3": "2026-03-13",
-    "valor_3": 94000.0,
-    "status": "ABERTO"
+    "valor_3": 94000.0
   },
   {
     "compra_id": 3,
@@ -455,8 +511,7 @@ const COMPRAS_BASE = [
     "venc_2": "2026-03-20",
     "valor_2": 94000.0,
     "venc_3": "2026-03-25",
-    "valor_3": 94000.0,
-    "status": "ABERTO"
+    "valor_3": 94000.0
   },
   {
     "compra_id": 4,
@@ -474,8 +529,7 @@ const COMPRAS_BASE = [
     "venc_2": "2026-04-01",
     "valor_2": 94000.0,
     "venc_3": "2026-04-03",
-    "valor_3": 94000.0,
-    "status": "ABERTO"
+    "valor_3": 94000.0
   },
   {
     "compra_id": 5,
@@ -493,8 +547,7 @@ const COMPRAS_BASE = [
     "venc_2": "2026-04-10",
     "valor_2": 94000.0,
     "venc_3": "2026-04-15",
-    "valor_3": 94000.0,
-    "status": "ABERTO"
+    "valor_3": 94000.0
   },
   {
     "compra_id": 6,
@@ -512,8 +565,7 @@ const COMPRAS_BASE = [
     "venc_2": "2026-04-22",
     "valor_2": 62666.67,
     "venc_3": "2026-04-24",
-    "valor_3": 62666.67,
-    "status": "ABERTO"
+    "valor_3": 62666.67
   },
   {
     "compra_id": 7,
@@ -531,8 +583,7 @@ const COMPRAS_BASE = [
     "venc_2": "2026-02-26",
     "valor_2": 109666.67,
     "venc_3": "2026-03-03",
-    "valor_3": 109666.67,
-    "status": "PARCIAL"
+    "valor_3": 109666.67
   },
   {
     "compra_id": 8,
@@ -550,8 +601,7 @@ const COMPRAS_BASE = [
     "venc_2": "2026-03-10",
     "valor_2": 109666.67,
     "venc_3": "2026-03-12",
-    "valor_3": 109666.67,
-    "status": "ABERTO"
+    "valor_3": 109666.67
   },
   {
     "compra_id": 9,
@@ -569,8 +619,7 @@ const COMPRAS_BASE = [
     "venc_2": "2026-03-19",
     "valor_2": 70500.0,
     "venc_3": "2026-03-26",
-    "valor_3": 70500.0,
-    "status": "ABERTO"
+    "valor_3": 70500.0
   },
   {
     "compra_id": 10,
@@ -588,8 +637,7 @@ const COMPRAS_BASE = [
     "venc_2": "2026-04-06",
     "valor_2": 70500.0,
     "venc_3": "2026-04-13",
-    "valor_3": 70500.0,
-    "status": "ABERTO"
+    "valor_3": 70500.0
   },
   {
     "compra_id": 11,
@@ -607,8 +655,7 @@ const COMPRAS_BASE = [
     "venc_2": "2026-03-02",
     "valor_2": 222873.47,
     "venc_3": "2026-03-09",
-    "valor_3": 222873.47,
-    "status": "PARCIAL"
+    "valor_3": 222873.47
   },
   {
     "compra_id": 12,
@@ -626,8 +673,7 @@ const COMPRAS_BASE = [
     "venc_2": "2026-03-03",
     "valor_2": 114876.74,
     "venc_3": "2026-03-10",
-    "valor_3": 114876.74,
-    "status": "ABERTO"
+    "valor_3": 114876.74
   },
   {
     "compra_id": 13,
@@ -645,8 +691,7 @@ const COMPRAS_BASE = [
     "venc_2": "2026-03-17",
     "valor_2": 118496.9,
     "venc_3": "2026-03-24",
-    "valor_3": 118496.9,
-    "status": "ABERTO"
+    "valor_3": 118496.9
   },
   {
     "compra_id": 14,
@@ -664,8 +709,7 @@ const COMPRAS_BASE = [
     "venc_2": "2026-04-09",
     "valor_2": 80000.67,
     "venc_3": "2026-04-16",
-    "valor_3": 80000.67,
-    "status": "ABERTO"
+    "valor_3": 80000.67
   },
   {
     "compra_id": 15,
@@ -683,8 +727,7 @@ const COMPRAS_BASE = [
     "venc_2": "2026-03-13",
     "valor_2": 229814.94,
     "venc_3": "2026-03-20",
-    "valor_3": 229814.94,
-    "status": "ABERTO"
+    "valor_3": 229814.94
   },
   {
     "compra_id": 16,
@@ -702,8 +745,7 @@ const COMPRAS_BASE = [
     "venc_2": "2026-03-25",
     "valor_2": 224826.67,
     "venc_3": "2026-03-31",
-    "valor_3": 224826.67,
-    "status": "ABERTO"
+    "valor_3": 224826.67
   },
   {
     "compra_id": 17,
@@ -721,8 +763,7 @@ const COMPRAS_BASE = [
     "venc_2": "2026-03-26",
     "valor_2": 216316.0,
     "venc_3": "2026-04-02",
-    "valor_3": 216316.0,
-    "status": "ABERTO"
+    "valor_3": 216316.0
   },
   {
     "compra_id": 18,
@@ -740,8 +781,7 @@ const COMPRAS_BASE = [
     "venc_2": "2026-03-30",
     "valor_2": 216316.0,
     "venc_3": "2026-04-06",
-    "valor_3": 216316.0,
-    "status": "ABERTO"
+    "valor_3": 216316.0
   },
   {
     "compra_id": 19,
@@ -759,8 +799,7 @@ const COMPRAS_BASE = [
     "venc_2": "2026-04-08",
     "valor_2": 216589.33,
     "venc_3": "2026-04-10",
-    "valor_3": 216589.33,
-    "status": "ABERTO"
+    "valor_3": 216589.33
   },
   {
     "compra_id": 20,
@@ -778,8 +817,7 @@ const COMPRAS_BASE = [
     "venc_2": "2026-04-30",
     "valor_2": 111107.5,
     "venc_3": "2026-05-05",
-    "valor_3": 111107.5,
-    "status": "ABERTO"
+    "valor_3": 111107.5
   },
   {
     "compra_id": 21,
@@ -797,8 +835,7 @@ const COMPRAS_BASE = [
     "venc_2": "2026-05-12",
     "valor_2": 111107.5,
     "venc_3": "2026-05-14",
-    "valor_3": 111107.5,
-    "status": "ABERTO"
+    "valor_3": 111107.5
   },
   {
     "compra_id": 22,
@@ -816,339 +853,348 @@ const COMPRAS_BASE = [
     "venc_2": "2026-05-21",
     "valor_2": 111107.5,
     "venc_3": "2026-05-26",
-    "valor_3": 111107.5,
-    "status": "ABERTO"
+    "valor_3": 111107.5
   }
 ];
 
 // Base mensal para ligar depois (placeholder)
-const GERENCIAL_MENSAL = [
+const CUSTOS_CONTAS_MENSAL = [
   {
-    "mes_ref": "2026-01-01",
-    "faturamento_bruto": 3989410.1,
-    "peso_total": 61460.12,
-    "lucro_bruto": 505133.41,
-    "margem_kg": 8.2189,
-    "custo_operacao": 397165.18,
-    "custo_kg": 6.4622,
-    "resultado_operacional": 107968.23,
-    "resultado_kg": 1.7567,
-    "previsibilidade_caixa": 2734752.27,
-    "resumo_caixa_mes": 1254657.83
+    "mes_ref": "2026-01",
+    "conta": "OPEX",
+    "pago": 272549.61,
+    "a_pagar": 0.0
   },
   {
-    "mes_ref": "2026-02-01",
-    "faturamento_bruto": 4092605.1,
-    "peso_total": 59881.59,
-    "lucro_bruto": 475263.01,
-    "margem_kg": 7.9367,
-    "custo_operacao": 491548.24,
-    "custo_kg": 8.2087,
-    "resultado_operacional": -16285.23,
-    "resultado_kg": -0.272,
-    "previsibilidade_caixa": 3974330.74,
-    "resumo_caixa_mes": 118274.36
+    "mes_ref": "2026-01",
+    "conta": "IMPOSTOS",
+    "pago": 38310.51,
+    "a_pagar": 0.0
   },
   {
-    "mes_ref": "2026-03-01",
-    "faturamento_bruto": 0.0,
-    "peso_total": 0.0,
-    "lucro_bruto": 0.0,
-    "margem_kg": null,
-    "custo_operacao": 0.0,
-    "custo_kg": null,
-    "resultado_operacional": 0.0,
-    "resultado_kg": null,
-    "previsibilidade_caixa": 0.0,
-    "resumo_caixa_mes": 0.0
+    "mes_ref": "2026-01",
+    "conta": "JUROS_TARIFAS",
+    "pago": 86305.05999999998,
+    "a_pagar": 0.0
   },
   {
-    "mes_ref": "2026-04-01",
-    "faturamento_bruto": 0.0,
-    "peso_total": 0.0,
-    "lucro_bruto": 0.0,
-    "margem_kg": null,
-    "custo_operacao": 0.0,
-    "custo_kg": null,
-    "resultado_operacional": 0.0,
-    "resultado_kg": null,
-    "previsibilidade_caixa": 0.0,
-    "resumo_caixa_mes": 0.0
+    "mes_ref": "2026-01",
+    "conta": "MATERIA_PRIMA",
+    "pago": 2277574.59,
+    "a_pagar": 0.0
   },
   {
-    "mes_ref": "2026-05-01",
-    "faturamento_bruto": 0.0,
-    "peso_total": 0.0,
-    "lucro_bruto": 0.0,
-    "margem_kg": null,
-    "custo_operacao": 0.0,
-    "custo_kg": null,
-    "resultado_operacional": 0.0,
-    "resultado_kg": null,
-    "previsibilidade_caixa": 0.0,
-    "resumo_caixa_mes": 0.0
+    "mes_ref": "2026-01",
+    "conta": "MAO_DE_OBRA",
+    "pago": 60012.5,
+    "a_pagar": 0.0
   },
   {
-    "mes_ref": "2026-06-01",
-    "faturamento_bruto": 0.0,
-    "peso_total": 0.0,
-    "lucro_bruto": 0.0,
-    "margem_kg": null,
-    "custo_operacao": 0.0,
-    "custo_kg": null,
-    "resultado_operacional": 0.0,
-    "resultado_kg": null,
-    "previsibilidade_caixa": 0.0,
-    "resumo_caixa_mes": 0.0
+    "mes_ref": "2026-01",
+    "conta": "COMISSARIA",
+    "pago": 908929.8899999997,
+    "a_pagar": 0.0
   },
   {
-    "mes_ref": "2026-07-01",
-    "faturamento_bruto": 0.0,
-    "peso_total": 0.0,
-    "lucro_bruto": 0.0,
-    "margem_kg": null,
-    "custo_operacao": 0.0,
-    "custo_kg": null,
-    "resultado_operacional": 0.0,
-    "resultado_kg": null,
-    "previsibilidade_caixa": 0.0,
-    "resumo_caixa_mes": 0.0
+    "mes_ref": "2026-02",
+    "conta": "OPEX",
+    "pago": 269934.3299999999,
+    "a_pagar": 29777.18
   },
   {
-    "mes_ref": "2026-08-01",
-    "faturamento_bruto": 0.0,
-    "peso_total": 0.0,
-    "lucro_bruto": 0.0,
-    "margem_kg": null,
-    "custo_operacao": 0.0,
-    "custo_kg": null,
-    "resultado_operacional": 0.0,
-    "resultado_kg": null,
-    "previsibilidade_caixa": 0.0,
-    "resumo_caixa_mes": 0.0
+    "mes_ref": "2026-02",
+    "conta": "IMPOSTOS",
+    "pago": 47974.18000000001,
+    "a_pagar": 0.0
   },
   {
-    "mes_ref": "2026-09-01",
-    "faturamento_bruto": 0.0,
-    "peso_total": 0.0,
-    "lucro_bruto": 0.0,
-    "margem_kg": null,
-    "custo_operacao": 0.0,
-    "custo_kg": null,
-    "resultado_operacional": 0.0,
-    "resultado_kg": null,
-    "previsibilidade_caixa": 0.0,
-    "resumo_caixa_mes": 0.0
+    "mes_ref": "2026-02",
+    "conta": "JUROS_TARIFAS",
+    "pago": 173639.73,
+    "a_pagar": 36109.19684016749
   },
   {
-    "mes_ref": "2026-10-01",
-    "faturamento_bruto": 0.0,
-    "peso_total": 0.0,
-    "lucro_bruto": 0.0,
-    "margem_kg": null,
-    "custo_operacao": 0.0,
-    "custo_kg": null,
-    "resultado_operacional": 0.0,
-    "resultado_kg": null,
-    "previsibilidade_caixa": 0.0,
-    "resumo_caixa_mes": 0.0
+    "mes_ref": "2026-02",
+    "conta": "MATERIA_PRIMA",
+    "pago": 3391561.99,
+    "a_pagar": 979217.91
   },
   {
-    "mes_ref": "2026-11-01",
-    "faturamento_bruto": 0.0,
-    "peso_total": 0.0,
-    "lucro_bruto": 0.0,
-    "margem_kg": null,
-    "custo_operacao": 0.0,
-    "custo_kg": null,
-    "resultado_operacional": 0.0,
-    "resultado_kg": null,
-    "previsibilidade_caixa": 0.0,
-    "resumo_caixa_mes": 0.0
+    "mes_ref": "2026-02",
+    "conta": "MAO_DE_OBRA",
+    "pago": 91220.51,
+    "a_pagar": 39886.65
   },
   {
-    "mes_ref": "2026-12-01",
-    "faturamento_bruto": 0.0,
-    "peso_total": 0.0,
-    "lucro_bruto": 0.0,
-    "margem_kg": null,
-    "custo_operacao": 0.0,
-    "custo_kg": null,
-    "resultado_operacional": 0.0,
-    "resultado_kg": null,
-    "previsibilidade_caixa": 0.0,
-    "resumo_caixa_mes": 0.0
-  },
-  {
-    "mes_ref": "MES_REF",
-    "faturamento_bruto": "CONTA",
-    "peso_total": "ORCADO",
-    "lucro_bruto": "PAGO",
-    "margem_kg": "A_PAGAR",
-    "custo_operacao": "PROJ_MES",
-    "custo_kg": null,
-    "resultado_operacional": null,
-    "resultado_kg": null,
-    "previsibilidade_caixa": null,
-    "resumo_caixa_mes": null
-  },
-  {
-    "mes_ref": "2026-01-01",
-    "faturamento_bruto": "Opex",
-    "peso_total": 300000.0,
-    "lucro_bruto": 272549.61,
-    "margem_kg": 0.0,
-    "custo_operacao": 272549.61,
-    "custo_kg": null,
-    "resultado_operacional": null,
-    "resultado_kg": null,
-    "previsibilidade_caixa": null,
-    "resumo_caixa_mes": null
-  },
-  {
-    "mes_ref": "2026-01-01",
-    "faturamento_bruto": "Impostos",
-    "peso_total": 35000.0,
-    "lucro_bruto": 38310.51,
-    "margem_kg": 0.0,
-    "custo_operacao": 38310.51,
-    "custo_kg": null,
-    "resultado_operacional": null,
-    "resultado_kg": null,
-    "previsibilidade_caixa": null,
-    "resumo_caixa_mes": null
-  },
-  {
-    "mes_ref": "2026-01-01",
-    "faturamento_bruto": "Juros e Tarifas",
-    "peso_total": 115000.0,
-    "lucro_bruto": 86305.06,
-    "margem_kg": null,
-    "custo_operacao": 86305.06,
-    "custo_kg": null,
-    "resultado_operacional": null,
-    "resultado_kg": null,
-    "previsibilidade_caixa": null,
-    "resumo_caixa_mes": null
-  },
-  {
-    "mes_ref": "2026-01-01",
-    "faturamento_bruto": "Matéria-prima",
-    "peso_total": 3300000.0,
-    "lucro_bruto": 2277574.59,
-    "margem_kg": 0.0,
-    "custo_operacao": 2277574.59,
-    "custo_kg": null,
-    "resultado_operacional": null,
-    "resultado_kg": null,
-    "previsibilidade_caixa": null,
-    "resumo_caixa_mes": null
-  },
-  {
-    "mes_ref": "2026-01-01",
-    "faturamento_bruto": "Mão de Obra",
-    "peso_total": 200000.0,
-    "lucro_bruto": 60012.5,
-    "margem_kg": 0.0,
-    "custo_operacao": 60012.5,
-    "custo_kg": null,
-    "resultado_operacional": null,
-    "resultado_kg": null,
-    "previsibilidade_caixa": null,
-    "resumo_caixa_mes": null
-  },
-  {
-    "mes_ref": "2026-01-01",
-    "faturamento_bruto": "Comissária",
-    "peso_total": 0.0,
-    "lucro_bruto": 908929.89,
-    "margem_kg": 0.0,
-    "custo_operacao": 908929.89,
-    "custo_kg": null,
-    "resultado_operacional": null,
-    "resultado_kg": null,
-    "previsibilidade_caixa": null,
-    "resumo_caixa_mes": null
-  },
-  {
-    "mes_ref": "2026-02-01",
-    "faturamento_bruto": "Opex",
-    "peso_total": 300000.0,
-    "lucro_bruto": 269934.33,
-    "margem_kg": 29777.18,
-    "custo_operacao": 299711.51,
-    "custo_kg": null,
-    "resultado_operacional": null,
-    "resultado_kg": null,
-    "previsibilidade_caixa": null,
-    "resumo_caixa_mes": null
-  },
-  {
-    "mes_ref": "2026-02-01",
-    "faturamento_bruto": "Impostos",
-    "peso_total": 35000.0,
-    "lucro_bruto": 47974.18,
-    "margem_kg": 0.0,
-    "custo_operacao": 47974.18,
-    "custo_kg": null,
-    "resultado_operacional": null,
-    "resultado_kg": null,
-    "previsibilidade_caixa": null,
-    "resumo_caixa_mes": null
-  },
-  {
-    "mes_ref": "2026-02-01",
-    "faturamento_bruto": "Juros e Tarifas",
-    "peso_total": 115000.0,
-    "lucro_bruto": 173639.73,
-    "margem_kg": 36109.1968,
-    "custo_operacao": 209748.93,
-    "custo_kg": null,
-    "resultado_operacional": null,
-    "resultado_kg": null,
-    "previsibilidade_caixa": null,
-    "resumo_caixa_mes": null
-  },
-  {
-    "mes_ref": "2026-02-01",
-    "faturamento_bruto": "Matéria-prima",
-    "peso_total": 3300000.0,
-    "lucro_bruto": 3391561.99,
-    "margem_kg": 979217.91,
-    "custo_operacao": 4370779.9,
-    "custo_kg": null,
-    "resultado_operacional": null,
-    "resultado_kg": null,
-    "previsibilidade_caixa": null,
-    "resumo_caixa_mes": null
-  },
-  {
-    "mes_ref": "2026-02-01",
-    "faturamento_bruto": "Mão de Obra",
-    "peso_total": 200000.0,
-    "lucro_bruto": 91220.51,
-    "margem_kg": 39886.65,
-    "custo_operacao": 131107.16,
-    "custo_kg": null,
-    "resultado_operacional": null,
-    "resultado_kg": null,
-    "previsibilidade_caixa": null,
-    "resumo_caixa_mes": null
-  },
-  {
-    "mes_ref": "2026-02-01",
-    "faturamento_bruto": "Comissária",
-    "peso_total": 0.0,
-    "lucro_bruto": 863472.48,
-    "margem_kg": 90214.27,
-    "custo_operacao": 953686.75,
-    "custo_kg": null,
-    "resultado_operacional": null,
-    "resultado_kg": null,
-    "previsibilidade_caixa": null,
-    "resumo_caixa_mes": null
+    "mes_ref": "2026-02",
+    "conta": "COMISSARIA",
+    "pago": 863472.48,
+    "a_pagar": 90214.27
   }
 ];
+
+const PESO_VENDIDO = [
+  {
+    "mes_ref": "2026-01",
+    "peso_vendido": 61460.0
+  },
+  {
+    "mes_ref": "2026-02",
+    "peso_vendido": 59882.0
+  },
+  {
+    "mes_ref": "2026-03",
+    "peso_vendido": null
+  },
+  {
+    "mes_ref": "2026-04",
+    "peso_vendido": null
+  },
+  {
+    "mes_ref": "2026-05",
+    "peso_vendido": null
+  },
+  {
+    "mes_ref": "2026-06",
+    "peso_vendido": null
+  },
+  {
+    "mes_ref": "2026-07",
+    "peso_vendido": null
+  },
+  {
+    "mes_ref": "2026-08",
+    "peso_vendido": null
+  },
+  {
+    "mes_ref": "2026-09",
+    "peso_vendido": null
+  },
+  {
+    "mes_ref": "2026-10",
+    "peso_vendido": null
+  },
+  {
+    "mes_ref": "2026-11",
+    "peso_vendido": null
+  },
+  {
+    "mes_ref": "2026-12",
+    "peso_vendido": null
+  }
+];
+
+/* =======================
+   3) CUSTO OP (a partir da planilha)
+======================= */
+const CONTAS_CUSTO_KG = ["OPEX","IMPOSTOS","JUROS_TARIFAS"];
+const CONTAS_OUTRAS   = ["MATERIA_PRIMA","MAO_DE_OBRA","COMISSARIA"];
+
+const CUSTO_MESES = Array.from(new Set([
+  ...CUSTOS_CONTAS_MENSAL.map(r => r.mes_ref),
+  ...PESO_VENDIDO.map(r => r.mes_ref)
+].filter(Boolean))).sort();
+
+let custoMesIdx = 0;
+// abre sempre no mês atual (se existir na base); senão, usa o último mês disponível
+(function initCustoMesIdx(){
+  if (!CUSTO_MESES.length) { custoMesIdx = 0; return; }
+  const now = new Date();
+  const cur = `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,"0")}`;
+  const i = CUSTO_MESES.indexOf(cur);
+  custoMesIdx = (i>=0) ? i : Math.max(0, CUSTO_MESES.length - 1);
+})();
+
+function getPesoVendido(mesRef){
+  const row = PESO_VENDIDO.find(r => r.mes_ref === mesRef);
+  const v = row ? row.peso_vendido : null;
+  return (v === null || v === undefined) ? null : Number(v);
+}
+
+function getContasDoMes(mesRef){
+  return CUSTOS_CONTAS_MENSAL.filter(r => r.mes_ref === mesRef);
+}
+
+function setCustoMesIdx(nextIdx){
+  if (!CUSTO_MESES.length) return;
+  custoMesIdx = Math.max(0, Math.min(CUSTO_MESES.length-1, nextIdx));
+  renderCustoOp();
+}
+
+
+
+
+
+function renderCustoOp(){
+  if (!CUSTO_MESES.length) return;
+
+  const mesRef = CUSTO_MESES[custoMesIdx];
+  const pill = document.getElementById("custoMonthPill");
+  if (pill) pill.textContent = `Mês: ${mesRef}`;
+
+  const contas = getContasDoMes(mesRef);
+  const peso = getPesoVendido(mesRef);
+
+  const byConta = {};
+  contas.forEach(r => {
+    const k = String(r.conta||"").trim().toUpperCase();
+    byConta[k] = { pago: Number(r.pago||0), a_pagar: Number(r.a_pagar||0) };
+  });
+
+  const totalPagoCustoKg = CONTAS_CUSTO_KG.reduce((acc,c)=> acc + (byConta[c]?.pago||0), 0);
+  const custoKgTotal = (peso && peso>0) ? (totalPagoCustoKg / peso) : null;
+
+  const elTotal = document.getElementById("custoTotalPago");
+  if (elTotal) elTotal.textContent = fmtBRL(totalPagoCustoKg);
+
+  const elKg = document.getElementById("custoKgTotal");
+  if (elKg) elKg.textContent = custoKgTotal===null ? "—" : fmtBRL(custoKgTotal);
+
+  const elPeso = document.getElementById("pesoVendido");
+  if (elPeso) elPeso.textContent = (peso===null) ? "—" : `${peso.toLocaleString("pt-BR",{maximumFractionDigits:0})} kg`;
+
+  const gridA = document.getElementById("contasCompoemGrid");
+  if (gridA){
+    gridA.innerHTML = "";
+
+    // Card TOTAL (somatório das contas que compõem o custo/kg)
+    const totalCard = document.createElement("div");
+    totalCard.className = "kpi";
+    totalCard.innerHTML = `
+      <div class="label">TOTAL</div>
+      <div class="value">${custoKgTotal===null ? "—" : fmtBRL(custoKgTotal)}</div>
+      <div class="sub">Custo/kg (pago)</div>
+    `;
+    gridA.appendChild(totalCard);
+
+    CONTAS_CUSTO_KG.forEach(nome => {
+      const pago = byConta[nome]?.pago || 0;
+      const ck = (peso && peso>0) ? (pago/peso) : null;
+
+      const card = document.createElement("div");
+      card.className = "kpi";
+      card.innerHTML = `
+        <div class="label">${nome.replaceAll("_"," ")}</div>
+        <div class="value">${fmtBRL(pago)}</div>
+        <div class="sub">${ck===null ? "—" : fmtBRL(ck)}</div>
+      `;
+      gridA.appendChild(card);
+    });
+  }
+
+  const gridB = document.getElementById("contasOutrasGrid");
+  if (gridB){
+    gridB.innerHTML = "";
+    CONTAS_OUTRAS.forEach(nome => {
+      const pago = byConta[nome]?.pago || 0;
+      const ap = byConta[nome]?.a_pagar || 0;
+
+      const card = document.createElement("div");
+      card.className = "kpi other";
+      card.innerHTML = `
+        <div class="label">${nome.replaceAll("_"," ")}</div>
+        <div class="value">${pago ? fmtBRL(pago) : "—"}</div>
+        <div class="sub">A pagar ${ap ? fmtBRL(ap) : "—"}</div>
+      `;
+      gridB.appendChild(card);
+    });
+  }
+
+  const prevBtn = document.getElementById("custoPrevBtn");
+  const nextBtn = document.getElementById("custoNextBtn");
+  if (prevBtn) prevBtn.disabled = (custoMesIdx<=0);
+  if (nextBtn) nextBtn.disabled = (custoMesIdx>=CUSTO_MESES.length-1);
+}
+
+
+/* ========= CUSTO OP — Modal de detalhes ========= */
+function openCustoDetalheModal(){
+  const mesRef = CUSTO_MESES[custoMesIdx];
+  const contas = getContasDoMes(mesRef);
+  const peso = getPesoVendido(mesRef);
+
+  const byConta = {};
+  contas.forEach(r => {
+    const k = String(r.conta||"").trim().toUpperCase();
+    if (!k) return;
+    byConta[k] = { pago: Number(r.pago||0), a_pagar: Number(r.a_pagar||0) };
+  });
+
+  const sumContas = (names, field)=> names.reduce((a,n)=> a + ((byConta[n]?.[field])||0), 0);
+  const totalPago = sumContas(CONTAS_CUSTO_KG, "pago");
+  const totalAPagar = sumContas(CONTAS_CUSTO_KG, "a_pagar");
+  const custoKg = (peso && peso>0) ? (totalPago / peso) : null;
+
+  const title = document.getElementById("custoModalTitle");
+  const sub = document.getElementById("custoModalSub");
+  if (title) title.textContent = `Detalhe do Custo Op. — ${mesRef}`;
+  if (sub) { sub.textContent = ""; sub.style.display = "none"; }
+
+  const elTP = document.getElementById("custoModalTotalPago");
+  const elTA = document.getElementById("custoModalTotalAPagar");
+  const elCK = document.getElementById("custoModalCustoKg");
+  const elP = document.getElementById("custoModalPeso");
+  if (elTP) elTP.textContent = fmtBRL(totalPago);
+  if (elTA) elTA.textContent = totalAPagar ? fmtBRL(totalAPagar) : "—";
+  if (elCK) elCK.textContent = custoKg===null ? "—" : fmtBRL(custoKg);
+  if (elP) elP.textContent = (peso===null) ? "—" : `${peso.toLocaleString("pt-BR",{maximumFractionDigits:0})} kg`;
+
+  function buildContaCard(nome, pago, ap){
+    const ckPago = (peso && peso>0) ? (pago/peso) : null;
+
+    const card = document.createElement("div");
+    card.className = "kpi clickable";
+    card.setAttribute("role","button");
+    card.setAttribute("tabindex","0");
+    card.innerHTML = `
+      <div class="label">${nome.replaceAll("_"," ")}</div>
+      <div class="value">${pago ? fmtBRL(pago) : "—"}</div>
+      <div class="sub">A pagar ${ap ? fmtBRL(ap) : "—"}</div>
+      <div class="sub" style="margin-top:6px;">
+        Custo/kg (pago): ${ckPago===null ? "—" : fmtBRL(ckPago)}
+      </div>
+    `;
+    const copy = ()=>{ try{ navigator.clipboard.writeText(nome.replaceAll("_"," ")); }catch(e){} };
+    card.addEventListener("click", copy);
+    card.addEventListener("keydown", (e)=>{ if(e.key==="Enter"||e.key===" "){ e.preventDefault(); copy(); }});
+    return card;
+  }
+
+  const gridA = document.getElementById("custoModalCompoemGrid");
+  if (gridA){
+    gridA.innerHTML = "";
+    CONTAS_CUSTO_KG.forEach(nome=>{
+      const pago = byConta[nome]?.pago || 0;
+      const ap = byConta[nome]?.a_pagar || 0;
+      gridA.appendChild(buildContaCard(nome, pago, ap));
+    });
+  }
+const modal = document.getElementById("custoModal");
+  if (modal){
+    modal.style.display = "flex";
+    modal.setAttribute("aria-hidden","false");
+  }
+}
+function closeCustoModal(){
+  const modal = document.getElementById("custoModal");
+  if (modal){
+    modal.style.display = "none";
+    modal.setAttribute("aria-hidden","true");
+  }
+}
+
+function wireCustoModal(){
+  const card = document.getElementById("custoTotalCard");
+  if (card){
+    card.addEventListener("click", openCustoDetalheModal);
+    card.addEventListener("keydown", (e)=>{ if(e.key==="Enter"||e.key===" "){ e.preventDefault(); openCustoDetalheModal(); }});
+  }
+  const back = document.getElementById("custoModalBack");
+  const close = document.getElementById("custoModalClose");
+  if (back) back.addEventListener("click", closeCustoModal);
+  if (close) close.addEventListener("click", closeCustoModal);
+}
+
 
 /* =======================
    3) UTIL
@@ -1193,7 +1239,6 @@ function gerarTitulos(compra){
   const valorTotal = Number(compra.valor_total ?? (Number(compra.qtd_peso_kg||0) * Number(compra.preco_unit||0)));
   const vencs = [compra.venc_1, compra.venc_2, compra.venc_3].map(v => String(v||"").slice(0,10));
   const vals = [compra.valor_1, compra.valor_2, compra.valor_3].map(v => (v===""||v==null)? null : Number(v));
-  const status = (compra.status || "ABERTO").toUpperCase();
 
   const n = parcelas || [vencs[0],vencs[1],vencs[2]].filter(Boolean).length || 1;
   const valorPadrao = n ? Math.round((valorTotal/n)*100)/100 : valorTotal;
@@ -1214,7 +1259,6 @@ function gerarTitulos(compra){
       data_compra: String(compra.data_compra||"").slice(0,10),
       qtd_peso_kg: Number(compra.qtd_peso_kg||0),
       preco_unit: Number(compra.preco_unit||0),
-      status,
       parcelas_total: n
     });
   }
@@ -1277,7 +1321,7 @@ function calcDayTotals(arr){
   const hasOverdue = arr.some(t=>{
     const d = parseISO(t.vencimento);
     const today = new Date(); today.setHours(0,0,0,0);
-    return d && d < today && String(t.status||"").toUpperCase()!=="PAGO";
+    return d && d < today;
   });
   const hasToday = arr.some(t=>{
     const d = parseISO(t.vencimento);
@@ -1384,7 +1428,7 @@ function openDayModal(dateISO, titles){
       </div>
       <div class="nums">
         <div class="line1">${fmtBRL(Number(t.valor)||0)}</div>
-        <div class="line2">${t.status}</div>
+        <div class="line2">Parc: ${t.parcela}/${t.parcelas_total}</div>
       </div>
     `;
     list.appendChild(r);
@@ -1399,6 +1443,78 @@ function closeDayModal(){
   modal.style.display = "none";
   modal.setAttribute("aria-hidden","true");
 }
+
+function openWeekModal(startDate, endDate, titles){
+  const modal = document.getElementById("dayModal");
+  const title = document.getElementById("dayModalTitle");
+  const sub = document.getElementById("dayModalSub");
+  const list = document.getElementById("dayModalList");
+  if (!modal || !title || !sub || !list) return;
+
+  const niceStart = startDate ? startDate.toLocaleDateString("pt-BR") : "—";
+  const niceEnd = endDate ? endDate.toLocaleDateString("pt-BR") : "—";
+  title.textContent = `Pagamentos da semana`;
+  const total = titles.reduce((a,x)=>a+(Number(x.valor)||0),0);
+  sub.textContent = `${niceStart} a ${niceEnd} • ${titles.length} títulos • Total ${fmtBRL(total)}`;
+
+  list.innerHTML = "";
+
+  // Agrupa por fornecedor
+  const byF = new Map();
+  for (const t of titles){
+    const k = String(t.fornecedor||"—").trim() || "—";
+    const cur = byF.get(k) || {fornecedor:k, total:0, items:[]};
+    cur.total += Number(t.valor)||0;
+    cur.items.push(t);
+    byF.set(k, cur);
+  }
+  const groups = Array.from(byF.values()).sort((a,b)=>b.total-a.total);
+
+  if (!groups.length){
+    list.innerHTML = `<div class="home-card"><div class="k">Sem pagamentos nesta semana</div><div class="s">Não há vencimentos no período.</div></div>`;
+  } else {
+    for (const g of groups){
+      // Header do fornecedor
+      const head = document.createElement("div");
+      head.className = "home-card";
+      head.style.margin = "10px 0";
+      head.innerHTML = `
+        <div class="k">${g.fornecedor}</div>
+        <div class="v" style="font-size:18px;margin-top:6px;">${fmtBRL(g.total)}</div>
+        <div class="s" style="margin-top:6px;">${g.items.length} títulos</div>
+      `;
+      list.appendChild(head);
+
+      // Itens do fornecedor
+      const sorted = g.items.slice().sort((a,b)=>
+        String(a.vencimento||"").localeCompare(String(b.vencimento||"")) ||
+        String(a.produto||"").localeCompare(String(b.produto||"")) ||
+        (Number(a.parcela||0)-Number(b.parcela||0))
+      );
+      for (const t of sorted){
+        const r = document.createElement("div");
+        r.className = "hrow";
+        r.innerHTML = `
+          <div>
+            <div class="m">${t.produto}</div>
+            <div style="color:var(--muted);font-size:12px;margin-top:4px;line-height:1.25;">
+              Venc: ${t.vencimento} • Parc: ${t.parcela}/${t.parcelas_total} • Compra: ${t.data_compra || "—"}
+            </div>
+          </div>
+          <div class="nums">
+            <div class="line1">${fmtBRL(Number(t.valor)||0)}</div>
+            <div class="line2">${t.categoria ? t.categoria : "—"}</div>
+          </div>
+        `;
+        list.appendChild(r);
+      }
+    }
+  }
+
+  modal.style.display = "flex";
+  modal.setAttribute("aria-hidden","false");
+}
+
 
 function setPeriodPills(){
   const p1 = document.getElementById("periodPill");
@@ -1428,7 +1544,7 @@ function calcKPIs(){
   // KPIs e cards por fornecedor (baseado no mês selecionado do calendário, por vencimento)
   const today = new Date(); today.setHours(0,0,0,0);
 
-  const open = TITULOS.filter(t => (String(t.status||"").toUpperCase()!=="PAGO"));
+  const open = TITULOS.slice(); // sem status
 
   // mês ativo (se não existir, usa mês atual)
   const now = new Date(); now.setHours(0,0,0,0);
@@ -1457,6 +1573,27 @@ function calcKPIs(){
   const kpiMesKg = document.getElementById("kpiMesKg");
   if (kpiMesValor) kpiMesValor.textContent = fmtBRL(totalMesValor);
   if (kpiMesKg) kpiMesKg.textContent = `${totalMesKg.toLocaleString("pt-BR",{maximumFractionDigits:0})} kg`;
+
+  // KPI: Pagamentos da semana (semana atual, segunda a domingo, por vencimento)
+  const startWeek = new Date(today);
+  const dow = startWeek.getDay(); // 0=Dom ... 6=Sáb
+  const offset = (dow + 6) % 7;   // quantos dias voltar para segunda
+  startWeek.setDate(startWeek.getDate() - offset);
+  startWeek.setHours(0,0,0,0);
+
+  const endWeek = new Date(startWeek);
+  endWeek.setDate(endWeek.getDate() + 6);
+  endWeek.setHours(23,59,59,999);
+
+  const inWeek = open.filter(t => {
+    const d = parseISO(t.vencimento);
+    return d && d >= startWeek && d <= endWeek;
+  });
+
+  const totalSemanaValor = sumValor(inWeek);
+  const kpiSemanaValor = document.getElementById("kpiSemanaValor");
+  if (kpiSemanaValor) kpiSemanaValor.textContent = fmtBRL(totalSemanaValor);
+
 
   // Cards por fornecedor
   const byFornecedor = new Map();
@@ -1508,6 +1645,14 @@ function calcKPIs(){
       renderComprasList("");
     };
   }
+
+  // Card semana (clique abre lista da semana por fornecedor)
+  const cardSemana = document.getElementById("cardSemana");
+  if (cardSemana){
+    cardSemana.onclick = ()=>{
+      openWeekModal(startWeek, endWeek, inWeek);
+    };
+  }
 }
 
 
@@ -1550,18 +1695,19 @@ function renderFornecedor(){
     const tot = Number(x.parcelas_total||1) || 1;
     return a + (kg / tot);
   },0);
-
-  const pago = inMonth.filter(t => String(t.status||"").toUpperCase()==="PAGO");
-  const aberto = inMonth.filter(t => String(t.status||"").toUpperCase()!=="PAGO");
+  const aberto = inMonth; // sem status (módulo informativo)
 
   const today = new Date(); today.setHours(0,0,0,0);
   const vencido = aberto.filter(t => {
     const d = parseISO(t.vencimento);
     return d && d < today;
   });
-
   const pagarMes = sum(aberto);
-  const pagoMes = sum(pago);
+  const aVencer = aberto.filter(t => {
+    const d = parseISO(t.vencimento);
+    return d && d >= today;
+  });
+  const aVencerMes = sum(aVencer);
   const vencidoMes = sum(vencido);
   const kgMes = sumKg(inMonth);
 
@@ -1570,13 +1716,13 @@ function renderFornecedor(){
   const elVenc = document.getElementById("fornVencidoMes");
   const elKg = document.getElementById("fornKgMes");
   if (elPagar) elPagar.textContent = fmtBRL(pagarMes);
-  if (elPago) elPago.textContent = fmtBRL(pagoMes);
+  if (elPago) elPago.textContent = fmtBRL(aVencerMes);
   if (elVenc) elVenc.textContent = fmtBRL(vencidoMes);
   if (elKg) elKg.textContent = `${kgMes.toLocaleString("pt-BR",{maximumFractionDigits:0})} kg`;
 
   const sub = document.getElementById("fornSub");
   if (sub){
-    sub.textContent = `${inMonth.length} títulos no mês • ${fmtBRL(sum(inMonth))} (pago + aberto)`;
+    sub.textContent = `${inMonth.length} títulos no mês • ${fmtBRL(sum(inMonth))} total do mês`;
   }
 
   // Lista de títulos do mês
@@ -1596,7 +1742,7 @@ function renderFornecedor(){
         </div>
         <div class="nums">
           <div class="line1">${fmtBRL(Number(t.valor)||0)}</div>
-          <div class="line2">${t.status}</div>
+          <div class="line2">Parc: ${t.parcela}/${t.parcelas_total}</div>
         </div>
       `;
       list.appendChild(r);
@@ -1687,24 +1833,13 @@ function renderComprasList(q=""){
       </div>
       <div class="nums">
         <div class="line1">${fmtBRL(Number(t.valor)||0)}</div>
-        <div class="line2">${t.status}</div>
+        <div class="line2">Parc: ${t.parcela}/${t.parcelas_total}</div>
       </div>
     `;
     titleEl.appendChild(r);
   }
 }
 
-function renderCustoOp(){
-  // placeholder simples: se tiver um item, usa o último
-  if (!GERENCIAL_MENSAL.length) return;
-
-  const last = GERENCIAL_MENSAL[GERENCIAL_MENSAL.length-1];
-  document.getElementById("custoPill").textContent = `Mês: ${last.mes_ref || "—"}`;
-  document.getElementById("kCustoOp").textContent = fmtBRL(Number(last.custo_operacao||0));
-  document.getElementById("kCustoKg").textContent = (Number(last.custo_kg||0)).toLocaleString("pt-BR",{minimumFractionDigits:2,maximumFractionDigits:2});
-  document.getElementById("kResOp").textContent = fmtBRL(Number(last.resultado_operacional||0));
-  document.getElementById("kPrev").textContent = fmtBRL(Number(last.previsibilidade_caixa||0));
-}
 
 /* =======================
    6) NAVEGAÇÃO
@@ -1717,6 +1852,7 @@ function showView(id){
   document.querySelectorAll(".bottom-nav .item").forEach(i => i.classList.remove("active"));
   const nav = document.querySelector(`.bottom-nav .item[data-view="${id}"]`);
   if (nav) nav.classList.add("active");
+  if (id === "view-c-custo") renderCustoOp();
 }
 
 function initNav(){
@@ -1783,9 +1919,14 @@ document.getElementById("calNext").addEventListener("click", ()=>{
   renderCalendar(document.getElementById("q").value);
   if (document.getElementById("view-c-fornecedor")?.classList.contains("active")) renderFornecedor();
 });
+
+// Navegação de mês — Custo Op.
+document.getElementById("custoPrevBtn")?.addEventListener("click", ()=> setCustoMesIdx(custoMesIdx-1));
+document.getElementById("custoNextBtn")?.addEventListener("click", ()=> setCustoMesIdx(custoMesIdx+1));
 document.getElementById("dayModalClose").addEventListener("click", closeDayModal);
 document.getElementById("dayModalBack").addEventListener("click", closeDayModal);
-document.addEventListener("keydown", (e)=>{ if (e.key==="Escape") closeDayModal(); });
+wireCustoModal();
+document.addEventListener("keydown", (e)=>{ if (e.key==="Escape"){ closeDayModal(); closeCustoModal(); } });
 
 const _homePrev = document.getElementById("homePrevMonth");
 if (_homePrev){
