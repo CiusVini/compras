@@ -1,0 +1,1576 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>VIMACOM — Compras</title>
+<style>
+/* ====== Tema (mesma linguagem visual do painel atual) ====== */
+:root{
+  --bg:#0b1220;--text:#e8eefc;--muted:#a9b5d1;--line:#24324f;
+  --green:#2ecc71;--yellow:#f1c40f;--red:#e74c3c;--shadow:0 10px 30px rgba(0,0,0,.35);
+  --radius:18px;
+}
+body{margin:0;font-family:ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Arial;background:linear-gradient(180deg,#0b1220 0%, #0b1220 100%);color:var(--text);}
+.wrap{max-width:460px;margin:0 auto;padding:18px 14px 120px;}
+.topbar{display:flex;align-items:center;justify-content:space-between;gap:10px;position:sticky;top:0;z-index:5;padding:12px 0;backdrop-filter:blur(10px);}
+.brand{display:flex;align-items:center;gap:10px;}
+.brand img{width:44px;height:44px;object-fit:contain;border-radius:12px;border:1px solid rgba(255,255,255,.06);background:rgba(255,255,255,.02);}
+.pill{font-size:12px;color:var(--muted);border:1px solid var(--line);padding:8px 10px;border-radius:999px;background:rgba(18,26,43,.6);}
+.iconbtn{width:40px;height:40px;border-radius:14px;border:1px solid var(--line);background:rgba(18,26,43,.6);display:inline-flex;align-items:center;justify-content:center;cursor:pointer;box-shadow:var(--shadow);}
+.iconbtn svg{width:20px;height:20px;stroke:rgba(232,238,252,.85);fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;}
+.section{margin-top:16px;}
+.home-cards{margin-top:14px;display:flex;flex-direction:column;gap:14px;}
+.home-card{background:rgba(18,26,43,.72);border:1px solid var(--line);border-radius:22px;padding:16px 16px;box-shadow:var(--shadow);}
+.home-card .k{color:var(--muted);font-size:13px;}
+.home-card .v{font-size:26px;font-weight:950;letter-spacing:.2px;margin-top:6px;}
+.home-card .s{color:rgba(232,238,252,.85);font-size:13px;margin-top:8px;}
+.home-card .muted{color:var(--muted);}
+.grid-kpi{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-top:8px;}
+.kpi{background:rgba(18,26,43,.7);border:1px solid var(--line);border-radius:var(--radius);padding:12px;box-shadow:var(--shadow);}
+.kpi .label{color:var(--muted);font-size:12px;}
+.kpi .value{font-size:18px;font-weight:800;margin-top:6px;}
+.hlist{display:flex;flex-direction:column;gap:10px;margin-top:10px;}
+.hrow{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;padding:12px 14px;border-radius:16px;background:rgba(18,26,43,.70);border:1px solid rgba(255,255,255,.07);box-shadow:var(--shadow);}
+.hrow .m{font-weight:950;font-size:13px;letter-spacing:.2px;white-space:nowrap;}
+.hrow .nums{flex:1;min-width:0;text-align:right;}
+.hrow .nums .line1{font-weight:950;font-size:14px;}
+.hrow .nums .line2{color:var(--muted);font-size:12px;margin-top:4px;}
+.search{
+  display:flex; align-items:center; gap:10px;
+  padding:10px 12px; border-radius:999px;
+  background:rgba(255,255,255,.04);
+  border:1px solid rgba(255,255,255,.08);
+  box-shadow: var(--shadow);
+}
+.search .sico{width:18px;height:18px;opacity:.9}
+.search .sico svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;opacity:.9}
+.search input{
+  flex:1; background:transparent; border:0; outline:none;
+  color:var(--text); font-size:14px;
+}
+.search input::placeholder{color:rgba(255,255,255,.45)}
+.search .sbtn{
+  width:34px;height:34px;border-radius:999px;
+  display:grid;place-items:center;
+  background:rgba(255,255,255,.04);
+  border:1px solid rgba(255,255,255,.08);
+  cursor:pointer;
+}
+.search .sbtn svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;opacity:.9}
+
+/* Bottom navigation */
+.bottom-nav{
+  position:fixed;left:0;right:0;bottom:0;height:72px;
+  padding:10px 14px calc(10px + env(safe-area-inset-bottom));
+  background:rgba(11,18,32,0.92);backdrop-filter: blur(10px);
+  border-top:1px solid rgba(255,255,255,0.06);
+  display:flex;justify-content:space-around;align-items:center;z-index:1200;
+}
+.bottom-nav .item{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;color:rgba(232,238,252,0.72);font-size:12px;cursor:pointer;user-select:none;}
+.bottom-nav .item .ico{width:22px;height:22px;display:flex;align-items:center;justify-content:center;border-radius:10px;}
+.ico svg{width:22px;height:22px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;}
+.bottom-nav .item.active{color:#2ecc71;}
+.bottom-nav .item.active .ico{background:rgba(46,204,113,0.14);box-shadow: 0 0 0 1px rgba(46,204,113,0.18) inset;}
+.view{display:none;padding-bottom:110px;}
+.view.active{display:block;}
+/* Login */
+.login-logo{
+  width:260px;max-width:85%;height:auto;margin-bottom:32px;padding:18px;border-radius:20px;
+  opacity:.95;filter: drop-shadow(0 10px 30px rgba(0,0,0,0.55));
+  background: radial-gradient(circle at center,rgba(255,255,255,0.08) 0%,rgba(255,255,255,0.03) 35%,rgba(255,255,255,0.00) 65%);
+}
+
+/* Calendar grid */
+.cal-wrap{margin-top:14px;}
+.cal-head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:10px 0 12px;}
+.cal-head .ttl{font-weight:900;font-size:16px;letter-spacing:.2px;}
+.cal-head .nav{display:flex;gap:8px;align-items:center;}
+.cal-btn{
+  width:40px;height:40px;border-radius:14px;border:1px solid var(--line);
+  background:rgba(18,26,43,.6);display:inline-flex;align-items:center;justify-content:center;
+  cursor:pointer;box-shadow:var(--shadow);
+}
+.cal-btn svg{width:18px;height:18px;stroke:rgba(232,238,252,.85);fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;}
+.cal-month{min-width:140px;text-align:center;font-size:13px;color:rgba(232,238,252,.85);border:1px solid var(--line);background:rgba(18,26,43,.6);
+  padding:10px 12px;border-radius:999px;box-shadow:var(--shadow);}
+.cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:8px;}
+.cal-dow{color:var(--muted);font-size:11px;text-align:center;margin-bottom:6px;}
+.daycell{
+  border-radius:16px;border:1px solid rgba(255,255,255,.07);
+  background:rgba(18,26,43,.62);box-shadow:var(--shadow);
+  padding:10px 10px;min-height:78px;cursor:pointer;position:relative;overflow:hidden;
+}
+.daycell.muted{opacity:.45;cursor:default;}
+.daycell .d{font-weight:900;font-size:13px;}
+.daycell .meta{margin-top:8px;display:flex;flex-direction:column;gap:4px;}
+.daycell .meta .t{font-weight:900;font-size:12px;}
+.daycell .meta .q{color:var(--muted);font-size:11px;}
+.daycell.state-future::before,
+.daycell.state-today::before,
+.daycell.state-overdue::before{
+  content:"";position:absolute;inset:0;opacity:.14;
+}
+.daycell.state-future::before{background:var(--green);}
+.daycell.state-today::before{background:var(--yellow);opacity:.18;}
+.daycell.state-overdue::before{background:var(--red);opacity:.18;}
+.daycell .badge{
+  position:absolute;top:10px;right:10px;
+  font-size:11px;font-weight:900; padding:6px 10px;border-radius:999px;
+  border:1px solid rgba(255,255,255,.10);background:rgba(11,18,32,.55);color:rgba(232,238,252,.85);
+}
+/* Modal */
+.modal{position:fixed;inset:0;z-index:2000;display:none;align-items:flex-end;justify-content:center;}
+.modal .back{position:absolute;inset:0;background:rgba(0,0,0,.55);backdrop-filter:blur(6px);}
+.modal .sheet{
+  position:relative;width:min(520px,96vw);max-height:82vh;overflow:auto;
+  border-radius:22px 22px 0 0;
+  background:rgba(11,18,32,.96);border:1px solid rgba(255,255,255,.08);
+  box-shadow:0 30px 70px rgba(0,0,0,.55);
+  padding:16px 14px 18px;
+}
+.modal .sheet .top{
+  display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:10px;
+}
+.modal .sheet .top .h{font-weight:950;font-size:16px;}
+.modal .sheet .top .sub{color:var(--muted);font-size:12px;margin-top:2px;}
+.modal .close{
+  width:40px;height:40px;border-radius:14px;border:1px solid rgba(255,255,255,.10);
+  background:rgba(18,26,43,.65);display:inline-flex;align-items:center;justify-content:center;cursor:pointer;
+}
+.modal .close svg{width:18px;height:18px;stroke:rgba(232,238,252,.85);fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;}
+
+</style>
+</head>
+<body>
+
+<!-- LOGIN -->
+<div id="loginScreen" style="position:fixed;inset:0;z-index:9999;background:#0b1220;display:flex;align-items:center;justify-content:center;">
+  <div style="width:100%;max-width:360px;padding:24px 18px;text-align:center;box-sizing:border-box;margin:0 auto;">
+    <img src="logo.png" alt="VIMACOM" class="login-logo">
+    <input id="loginPassword" type="password" placeholder="Digite a senha"
+      style="width:100%;box-sizing:border-box;padding:14px 16px;border-radius:12px;border:1px solid #24324f;
+             background:#121a2b;color:#e8eefc;font-size:16px;outline:none;">
+    <button id="loginBtn"
+      style="margin-top:16px;width:100%;box-sizing:border-box;padding:14px;border-radius:12px;
+             border:none;background:#2ecc71;color:#0b1220;font-weight:800;font-size:16px;cursor:pointer;">
+      Acessar Compras
+    </button>
+    <div id="loginError" style="display:none;margin-top:14px;color:#e74c3c;font-size:13px;">
+      Senha incorreta
+    </div>
+  </div>
+</div>
+
+<div class="wrap">
+
+  <!-- ====== VIEW: HOME COMPRAS ====== -->
+  <div class="view" id="view-c-home">
+    <div class="topbar">
+      <div class="brand">
+        <img src="logo.png" alt="VIMACOM" />
+      </div>
+      <div style="display:flex;align-items:center;gap:10px;">
+        <div class="pill" id="periodPill">Período: —</div>
+        <button class="iconbtn" id="btnHoje" title="Hoje">
+          <svg viewBox="0 0 24 24"><path d="M8 7V3"/><path d="M16 7V3"/><path d="M4 11h16"/><path d="M5 21h14a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2z"/></svg>
+        </button>
+      </div>
+    </div>
+
+    <div class="home-cards">
+      <div class="home-card">
+        <div class="k">A pagar hoje</div>
+        <div class="v" id="kpiHoje">—</div>
+        <div class="s"><span class="muted" id="kpiHojeN">—</span> títulos</div>
+      </div>
+
+      <div class="home-card">
+        <div class="k">Próximos 7 dias</div>
+        <div class="v" id="kpi7">—</div>
+        <div class="s"><span class="muted" id="kpi7N">—</span> títulos</div>
+      </div>
+
+      <div class="home-card">
+        <div class="k">Total do mês</div>
+        <div class="v" id="kpiMes">—</div>
+        <div class="s"><span class="muted" id="kpiMesN">—</span> títulos</div>
+      </div>
+
+      <div class="home-card">
+        <div class="k">Em aberto (período)</div>
+        <div class="v" id="kpiAberto">—</div>
+        <div class="s"><span class="muted" id="kpiAbertoN">—</span> títulos</div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div style="display:flex;align-items:flex-end;justify-content:space-between;margin:12px 0 8px;">
+        <div style="font-weight:800;font-size:14px;">Próximos vencimentos</div>
+        <div style="font-size:12px;color:var(--muted);">Vencimento • Valor</div>
+      </div>
+      <div class="hlist" id="nextList"></div>
+    </div>
+  </div>
+
+  <!-- ====== VIEW: LISTA / CALENDÁRIO (POR DIA) ====== -->
+  <div class="view" id="view-c-compras">
+    <div class="topbar">
+      <div style="font-weight:900;font-size:22px;">Compras</div>
+      <div style="display:flex;align-items:center;gap:10px;">
+        <div class="pill" id="periodPill2">Período: —</div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="search">
+        <div class="sico" aria-hidden="true">
+          <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
+        </div>
+        <input id="q" type="text" placeholder="Buscar fornecedor ou produto" autocomplete="off" />
+        <button class="sbtn" id="qClear" aria-label="Limpar busca" title="Limpar">
+          <svg viewBox="0 0 24 24"><path d="M18 6 6 18"/><path d="M6 6l12 12"/></svg>
+        </button>
+      </div>
+    </div>
+
+    
+<div class="section cal-wrap">
+  <div class="cal-head">
+    <div class="ttl">Calendário de vencimentos</div>
+    <div class="nav">
+      <button class="cal-btn" id="calPrev" title="Mês anterior">
+        <svg viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg>
+      </button>
+      <div class="cal-month" id="calMonth">—</div>
+      <button class="cal-btn" id="calNext" title="Próximo mês">
+        <svg viewBox="0 0 24 24"><path d="M9 6l6 6-6 6"/></svg>
+      </button>
+    </div>
+  </div>
+
+  <div class="cal-grid" id="calDow">
+    <div class="cal-dow">D</div><div class="cal-dow">S</div><div class="cal-dow">T</div>
+    <div class="cal-dow">Q</div><div class="cal-dow">Q</div><div class="cal-dow">S</div><div class="cal-dow">S</div>
+  </div>
+  <div class="cal-grid" id="calGrid"></div>
+</div>
+
+<div class="section">
+  <div style="display:flex;align-items:flex-end;justify-content:space-between;margin:12px 0 8px;">
+    <div style="font-weight:800;font-size:14px;">Vencimentos por dia (lista)</div>
+    <div style="font-size:12px;color:var(--muted);">Qtd • Total</div>
+  </div>
+  <div class="hlist" id="byDay"></div>
+</div>
+
+
+    <div class="section">
+      <div style="display:flex;align-items:flex-end;justify-content:space-between;margin:12px 0 8px;">
+        <div style="font-weight:800;font-size:14px;">Histórico (títulos)</div>
+        <div style="font-size:12px;color:var(--muted);">Fornecedor • Produto</div>
+      </div>
+      <div class="hlist" id="titleList"></div>
+    </div>
+  </div>
+
+  <!-- ====== VIEW: CUSTO OP (placeholder para ligar depois) ====== -->
+  <div class="view" id="view-c-custo">
+    <div class="topbar">
+      <div style="font-weight:900;font-size:22px;">Custo Op.</div>
+      <div class="pill" id="custoPill">Mês: —</div>
+    </div>
+
+    <div class="section">
+      <div class="grid-kpi">
+        <div class="kpi"><div class="label">Custo Operação</div><div class="value" id="kCustoOp">—</div></div>
+        <div class="kpi"><div class="label">Custo / Kg</div><div class="value" id="kCustoKg">—</div></div>
+        <div class="kpi"><div class="label">Resultado Oper.</div><div class="value" id="kResOp">—</div></div>
+        <div class="kpi"><div class="label">Previsibilidade</div><div class="value" id="kPrev">—</div></div>
+      </div>
+
+      <div class="section" style="margin-top:14px;">
+        <div class="home-card">
+          <div class="k">Nota</div>
+          <div class="s">Esta tela está pronta. No próximo passo a gente liga ela na sua base mensal (GERENCIAL_MENSAL) igual no módulo Vendas.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- Bottom Nav (Compras) -->
+<nav class="bottom-nav" id="bottomNav" style="display:none;">
+  <div class="item active" data-view="view-c-home">
+    <div class="ico">
+      <svg viewBox="0 0 24 24"><path d="M3 10.5 12 3l9 7.5V21a1 1 0 0 1-1 1h-5v-7H9v7H4a1 1 0 0 1-1-1z"/></svg>
+    </div>
+    <div>Início</div>
+  </div>
+  <div class="item" data-view="view-c-compras">
+    <div class="ico">
+      <svg viewBox="0 0 24 24"><path d="M6 6h15l-1.5 9h-12z"/><path d="M6 6 5 3H2"/><path d="M9 20a1 1 0 1 0 0-2 1 1 0 0 0 0 2z"/><path d="M18 20a1 1 0 1 0 0-2 1 1 0 0 0 0 2z"/></svg>
+    </div>
+    <div>Compras</div>
+  </div>
+  <div class="item" data-view="view-c-custo">
+    <div class="ico">
+      <svg viewBox="0 0 24 24"><path d="M3 3v18h18"/><path d="M7 14l3-3 4 4 6-8"/></svg>
+    </div>
+    <div>Custo Op.</div>
+  </div>
+</nav>
+
+
+<!-- Modal: detalhes do dia -->
+<div class="modal" id="dayModal" aria-hidden="true">
+  <div class="back" id="dayModalBack"></div>
+  <div class="sheet" role="dialog" aria-modal="true" aria-labelledby="dayModalTitle">
+    <div class="top">
+      <div>
+        <div class="h" id="dayModalTitle">—</div>
+        <div class="sub" id="dayModalSub">—</div>
+      </div>
+      <button class="close" id="dayModalClose" aria-label="Fechar">
+        <svg viewBox="0 0 24 24"><path d="M18 6 6 18"/><path d="M6 6l12 12"/></svg>
+      </button>
+    </div>
+    <div class="hlist" id="dayModalList"></div>
+  </div>
+</div>
+
+<script>
+/* =======================
+   1) CONFIG
+======================= */
+const APP_PASSWORD = "1234"; // troque pela mesma senha do painel atual
+
+/* =======================
+   2) DADOS (cole aqui diariamente)
+   - 1 linha = 1 compra (COMPRAS_BASE)
+======================= */
+const COMPRAS_BASE = [
+  {
+    "compra_id": 1,
+    "data_compra": "2025-10-24",
+    "fornecedor": "STL",
+    "produto": "BARRAS",
+    "categoria": "MATÉRIA PRIMA",
+    "qtd_peso_kg": 12000.0,
+    "preco_unit": 23.5,
+    "valor_total": 282000.0,
+    "condicao_pgto": "3X",
+    "parcelas": 3,
+    "venc_1": "2026-02-25",
+    "valor_1": 94000.0,
+    "venc_2": "2026-02-27",
+    "valor_2": 94000.0,
+    "venc_3": "2026-03-04",
+    "valor_3": 94000.0,
+    "status": "PARCIAL"
+  },
+  {
+    "compra_id": 2,
+    "data_compra": "2025-10-28",
+    "fornecedor": "STL",
+    "produto": "BARRAS",
+    "categoria": "MATÉRIA PRIMA",
+    "qtd_peso_kg": 12000.0,
+    "preco_unit": 23.5,
+    "valor_total": 282000.0,
+    "condicao_pgto": "3X",
+    "parcelas": 3,
+    "venc_1": "2026-03-06",
+    "valor_1": 94000.0,
+    "venc_2": "2026-03-11",
+    "valor_2": 94000.0,
+    "venc_3": "2026-03-13",
+    "valor_3": 94000.0,
+    "status": "ABERTO"
+  },
+  {
+    "compra_id": 3,
+    "data_compra": "2025-10-28",
+    "fornecedor": "STL",
+    "produto": "BARRAS",
+    "categoria": "MATÉRIA PRIMA",
+    "qtd_peso_kg": 12000.0,
+    "preco_unit": 23.5,
+    "valor_total": 282000.0,
+    "condicao_pgto": "3X",
+    "parcelas": 3,
+    "venc_1": "2026-03-18",
+    "valor_1": 94000.0,
+    "venc_2": "2026-03-20",
+    "valor_2": 94000.0,
+    "venc_3": "2026-03-25",
+    "valor_3": 94000.0,
+    "status": "ABERTO"
+  },
+  {
+    "compra_id": 4,
+    "data_compra": "2025-10-30",
+    "fornecedor": "STL",
+    "produto": "BARRAS",
+    "categoria": "MATÉRIA PRIMA",
+    "qtd_peso_kg": 12000.0,
+    "preco_unit": 23.5,
+    "valor_total": 282000.0,
+    "condicao_pgto": "3X",
+    "parcelas": 3,
+    "venc_1": "2026-03-27",
+    "valor_1": 94000.0,
+    "venc_2": "2026-04-01",
+    "valor_2": 94000.0,
+    "venc_3": "2026-04-03",
+    "valor_3": 94000.0,
+    "status": "ABERTO"
+  },
+  {
+    "compra_id": 5,
+    "data_compra": "2025-10-30",
+    "fornecedor": "STL",
+    "produto": "BARRAS",
+    "categoria": "MATÉRIA PRIMA",
+    "qtd_peso_kg": 12000.0,
+    "preco_unit": 23.5,
+    "valor_total": 282000.0,
+    "condicao_pgto": "3X",
+    "parcelas": 3,
+    "venc_1": "2026-04-08",
+    "valor_1": 94000.0,
+    "venc_2": "2026-04-10",
+    "valor_2": 94000.0,
+    "venc_3": "2026-04-15",
+    "valor_3": 94000.0,
+    "status": "ABERTO"
+  },
+  {
+    "compra_id": 6,
+    "data_compra": "2025-10-31",
+    "fornecedor": "STL",
+    "produto": "BARRAS",
+    "categoria": "MATÉRIA PRIMA",
+    "qtd_peso_kg": 8000.0,
+    "preco_unit": 23.5,
+    "valor_total": 188000.0,
+    "condicao_pgto": "3X",
+    "parcelas": 3,
+    "venc_1": "2026-04-17",
+    "valor_1": 62666.67,
+    "venc_2": "2026-04-22",
+    "valor_2": 62666.67,
+    "venc_3": "2026-04-24",
+    "valor_3": 62666.67,
+    "status": "ABERTO"
+  },
+  {
+    "compra_id": 7,
+    "data_compra": "2025-11-28",
+    "fornecedor": "STL",
+    "produto": "BARRAS",
+    "categoria": "MATÉRIA PRIMA",
+    "qtd_peso_kg": 14000.0,
+    "preco_unit": 23.5,
+    "valor_total": 329000.0,
+    "condicao_pgto": "3X",
+    "parcelas": 3,
+    "venc_1": "2026-02-24",
+    "valor_1": 109666.67,
+    "venc_2": "2026-02-26",
+    "valor_2": 109666.67,
+    "venc_3": "2026-03-03",
+    "valor_3": 109666.67,
+    "status": "PARCIAL"
+  },
+  {
+    "compra_id": 8,
+    "data_compra": "2025-11-28",
+    "fornecedor": "STL",
+    "produto": "BARRAS",
+    "categoria": "MATÉRIA PRIMA",
+    "qtd_peso_kg": 14000.0,
+    "preco_unit": 23.5,
+    "valor_total": 329000.0,
+    "condicao_pgto": "3X",
+    "parcelas": 3,
+    "venc_1": "2026-03-05",
+    "valor_1": 109666.67,
+    "venc_2": "2026-03-10",
+    "valor_2": 109666.67,
+    "venc_3": "2026-03-12",
+    "valor_3": 109666.67,
+    "status": "ABERTO"
+  },
+  {
+    "compra_id": 9,
+    "data_compra": "2025-12-30",
+    "fornecedor": "STL",
+    "produto": "BARRAS",
+    "categoria": "MATÉRIA PRIMA",
+    "qtd_peso_kg": 9000.0,
+    "preco_unit": 23.5,
+    "valor_total": 211500.0,
+    "condicao_pgto": "3X",
+    "parcelas": 3,
+    "venc_1": "2026-03-16",
+    "valor_1": 70500.0,
+    "venc_2": "2026-03-19",
+    "valor_2": 70500.0,
+    "venc_3": "2026-03-26",
+    "valor_3": 70500.0,
+    "status": "ABERTO"
+  },
+  {
+    "compra_id": 10,
+    "data_compra": "2025-12-30",
+    "fornecedor": "STL",
+    "produto": "BARRAS",
+    "categoria": "MATÉRIA PRIMA",
+    "qtd_peso_kg": 9000.0,
+    "preco_unit": 23.5,
+    "valor_total": 211500.0,
+    "condicao_pgto": "3X",
+    "parcelas": 3,
+    "venc_1": "2026-03-30",
+    "valor_1": 70500.0,
+    "venc_2": "2026-04-06",
+    "valor_2": 70500.0,
+    "venc_3": "2026-04-13",
+    "valor_3": 70500.0,
+    "status": "ABERTO"
+  },
+  {
+    "compra_id": 11,
+    "data_compra": "2026-01-30",
+    "fornecedor": "JF PASQUA",
+    "produto": "VERG. COBRE",
+    "categoria": "MATÉRIA PRIMA",
+    "qtd_peso_kg": 8098.6,
+    "preco_unit": 82.56,
+    "valor_total": 668620.42,
+    "condicao_pgto": "3X",
+    "parcelas": 3,
+    "venc_1": "2026-02-23",
+    "valor_1": 222873.47,
+    "venc_2": "2026-03-02",
+    "valor_2": 222873.47,
+    "venc_3": "2026-03-09",
+    "valor_3": 222873.47,
+    "status": "PARCIAL"
+  },
+  {
+    "compra_id": 12,
+    "data_compra": "2026-01-30",
+    "fornecedor": "JF PASQUA",
+    "produto": "VERG. COBRE",
+    "categoria": "MATÉRIA PRIMA",
+    "qtd_peso_kg": 4174.3,
+    "preco_unit": 82.56,
+    "valor_total": 344630.21,
+    "condicao_pgto": "3X",
+    "parcelas": 3,
+    "venc_1": "2026-02-24",
+    "valor_1": 114876.74,
+    "venc_2": "2026-03-03",
+    "valor_2": 114876.74,
+    "venc_3": "2026-03-10",
+    "valor_3": 114876.74,
+    "status": "ABERTO"
+  },
+  {
+    "compra_id": 13,
+    "data_compra": "2026-01-30",
+    "fornecedor": "GDRW",
+    "produto": "VERG. COBRE",
+    "categoria": "MATÉRIA PRIMA",
+    "qtd_peso_kg": 4227.0,
+    "preco_unit": 84.1,
+    "valor_total": 355490.7,
+    "condicao_pgto": "3X",
+    "parcelas": 3,
+    "venc_1": "2026-03-11",
+    "valor_1": 118496.9,
+    "venc_2": "2026-03-17",
+    "valor_2": 118496.9,
+    "venc_3": "2026-03-24",
+    "valor_3": 118496.9,
+    "status": "ABERTO"
+  },
+  {
+    "compra_id": 14,
+    "data_compra": "2026-01-30",
+    "fornecedor": "STL",
+    "produto": "BARRAS",
+    "categoria": "MATÉRIA PRIMA",
+    "qtd_peso_kg": 9796.0,
+    "preco_unit": 24.5,
+    "valor_total": 240002.0,
+    "condicao_pgto": "3X",
+    "parcelas": 3,
+    "venc_1": "2026-04-02",
+    "valor_1": 80000.67,
+    "venc_2": "2026-04-09",
+    "valor_2": 80000.67,
+    "venc_3": "2026-04-16",
+    "valor_3": 80000.67,
+    "status": "ABERTO"
+  },
+  {
+    "compra_id": 15,
+    "data_compra": "2026-02-13",
+    "fornecedor": "JF PASQUA",
+    "produto": "VERG. COBRE",
+    "categoria": "MATÉRIA PRIMA",
+    "qtd_peso_kg": 8396.6,
+    "preco_unit": 82.11,
+    "valor_total": 689444.83,
+    "condicao_pgto": "3X",
+    "parcelas": 3,
+    "venc_1": "2026-03-06",
+    "valor_1": 229814.94,
+    "venc_2": "2026-03-13",
+    "valor_2": 229814.94,
+    "venc_3": "2026-03-20",
+    "valor_3": 229814.94,
+    "status": "ABERTO"
+  },
+  {
+    "compra_id": 16,
+    "data_compra": "2026-02-18",
+    "fornecedor": "GDRW",
+    "produto": "VERG. COBRE",
+    "categoria": "MATÉRIA PRIMA",
+    "qtd_peso_kg": 8431.0,
+    "preco_unit": 80.0,
+    "valor_total": 674480.0,
+    "condicao_pgto": "3X",
+    "parcelas": 3,
+    "venc_1": "2026-03-18",
+    "valor_1": 224826.67,
+    "venc_2": "2026-03-25",
+    "valor_2": 224826.67,
+    "venc_3": "2026-03-31",
+    "valor_3": 224826.67,
+    "status": "ABERTO"
+  },
+  {
+    "compra_id": 17,
+    "data_compra": "2026-02-26",
+    "fornecedor": "JF PASQUA",
+    "produto": "VERG. COBRE",
+    "categoria": "MATÉRIA PRIMA",
+    "qtd_peso_kg": 8200.0,
+    "preco_unit": 79.14,
+    "valor_total": 648948.0,
+    "condicao_pgto": "3X",
+    "parcelas": 3,
+    "venc_1": "2026-03-19",
+    "valor_1": 216316.0,
+    "venc_2": "2026-03-26",
+    "valor_2": 216316.0,
+    "venc_3": "2026-04-02",
+    "valor_3": 216316.0,
+    "status": "ABERTO"
+  },
+  {
+    "compra_id": 18,
+    "data_compra": "2026-02-27",
+    "fornecedor": "JF PASQUA",
+    "produto": "VERG. COBRE",
+    "categoria": "MATÉRIA PRIMA",
+    "qtd_peso_kg": 8200.0,
+    "preco_unit": 79.14,
+    "valor_total": 648948.0,
+    "condicao_pgto": "3X",
+    "parcelas": 3,
+    "venc_1": "2026-03-23",
+    "valor_1": 216316.0,
+    "venc_2": "2026-03-30",
+    "valor_2": 216316.0,
+    "venc_3": "2026-04-06",
+    "valor_3": 216316.0,
+    "status": "ABERTO"
+  },
+  {
+    "compra_id": 19,
+    "data_compra": "2026-02-27",
+    "fornecedor": "GDRW",
+    "produto": "VERG. COBRE",
+    "categoria": "MATÉRIA PRIMA",
+    "qtd_peso_kg": 8200.0,
+    "preco_unit": 79.24,
+    "valor_total": 649768.0,
+    "condicao_pgto": "3X",
+    "parcelas": 3,
+    "venc_1": "2026-04-01",
+    "valor_1": 216589.33,
+    "venc_2": "2026-04-08",
+    "valor_2": 216589.33,
+    "venc_3": "2026-04-10",
+    "valor_3": 216589.33,
+    "status": "ABERTO"
+  },
+  {
+    "compra_id": 20,
+    "data_compra": "2026-02-27",
+    "fornecedor": "STL",
+    "produto": "BARRAS",
+    "categoria": "MATÉRIA PRIMA",
+    "qtd_peso_kg": 13605.0,
+    "preco_unit": 24.5,
+    "valor_total": 333322.5,
+    "condicao_pgto": "3X",
+    "parcelas": 3,
+    "venc_1": "2026-04-28",
+    "valor_1": 111107.5,
+    "venc_2": "2026-04-30",
+    "valor_2": 111107.5,
+    "venc_3": "2026-05-05",
+    "valor_3": 111107.5,
+    "status": "ABERTO"
+  },
+  {
+    "compra_id": 21,
+    "data_compra": "2026-02-27",
+    "fornecedor": "STL",
+    "produto": "BARRAS",
+    "categoria": "MATÉRIA PRIMA",
+    "qtd_peso_kg": 13605.0,
+    "preco_unit": 24.5,
+    "valor_total": 333322.5,
+    "condicao_pgto": "3X",
+    "parcelas": 3,
+    "venc_1": "2026-05-07",
+    "valor_1": 111107.5,
+    "venc_2": "2026-05-12",
+    "valor_2": 111107.5,
+    "venc_3": "2026-05-14",
+    "valor_3": 111107.5,
+    "status": "ABERTO"
+  },
+  {
+    "compra_id": 22,
+    "data_compra": "2026-02-27",
+    "fornecedor": "STL",
+    "produto": "BARRAS",
+    "categoria": "MATÉRIA PRIMA",
+    "qtd_peso_kg": 13605.0,
+    "preco_unit": 24.5,
+    "valor_total": 333322.5,
+    "condicao_pgto": "3X",
+    "parcelas": 3,
+    "venc_1": "2026-05-19",
+    "valor_1": 111107.5,
+    "venc_2": "2026-05-21",
+    "valor_2": 111107.5,
+    "venc_3": "2026-05-26",
+    "valor_3": 111107.5,
+    "status": "ABERTO"
+  }
+];
+
+// Base mensal para ligar depois (placeholder)
+const GERENCIAL_MENSAL = [
+  {
+    "mes_ref": "2026-01-01",
+    "faturamento_bruto": 3989410.1,
+    "peso_total": 61460.12,
+    "lucro_bruto": 505133.41,
+    "margem_kg": 8.2189,
+    "custo_operacao": 397165.18,
+    "custo_kg": 6.4622,
+    "resultado_operacional": 107968.23,
+    "resultado_kg": 1.7567,
+    "previsibilidade_caixa": 2734752.27,
+    "resumo_caixa_mes": 1254657.83
+  },
+  {
+    "mes_ref": "2026-02-01",
+    "faturamento_bruto": 4092605.1,
+    "peso_total": 59881.59,
+    "lucro_bruto": 475263.01,
+    "margem_kg": 7.9367,
+    "custo_operacao": 491548.24,
+    "custo_kg": 8.2087,
+    "resultado_operacional": -16285.23,
+    "resultado_kg": -0.272,
+    "previsibilidade_caixa": 3974330.74,
+    "resumo_caixa_mes": 118274.36
+  },
+  {
+    "mes_ref": "2026-03-01",
+    "faturamento_bruto": 0.0,
+    "peso_total": 0.0,
+    "lucro_bruto": 0.0,
+    "margem_kg": null,
+    "custo_operacao": 0.0,
+    "custo_kg": null,
+    "resultado_operacional": 0.0,
+    "resultado_kg": null,
+    "previsibilidade_caixa": 0.0,
+    "resumo_caixa_mes": 0.0
+  },
+  {
+    "mes_ref": "2026-04-01",
+    "faturamento_bruto": 0.0,
+    "peso_total": 0.0,
+    "lucro_bruto": 0.0,
+    "margem_kg": null,
+    "custo_operacao": 0.0,
+    "custo_kg": null,
+    "resultado_operacional": 0.0,
+    "resultado_kg": null,
+    "previsibilidade_caixa": 0.0,
+    "resumo_caixa_mes": 0.0
+  },
+  {
+    "mes_ref": "2026-05-01",
+    "faturamento_bruto": 0.0,
+    "peso_total": 0.0,
+    "lucro_bruto": 0.0,
+    "margem_kg": null,
+    "custo_operacao": 0.0,
+    "custo_kg": null,
+    "resultado_operacional": 0.0,
+    "resultado_kg": null,
+    "previsibilidade_caixa": 0.0,
+    "resumo_caixa_mes": 0.0
+  },
+  {
+    "mes_ref": "2026-06-01",
+    "faturamento_bruto": 0.0,
+    "peso_total": 0.0,
+    "lucro_bruto": 0.0,
+    "margem_kg": null,
+    "custo_operacao": 0.0,
+    "custo_kg": null,
+    "resultado_operacional": 0.0,
+    "resultado_kg": null,
+    "previsibilidade_caixa": 0.0,
+    "resumo_caixa_mes": 0.0
+  },
+  {
+    "mes_ref": "2026-07-01",
+    "faturamento_bruto": 0.0,
+    "peso_total": 0.0,
+    "lucro_bruto": 0.0,
+    "margem_kg": null,
+    "custo_operacao": 0.0,
+    "custo_kg": null,
+    "resultado_operacional": 0.0,
+    "resultado_kg": null,
+    "previsibilidade_caixa": 0.0,
+    "resumo_caixa_mes": 0.0
+  },
+  {
+    "mes_ref": "2026-08-01",
+    "faturamento_bruto": 0.0,
+    "peso_total": 0.0,
+    "lucro_bruto": 0.0,
+    "margem_kg": null,
+    "custo_operacao": 0.0,
+    "custo_kg": null,
+    "resultado_operacional": 0.0,
+    "resultado_kg": null,
+    "previsibilidade_caixa": 0.0,
+    "resumo_caixa_mes": 0.0
+  },
+  {
+    "mes_ref": "2026-09-01",
+    "faturamento_bruto": 0.0,
+    "peso_total": 0.0,
+    "lucro_bruto": 0.0,
+    "margem_kg": null,
+    "custo_operacao": 0.0,
+    "custo_kg": null,
+    "resultado_operacional": 0.0,
+    "resultado_kg": null,
+    "previsibilidade_caixa": 0.0,
+    "resumo_caixa_mes": 0.0
+  },
+  {
+    "mes_ref": "2026-10-01",
+    "faturamento_bruto": 0.0,
+    "peso_total": 0.0,
+    "lucro_bruto": 0.0,
+    "margem_kg": null,
+    "custo_operacao": 0.0,
+    "custo_kg": null,
+    "resultado_operacional": 0.0,
+    "resultado_kg": null,
+    "previsibilidade_caixa": 0.0,
+    "resumo_caixa_mes": 0.0
+  },
+  {
+    "mes_ref": "2026-11-01",
+    "faturamento_bruto": 0.0,
+    "peso_total": 0.0,
+    "lucro_bruto": 0.0,
+    "margem_kg": null,
+    "custo_operacao": 0.0,
+    "custo_kg": null,
+    "resultado_operacional": 0.0,
+    "resultado_kg": null,
+    "previsibilidade_caixa": 0.0,
+    "resumo_caixa_mes": 0.0
+  },
+  {
+    "mes_ref": "2026-12-01",
+    "faturamento_bruto": 0.0,
+    "peso_total": 0.0,
+    "lucro_bruto": 0.0,
+    "margem_kg": null,
+    "custo_operacao": 0.0,
+    "custo_kg": null,
+    "resultado_operacional": 0.0,
+    "resultado_kg": null,
+    "previsibilidade_caixa": 0.0,
+    "resumo_caixa_mes": 0.0
+  },
+  {
+    "mes_ref": "MES_REF",
+    "faturamento_bruto": "CONTA",
+    "peso_total": "ORCADO",
+    "lucro_bruto": "PAGO",
+    "margem_kg": "A_PAGAR",
+    "custo_operacao": "PROJ_MES",
+    "custo_kg": null,
+    "resultado_operacional": null,
+    "resultado_kg": null,
+    "previsibilidade_caixa": null,
+    "resumo_caixa_mes": null
+  },
+  {
+    "mes_ref": "2026-01-01",
+    "faturamento_bruto": "Opex",
+    "peso_total": 300000.0,
+    "lucro_bruto": 272549.61,
+    "margem_kg": 0.0,
+    "custo_operacao": 272549.61,
+    "custo_kg": null,
+    "resultado_operacional": null,
+    "resultado_kg": null,
+    "previsibilidade_caixa": null,
+    "resumo_caixa_mes": null
+  },
+  {
+    "mes_ref": "2026-01-01",
+    "faturamento_bruto": "Impostos",
+    "peso_total": 35000.0,
+    "lucro_bruto": 38310.51,
+    "margem_kg": 0.0,
+    "custo_operacao": 38310.51,
+    "custo_kg": null,
+    "resultado_operacional": null,
+    "resultado_kg": null,
+    "previsibilidade_caixa": null,
+    "resumo_caixa_mes": null
+  },
+  {
+    "mes_ref": "2026-01-01",
+    "faturamento_bruto": "Juros e Tarifas",
+    "peso_total": 115000.0,
+    "lucro_bruto": 86305.06,
+    "margem_kg": null,
+    "custo_operacao": 86305.06,
+    "custo_kg": null,
+    "resultado_operacional": null,
+    "resultado_kg": null,
+    "previsibilidade_caixa": null,
+    "resumo_caixa_mes": null
+  },
+  {
+    "mes_ref": "2026-01-01",
+    "faturamento_bruto": "Matéria-prima",
+    "peso_total": 3300000.0,
+    "lucro_bruto": 2277574.59,
+    "margem_kg": 0.0,
+    "custo_operacao": 2277574.59,
+    "custo_kg": null,
+    "resultado_operacional": null,
+    "resultado_kg": null,
+    "previsibilidade_caixa": null,
+    "resumo_caixa_mes": null
+  },
+  {
+    "mes_ref": "2026-01-01",
+    "faturamento_bruto": "Mão de Obra",
+    "peso_total": 200000.0,
+    "lucro_bruto": 60012.5,
+    "margem_kg": 0.0,
+    "custo_operacao": 60012.5,
+    "custo_kg": null,
+    "resultado_operacional": null,
+    "resultado_kg": null,
+    "previsibilidade_caixa": null,
+    "resumo_caixa_mes": null
+  },
+  {
+    "mes_ref": "2026-01-01",
+    "faturamento_bruto": "Comissária",
+    "peso_total": 0.0,
+    "lucro_bruto": 908929.89,
+    "margem_kg": 0.0,
+    "custo_operacao": 908929.89,
+    "custo_kg": null,
+    "resultado_operacional": null,
+    "resultado_kg": null,
+    "previsibilidade_caixa": null,
+    "resumo_caixa_mes": null
+  },
+  {
+    "mes_ref": "2026-02-01",
+    "faturamento_bruto": "Opex",
+    "peso_total": 300000.0,
+    "lucro_bruto": 269934.33,
+    "margem_kg": 29777.18,
+    "custo_operacao": 299711.51,
+    "custo_kg": null,
+    "resultado_operacional": null,
+    "resultado_kg": null,
+    "previsibilidade_caixa": null,
+    "resumo_caixa_mes": null
+  },
+  {
+    "mes_ref": "2026-02-01",
+    "faturamento_bruto": "Impostos",
+    "peso_total": 35000.0,
+    "lucro_bruto": 47974.18,
+    "margem_kg": 0.0,
+    "custo_operacao": 47974.18,
+    "custo_kg": null,
+    "resultado_operacional": null,
+    "resultado_kg": null,
+    "previsibilidade_caixa": null,
+    "resumo_caixa_mes": null
+  },
+  {
+    "mes_ref": "2026-02-01",
+    "faturamento_bruto": "Juros e Tarifas",
+    "peso_total": 115000.0,
+    "lucro_bruto": 173639.73,
+    "margem_kg": 36109.1968,
+    "custo_operacao": 209748.93,
+    "custo_kg": null,
+    "resultado_operacional": null,
+    "resultado_kg": null,
+    "previsibilidade_caixa": null,
+    "resumo_caixa_mes": null
+  },
+  {
+    "mes_ref": "2026-02-01",
+    "faturamento_bruto": "Matéria-prima",
+    "peso_total": 3300000.0,
+    "lucro_bruto": 3391561.99,
+    "margem_kg": 979217.91,
+    "custo_operacao": 4370779.9,
+    "custo_kg": null,
+    "resultado_operacional": null,
+    "resultado_kg": null,
+    "previsibilidade_caixa": null,
+    "resumo_caixa_mes": null
+  },
+  {
+    "mes_ref": "2026-02-01",
+    "faturamento_bruto": "Mão de Obra",
+    "peso_total": 200000.0,
+    "lucro_bruto": 91220.51,
+    "margem_kg": 39886.65,
+    "custo_operacao": 131107.16,
+    "custo_kg": null,
+    "resultado_operacional": null,
+    "resultado_kg": null,
+    "previsibilidade_caixa": null,
+    "resumo_caixa_mes": null
+  },
+  {
+    "mes_ref": "2026-02-01",
+    "faturamento_bruto": "Comissária",
+    "peso_total": 0.0,
+    "lucro_bruto": 863472.48,
+    "margem_kg": 90214.27,
+    "custo_operacao": 953686.75,
+    "custo_kg": null,
+    "resultado_operacional": null,
+    "resultado_kg": null,
+    "previsibilidade_caixa": null,
+    "resumo_caixa_mes": null
+  }
+];
+
+/* =======================
+   3) UTIL
+======================= */
+const parseISO = (s) => {
+  if (!s) return null;
+  const d = new Date(String(s).slice(0,10) + "T00:00:00");
+  return isNaN(d.getTime()) ? null : d;
+};
+const iso = (d) => {
+  const y=d.getFullYear();
+  const m=String(d.getMonth()+1).padStart(2,"0");
+  const day=String(d.getDate()).padStart(2,"0");
+  return `${y}-${m}-${day}`;
+};
+const fmtBRL = (n) => {
+  if (n==null || isNaN(n)) return "—";
+  return n.toLocaleString("pt-BR",{style:"currency",currency:"BRL"});
+};
+const sameDay = (a,b) => a && b && a.getFullYear()===b.getFullYear() && a.getMonth()===b.getMonth() && a.getDate()===b.getDate();
+
+/* =======================
+   4) NORMALIZAR: compra -> títulos (parcelas)
+======================= */
+function inferirParcelas(cond){
+  const c = String(cond||"").toUpperCase().trim();
+  if (c==="À VISTA" || c==="A VISTA") return 1;
+  if (c==="2X") return 2;
+  if (c==="3X") return 3;
+  return null;
+}
+function gerarTitulos(compra){
+  const parcelas = Number(compra.parcelas || inferirParcelas(compra.condicao_pgto) || 0);
+  const valorTotal = Number(compra.valor_total ?? (Number(compra.qtd_peso_kg||0) * Number(compra.preco_unit||0)));
+  const vencs = [compra.venc_1, compra.venc_2, compra.venc_3].map(v => String(v||"").slice(0,10));
+  const vals = [compra.valor_1, compra.valor_2, compra.valor_3].map(v => (v===""||v==null)? null : Number(v));
+  const status = (compra.status || "ABERTO").toUpperCase();
+
+  const n = parcelas || [vencs[0],vencs[1],vencs[2]].filter(Boolean).length || 1;
+  const valorPadrao = n ? Math.round((valorTotal/n)*100)/100 : valorTotal;
+
+  const out = [];
+  for (let i=0;i<n;i++){
+    const venc = vencs[i];
+    if (!venc) continue; // se não tem vencimento, não cria título
+    out.push({
+      titulo_id: `${compra.compra_id}-${i+1}`,
+      compra_id: compra.compra_id,
+      parcela: i+1,
+      vencimento: venc,
+      valor: vals[i] ?? valorPadrao,
+      fornecedor: compra.fornecedor || "—",
+      produto: compra.produto || "—",
+      data_compra: String(compra.data_compra||"").slice(0,10),
+      qtd_peso_kg: Number(compra.qtd_peso_kg||0),
+      preco_unit: Number(compra.preco_unit||0),
+      status
+    });
+  }
+  return out;
+}
+function buildTitulos(){
+  const t = [];
+  for (const c of COMPRAS_BASE){
+    t.push(...gerarTitulos(c));
+  }
+  // ordenar por vencimento
+  t.sort((a,b)=> (a.vencimento||"").localeCompare(b.vencimento||""));
+  return t;
+}
+
+/* =======================
+   5) RENDER
+======================= */
+let TITULOS = [];
+
+let CAL_MONTHS = [];   // array of {y,m} where m is 0-11
+let CAL_INDEX = 0;     // current index in CAL_MONTHS
+function monthKey(y,m){ return `${y}-${String(m+1).padStart(2,"0")}`; }
+function monthLabel(y,m){
+  const names = ["Jan","Fev","Mar","Abr","Mai","Jun","Jul","Ago","Set","Out","Nov","Dez"];
+  return `${names[m]}/${y}`;
+}
+function buildMonths(){
+  const set = new Set();
+  for (const t of TITULOS){
+    const d = parseISO(t.vencimento);
+    if (!d) continue;
+    set.add(monthKey(d.getFullYear(), d.getMonth()));
+  }
+  CAL_MONTHS = Array.from(set).map(k=>{
+    const [y,mm]=k.split("-");
+    return {y:Number(y), m:Number(mm)-1};
+  }).sort((a,b)=> (a.y-b.y) || (a.m-b.m));
+
+  // prefer current month if exists, else first
+  const now = new Date(); now.setHours(0,0,0,0);
+  const curKey = monthKey(now.getFullYear(), now.getMonth());
+  const idx = CAL_MONTHS.findIndex(x=>monthKey(x.y,x.m)===curKey);
+  CAL_INDEX = (idx>=0) ? idx : 0;
+}
+function titlesByDateMap(list){
+  const m = new Map();
+  for (const t of list){
+    const k = t.vencimento;
+    if (!k) continue;
+    const arr = m.get(k) || [];
+    arr.push(t);
+    m.set(k, arr);
+  }
+  return m;
+}
+function calcDayTotals(arr){
+  const qtd = arr.length;
+  const total = arr.reduce((a,x)=>a+(Number(x.valor)||0),0);
+  const hasOverdue = arr.some(t=>{
+    const d = parseISO(t.vencimento);
+    const today = new Date(); today.setHours(0,0,0,0);
+    return d && d < today && String(t.status||"").toUpperCase()!=="PAGO";
+  });
+  const hasToday = arr.some(t=>{
+    const d = parseISO(t.vencimento);
+    const today = new Date(); today.setHours(0,0,0,0);
+    return d && sameDay(d,today);
+  });
+  return {qtd,total,hasOverdue,hasToday};
+}
+function renderCalendar(q=""){
+  const grid = document.getElementById("calGrid");
+  const calMonth = document.getElementById("calMonth");
+  if (!grid || !calMonth) return;
+
+  const term = String(q||"").trim().toLowerCase();
+  let list = TITULOS.slice();
+  if (term){
+    list = list.filter(t =>
+      String(t.fornecedor||"").toLowerCase().includes(term) ||
+      String(t.produto||"").toLowerCase().includes(term)
+    );
+  }
+  const map = titlesByDateMap(list);
+
+  if (!CAL_MONTHS.length){
+    calMonth.textContent = "—";
+    grid.innerHTML = `<div class="home-card" style="grid-column:1/-1"><div class="k">Sem dados</div><div class="s">Cole sua base diária em <b>COMPRAS_BASE</b>.</div></div>`;
+    return;
+  }
+
+  const {y,m} = CAL_MONTHS[Math.max(0, Math.min(CAL_INDEX, CAL_MONTHS.length-1))];
+  calMonth.textContent = monthLabel(y,m);
+
+  const first = new Date(y,m,1);
+  const startDow = first.getDay(); // 0=Sun
+  const daysInMonth = new Date(y,m+1,0).getDate();
+
+  // start at Sunday before first day
+  const start = new Date(y,m,1 - startDow);
+  const totalCells = 42; // 6 weeks
+  const today = new Date(); today.setHours(0,0,0,0);
+
+  grid.innerHTML = "";
+  for (let i=0;i<totalCells;i++){
+    const d = new Date(start); d.setDate(start.getDate()+i);
+    const inMonth = (d.getMonth()===m);
+    const key = iso(d);
+    const titles = map.get(key) || [];
+    const cell = document.createElement("div");
+    cell.className = "daycell" + (inMonth ? "" : " muted");
+    cell.setAttribute("data-date", key);
+
+    // state
+    if (inMonth && titles.length){
+      const meta = calcDayTotals(titles);
+      if (meta.hasOverdue) cell.classList.add("state-overdue");
+      else if (meta.hasToday) cell.classList.add("state-today");
+      else cell.classList.add("state-future");
+
+      cell.innerHTML = `
+        <div class="d">${d.getDate()}</div>
+        <div class="badge">${meta.qtd}</div>
+        <div class="meta">
+          <div class="t">${fmtBRL(meta.total)}</div>
+          <div class="q">${meta.qtd} títulos</div>
+        </div>
+      `;
+      cell.addEventListener("click", ()=> openDayModal(key, titles));
+    } else {
+      cell.innerHTML = `<div class="d">${d.getDate()}</div>`;
+    }
+    grid.appendChild(cell);
+  }
+}
+function openDayModal(dateISO, titles){
+  const modal = document.getElementById("dayModal");
+  const title = document.getElementById("dayModalTitle");
+  const sub = document.getElementById("dayModalSub");
+  const list = document.getElementById("dayModalList");
+  if (!modal || !title || !sub || !list) return;
+
+  const d = parseISO(dateISO);
+  const nice = d ? d.toLocaleDateString("pt-BR") : dateISO;
+  title.textContent = `Vencimentos • ${nice}`;
+
+  const total = titles.reduce((a,x)=>a+(Number(x.valor)||0),0);
+  sub.textContent = `${titles.length} títulos • Total ${fmtBRL(total)}`;
+
+  list.innerHTML = "";
+  // sort by fornecedor/produto/parcela
+  const sorted = titles.slice().sort((a,b)=>
+    String(a.fornecedor||"").localeCompare(String(b.fornecedor||"")) ||
+    String(a.produto||"").localeCompare(String(b.produto||"")) ||
+    (Number(a.parcela||0)-Number(b.parcela||0))
+  );
+  for (const t of sorted){
+    const r = document.createElement("div");
+    r.className = "hrow";
+    r.innerHTML = `
+      <div>
+        <div class="m">${t.fornecedor}</div>
+        <div style="color:var(--muted);font-size:12px;margin-top:4px;line-height:1.25;">
+          ${t.produto} • Parc: ${t.parcela} • Compra: ${t.data_compra || "—"}
+        </div>
+      </div>
+      <div class="nums">
+        <div class="line1">${fmtBRL(Number(t.valor)||0)}</div>
+        <div class="line2">${t.status}</div>
+      </div>
+    `;
+    list.appendChild(r);
+  }
+
+  modal.style.display = "flex";
+  modal.setAttribute("aria-hidden","false");
+}
+function closeDayModal(){
+  const modal = document.getElementById("dayModal");
+  if (!modal) return;
+  modal.style.display = "none";
+  modal.setAttribute("aria-hidden","true");
+}
+
+function setPeriodPills(){
+  if (!TITULOS.length){
+    document.getElementById("periodPill").textContent = "Período: —";
+    document.getElementById("periodPill2").textContent = "Período: —";
+    return;
+  }
+  const min = TITULOS[0].vencimento;
+  const max = TITULOS[TITULOS.length-1].vencimento;
+  const txt = (min===max) ? min : `${min} → ${max}`;
+  document.getElementById("periodPill").textContent = `Período: ${txt}`;
+  document.getElementById("periodPill2").textContent = `Período: ${txt}`;
+}
+
+function calcKPIs(){
+  const today = new Date(); today.setHours(0,0,0,0);
+  const in7 = new Date(today); in7.setDate(in7.getDate()+7);
+
+  const open = TITULOS.filter(t => (t.status!=="PAGO"));
+  const hoje = open.filter(t => sameDay(parseISO(t.vencimento), today));
+  const next7 = open.filter(t => {
+    const d = parseISO(t.vencimento);
+    return d && d>=today && d<=in7;
+  });
+
+  // mês do "today"
+  const mesOpen = open.filter(t => {
+    const d = parseISO(t.vencimento);
+    return d && d.getFullYear()===today.getFullYear() && d.getMonth()===today.getMonth();
+  });
+
+  const sum = (arr) => arr.reduce((a,x)=>a+(Number(x.valor)||0),0);
+
+  document.getElementById("kpiHoje").textContent = fmtBRL(sum(hoje));
+  document.getElementById("kpiHojeN").textContent = hoje.length;
+
+  document.getElementById("kpi7").textContent = fmtBRL(sum(next7));
+  document.getElementById("kpi7N").textContent = next7.length;
+
+  document.getElementById("kpiMes").textContent = fmtBRL(sum(mesOpen));
+  document.getElementById("kpiMesN").textContent = mesOpen.length;
+
+  document.getElementById("kpiAberto").textContent = fmtBRL(sum(open));
+  document.getElementById("kpiAbertoN").textContent = open.length;
+
+  // próximos vencimentos (top 10)
+  const next = open
+    .filter(t => {
+      const d = parseISO(t.vencimento);
+      return d && d>=today;
+    })
+    .slice(0,10);
+
+  const nextList = document.getElementById("nextList");
+  nextList.innerHTML = next.length ? "" : `<div class="home-card"><div class="k">Sem dados</div><div class="s">Cole sua base diária em <b>COMPRAS_BASE</b> no arquivo.</div></div>`;
+  for (const t of next){
+    const r = document.createElement("div");
+    r.className = "hrow";
+    r.innerHTML = `
+      <div>
+        <div class="m">${t.vencimento}</div>
+        <div style="color:var(--muted);font-size:12px;margin-top:4px;line-height:1.25;">
+          ${t.fornecedor} • ${t.produto} • ${t.parcela}
+        </div>
+      </div>
+      <div class="nums">
+        <div class="line1">${fmtBRL(Number(t.valor)||0)}</div>
+        <div class="line2">${t.status}</div>
+      </div>
+    `;
+    nextList.appendChild(r);
+  }
+}
+
+function renderComprasList(q=""){
+  renderCalendar(q);
+  const term = String(q||"").trim().toLowerCase();
+
+  let list = TITULOS.slice();
+  if (term){
+    list = list.filter(t =>
+      String(t.fornecedor||"").toLowerCase().includes(term) ||
+      String(t.produto||"").toLowerCase().includes(term)
+    );
+  }
+
+  // byDay
+  const byDayMap = new Map();
+  for (const t of list){
+    const k = t.vencimento || "";
+    if (!k) continue;
+    const cur = byDayMap.get(k) || {vencimento:k, qtd:0, total:0};
+    cur.qtd += 1;
+    cur.total += Number(t.valor)||0;
+    byDayMap.set(k, cur);
+  }
+  const byDay = Array.from(byDayMap.values()).sort((a,b)=>a.vencimento.localeCompare(b.vencimento));
+
+  const byDayEl = document.getElementById("byDay");
+  byDayEl.innerHTML = byDay.length ? "" : `<div class="home-card"><div class="k">Sem dados</div><div class="s">Nada encontrado para a busca.</div></div>`;
+  for (const d of byDay){
+    const r = document.createElement("div");
+    r.className = "hrow";
+    r.innerHTML = `
+      <div>
+        <div class="m">${d.vencimento}</div>
+        <div style="color:var(--muted);font-size:12px;margin-top:4px;">${d.qtd} títulos</div>
+      </div>
+      <div class="nums">
+        <div class="line1">${fmtBRL(d.total)}</div>
+        <div class="line2">Total do dia</div>
+      </div>
+    `;
+    byDayEl.appendChild(r);
+  }
+
+  // titleList (top 60)
+  const titleEl = document.getElementById("titleList");
+  const top = list.slice(0,60);
+  titleEl.innerHTML = top.length ? "" : `<div class="home-card"><div class="k">Sem dados</div><div class="s">Cole sua base diária em <b>COMPRAS_BASE</b>.</div></div>`;
+  for (const t of top){
+    const r = document.createElement("div");
+    r.className = "hrow";
+    r.innerHTML = `
+      <div>
+        <div class="m">${t.fornecedor}</div>
+        <div style="color:var(--muted);font-size:12px;margin-top:4px;line-height:1.25;">
+          ${t.produto} • Venc: ${t.vencimento} • Parc: ${t.parcela}
+        </div>
+      </div>
+      <div class="nums">
+        <div class="line1">${fmtBRL(Number(t.valor)||0)}</div>
+        <div class="line2">${t.status}</div>
+      </div>
+    `;
+    titleEl.appendChild(r);
+  }
+}
+
+function renderCustoOp(){
+  // placeholder simples: se tiver um item, usa o último
+  if (!GERENCIAL_MENSAL.length) return;
+
+  const last = GERENCIAL_MENSAL[GERENCIAL_MENSAL.length-1];
+  document.getElementById("custoPill").textContent = `Mês: ${last.mes_ref || "—"}`;
+  document.getElementById("kCustoOp").textContent = fmtBRL(Number(last.custo_operacao||0));
+  document.getElementById("kCustoKg").textContent = (Number(last.custo_kg||0)).toLocaleString("pt-BR",{minimumFractionDigits:2,maximumFractionDigits:2});
+  document.getElementById("kResOp").textContent = fmtBRL(Number(last.resultado_operacional||0));
+  document.getElementById("kPrev").textContent = fmtBRL(Number(last.previsibilidade_caixa||0));
+}
+
+/* =======================
+   6) NAVEGAÇÃO
+======================= */
+function showView(id){
+  document.querySelectorAll(".view").forEach(v => v.classList.remove("active"));
+  const el = document.getElementById(id);
+  if (el) el.classList.add("active");
+
+  document.querySelectorAll(".bottom-nav .item").forEach(i => i.classList.remove("active"));
+  const nav = document.querySelector(`.bottom-nav .item[data-view="${id}"]`);
+  if (nav) nav.classList.add("active");
+}
+
+function initNav(){
+  document.querySelectorAll(".bottom-nav .item").forEach(item=>{
+    item.addEventListener("click", ()=>{
+      const id = item.getAttribute("data-view");
+      showView(id);
+      if (id==="view-c-compras"){
+        renderComprasList(document.getElementById("q").value);
+      }
+    });
+  });
+}
+
+/* =======================
+   7) LOGIN
+======================= */
+function doLogin(){
+  const pass = document.getElementById("loginPassword").value || "";
+  if (pass !== APP_PASSWORD){
+    document.getElementById("loginError").style.display = "block";
+    return;
+  }
+  document.getElementById("loginError").style.display = "none";
+  document.getElementById("loginScreen").style.display = "none";
+  document.getElementById("bottomNav").style.display = "flex";
+
+  // carregar base
+  TITULOS = buildTitulos();
+  buildMonths();
+  setPeriodPills();
+  calcKPIs();
+  renderComprasList("");
+  renderCustoOp();
+
+  showView("view-c-home");
+}
+
+document.getElementById("loginBtn").addEventListener("click", doLogin);
+document.getElementById("loginPassword").addEventListener("keydown", (e)=>{ if (e.key==="Enter") doLogin(); });
+
+document.getElementById("btnHoje").addEventListener("click", ()=>{
+  calcKPIs();
+});
+
+initNav();
+
+// Calendar navigation + modal
+document.getElementById("calPrev").addEventListener("click", ()=>{
+  if (!CAL_MONTHS.length) return;
+  CAL_INDEX = Math.max(0, CAL_INDEX-1);
+  renderCalendar(document.getElementById("q").value);
+});
+document.getElementById("calNext").addEventListener("click", ()=>{
+  if (!CAL_MONTHS.length) return;
+  CAL_INDEX = Math.min(CAL_MONTHS.length-1, CAL_INDEX+1);
+  renderCalendar(document.getElementById("q").value);
+});
+document.getElementById("dayModalClose").addEventListener("click", closeDayModal);
+document.getElementById("dayModalBack").addEventListener("click", closeDayModal);
+document.addEventListener("keydown", (e)=>{ if (e.key==="Escape") closeDayModal(); });
+
+
+document.getElementById("q").addEventListener("input", (e)=>{
+  renderComprasList(e.target.value);
+});
+document.getElementById("qClear").addEventListener("click", ()=>{
+  document.getElementById("q").value="";
+  renderComprasList("");
+});
+</script>
+</body>
+</html>
