@@ -46,6 +46,10 @@ body{margin:0;font-family:ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,
 .hrow .nums{flex:1;min-width:0;text-align:right;}
 .hrow .nums .line1{font-weight:950;font-size:14px;}
 .hrow .nums .line2{color:var(--muted);font-size:12px;margin-top:4px;}
+.hrow .nums.wkNums{flex:0 0 auto;max-width:48%;min-width:120px;}
+.hrow .nums.wkNums .line1{font-size:13px;}
+.hrow .nums.wkNums .line2{white-space:normal;word-break:break-word;line-height:1.25;}
+
 .search{
   display:flex; align-items:center; gap:10px;
   padding:10px 12px; border-radius:999px;
@@ -230,7 +234,13 @@ body{margin:0;font-family:ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,
     <div class="topbar">
       <div style="font-weight:900;font-size:22px;">Compras</div>
       <div style="display:flex;align-items:center;gap:10px;">
-        <div class="pill" id="periodPill2">Período: —</div>
+        <button class="iconbtn" id="comprasPrevMonth" title="Mês anterior">
+          <svg viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg>
+        </button>
+        <div class="pill" id="comprasMonthPill">Mês: —</div>
+        <button class="iconbtn" id="comprasNextMonth" title="Próximo mês">
+          <svg viewBox="0 0 24 24"><path d="M9 6l6 6-6 6"/></svg>
+        </button>
       </div>
     </div>
 
@@ -267,29 +277,12 @@ body{margin:0;font-family:ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,
   </div>
   <div class="cal-grid" id="calGrid"></div>
 </div>
-
-<div class="section">
-  <div style="display:flex;align-items:flex-end;justify-content:space-between;margin:12px 0 8px;">
-    <div style="font-weight:800;font-size:14px;">Vencimentos por dia (lista)</div>
-    <div style="font-size:12px;color:var(--muted);">Qtd • Total</div>
-  </div>
-  <div class="hlist" id="byDay"></div>
-</div>
-
-
-    <div class="section">
-      <div style="display:flex;align-items:flex-end;justify-content:space-between;margin:12px 0 8px;">
-        <div style="font-weight:800;font-size:14px;">Histórico (títulos)</div>
-        <div style="font-size:12px;color:var(--muted);">Fornecedor • Produto</div>
-      </div>
-      <div class="hlist" id="titleList"></div>
-    </div>
   </div>
 
   <!-- ====== VIEW: CUSTO OP (placeholder para ligar depois) ====== -->
   <div class="view" id="view-c-custo">
   <div class="topbar" style="gap:10px;">
-    <div style="font-weight:900;font-size:22px;">Custo Op.</div>
+    <div style="font-weight:950;font-size:18px;line-height:1.05;">Custo Operacional</div>
     <div style="margin-left:auto;display:flex;align-items:center;gap:10px;">
       <button class="iconbtn" id="custoPrevBtn" title="Mês anterior" aria-label="Mês anterior">‹</button>
       <div class="pill" id="custoMonthPill">Mês: —</div>
@@ -299,8 +292,8 @@ body{margin:0;font-family:ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,
 
   <div class="section">
     <div class="home-card clickable" id="custoTotalCard" role="button" tabindex="0" aria-label="Detalhar contas do custo">
-      <div class="k" style="font-size:13px;opacity:.95;">Custo total (Pago)</div>
-      <div class="value" id="custoTotalPago" style="font-size:34px;font-weight:900;margin-top:6px;">—</div>
+      <div class="k">Custo total (Pago)</div>
+      <div class="v" id="custoTotalPago">—</div>
       <div class="s" style="margin-top:6px;">
         Custo/kg vendido: <span id="custoKgTotal">—</span> • Peso: <span id="pesoVendido">—</span>
       </div>
@@ -308,7 +301,7 @@ body{margin:0;font-family:ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,
 
     <div class="section" style="margin-top:16px;">
       <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;">
-        <div style="font-weight:800;">Contas que compõem o custo/kg</div>
+        <div style="font-weight:900;font-size:14px;">Contas que compõem o custo/kg</div>
         <div style="font-size:12px;color:var(--muted);">Pago • Custo/kg</div>
       </div>
       <div class="grid-kpi" id="contasCompoemGrid"></div>
@@ -316,8 +309,8 @@ body{margin:0;font-family:ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,
 
     <div class="section" style="margin-top:16px;">
       <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;">
-        <div style="font-weight:800;">Outras contas (informativo)</div>
-        <div style="font-size:12px;color:var(--muted);">Pago • A pagar</div>
+        <div style="font-weight:900;font-size:14px;">Outras contas (informativo)</div>
+        <div style="font-size:12px;color:var(--muted);">Pago</div>
       </div>
       <div class="grid-kpi" id="contasOutrasGrid"></div>
     </div>
@@ -348,11 +341,11 @@ body{margin:0;font-family:ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,
           <div class="value" id="fornKgMes">—</div>
         </div>
         <div class="kpi">
-          <div class="label">A vencer (mês)</div>
+          <div class="label">Pago (mês)</div>
           <div class="value" id="fornPagoMes">—</div>
         </div>
         <div class="kpi">
-          <div class="label">Vencido (mês)</div>
+          <div class="label">Preço médio (títulos do mês) — R$/kg</div>
           <div class="value" id="fornVencidoMes">—</div>
         </div>
       </div>
@@ -395,7 +388,7 @@ body{margin:0;font-family:ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,
     <div class="ico">
       <svg viewBox="0 0 24 24"><path d="M3 3v18h18"/><path d="M7 14l3-3 4 4 6-8"/></svg>
     </div>
-    <div>Custo Op.</div>
+    <div>Custo Operacional</div>
   </div>
 </nav>
 
@@ -441,12 +434,33 @@ body{margin:0;font-family:ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,
     </div>
 
     <div style="display:flex;align-items:center;justify-content:space-between;margin:8px 2px 8px;">
-      <div style="font-weight:800;">Contas que compõem o custo/kg</div>
+      <div style="font-weight:900;font-size:14px;">Contas que compõem o custo/kg</div>
       <div style="font-size:12px;color:var(--muted);">Pago • A pagar • Custo/kg</div>
     </div>
     <div class="kpi-grid" id="custoModalCompoemGrid"></div>
 </div>
 </div>
+
+
+<div class="modal" id="contaModal" aria-hidden="true">
+  <div class="back" id="contaModalBack"></div>
+  <div class="sheet" role="dialog" aria-modal="true" aria-labelledby="contaModalTitle">
+    <div class="top">
+      <div>
+        <div class="h" id="contaModalTitle">—</div>
+        <div class="sub" id="contaModalSub">—</div>
+      </div>
+      <button class="close" id="contaModalClose" aria-label="Fechar">
+        <svg viewBox="0 0 24 24"><path d="M18 6 6 18"/><path d="M6 6l12 12"/></svg>
+      </button>
+    </div>
+
+    <div class="section" style="margin-top:12px;">
+      <div class="kpi-grid" id="contaModalGrid"></div>
+    </div>
+  </div>
+</div>
+
 
 <script>
 /* =======================
@@ -1090,12 +1104,12 @@ function renderCustoOp(){
       const ap = byConta[nome]?.a_pagar || 0;
 
       const card = document.createElement("div");
-      card.className = "kpi other";
+      card.className = "kpi other clickable";
       card.innerHTML = `
         <div class="label">${nome.replaceAll("_"," ")}</div>
         <div class="value">${pago ? fmtBRL(pago) : "—"}</div>
-        <div class="sub">A pagar ${ap ? fmtBRL(ap) : "—"}</div>
       `;
+      card.addEventListener("click", ()=> openContaDetalheModal(nome)); 
       gridB.appendChild(card);
     });
   }
@@ -1193,6 +1207,63 @@ function wireCustoModal(){
   const close = document.getElementById("custoModalClose");
   if (back) back.addEventListener("click", closeCustoModal);
   if (close) close.addEventListener("click", closeCustoModal);
+}
+
+
+
+
+function openContaDetalheModal(contaNome){
+  const mesRef = CUSTO_MESES[custoMesIdx];
+  const contas = getContasDoMes(mesRef);
+  const byConta = {};
+  contas.forEach(r=>{
+    const k = String(r.conta||"").trim().toUpperCase();
+    if(!k) return;
+    byConta[k] = { pago: Number(r.pago||0), a_pagar: Number(r.a_pagar||0) };
+  });
+
+  const key = String(contaNome||"").trim().toUpperCase();
+  const pago = byConta[key]?.pago || 0;
+  const ap = byConta[key]?.a_pagar || 0;
+
+  const modal = document.getElementById("contaModal");
+  const title = document.getElementById("contaModalTitle");
+  const sub = document.getElementById("contaModalSub");
+  const grid = document.getElementById("contaModalGrid");
+  if(!modal || !title || !sub || !grid) return;
+
+  title.textContent = `${key.replaceAll("_"," ")}`;
+  sub.textContent = `Mês: ${mesRef}`;
+
+  grid.innerHTML = "";
+
+  const c1 = document.createElement("div");
+  c1.className = "kpi";
+  c1.innerHTML = `<div class="label">Pago</div><div class="value">${pago ? fmtBRL(pago) : "—"}</div>`;
+  grid.appendChild(c1);
+
+  const c2 = document.createElement("div");
+  c2.className = "kpi";
+  c2.innerHTML = `<div class="label">A pagar</div><div class="value">${ap ? fmtBRL(ap) : "—"}</div>`;
+  grid.appendChild(c2);
+
+  modal.style.display = "flex";
+  modal.setAttribute("aria-hidden","false");
+}
+
+function closeContaModal(){
+  const modal = document.getElementById("contaModal");
+  if (modal){
+    modal.style.display = "none";
+    modal.setAttribute("aria-hidden","true");
+  }
+}
+
+function wireContaModal(){
+  const back = document.getElementById("contaModalBack");
+  const close = document.getElementById("contaModalClose");
+  if (back) back.addEventListener("click", closeContaModal);
+  if (close) close.addEventListener("click", closeContaModal);
 }
 
 
@@ -1495,15 +1566,13 @@ function openWeekModal(startDate, endDate, titles){
         const r = document.createElement("div");
         r.className = "hrow";
         r.innerHTML = `
-          <div>
+          <div style="min-width:0;">
             <div class="m">${t.produto}</div>
-            <div style="color:var(--muted);font-size:12px;margin-top:4px;line-height:1.25;">
-              Venc: ${t.vencimento} • Parc: ${t.parcela}/${t.parcelas_total} • Compra: ${t.data_compra || "—"}
-            </div>
+            ${t.categoria ? `<div class="s" style="margin-top:4px;">${t.categoria}</div>` : ``}
           </div>
-          <div class="nums">
+          <div class="nums wkNums">
             <div class="line1">${fmtBRL(Number(t.valor)||0)}</div>
-            <div class="line2">${t.categoria ? t.categoria : "—"}</div>
+            <div class="line2">Venc: ${t.vencimento} • Parc: ${t.parcela}/${t.parcelas_total} • Compra: ${t.data_compra || "—"}</div>
           </div>
         `;
         list.appendChild(r);
@@ -1537,6 +1606,48 @@ function setPeriodPills(){
     if (p1) p1.textContent = `Mês: ${monthLabel(cur.y, cur.m)}`;
   } else {
     if (p1) p1.textContent = "Mês: —";
+  }
+}
+
+
+// ====== Compras: pill de mês + navegação ======
+function updateComprasMonthPill(){
+  const pill = document.getElementById("comprasMonthPill");
+  if (!pill) return;
+  if (!CAL_MONTHS || !CAL_MONTHS.length){
+    pill.textContent = "Mês: —";
+    return;
+  }
+  const cur = CAL_MONTHS[CAL_INDEX];
+  pill.textContent = `Mês: ${monthKey(cur.y, cur.m)}`;
+}
+
+function setCalToCurrentMonth(){
+  if (!CAL_MONTHS || !CAL_MONTHS.length) return;
+  const now = new Date(); now.setHours(0,0,0,0);
+  const curKey = monthKey(now.getFullYear(), now.getMonth());
+  const idx = CAL_MONTHS.findIndex(x => monthKey(x.y, x.m) === curKey);
+  if (idx >= 0) CAL_INDEX = idx;
+}
+
+function initComprasMonthNav(){
+  const prev = document.getElementById("comprasPrevMonth");
+  const next = document.getElementById("comprasNextMonth");
+  const qEl = document.getElementById("q");
+
+  if (prev){
+    prev.addEventListener("click", ()=>{
+      if (!CAL_MONTHS.length) return;
+      CAL_INDEX = Math.max(0, CAL_INDEX - 1);
+      renderComprasList(qEl ? qEl.value : "");
+    });
+  }
+  if (next){
+    next.addEventListener("click", ()=>{
+      if (!CAL_MONTHS.length) return;
+      CAL_INDEX = Math.min(CAL_MONTHS.length-1, CAL_INDEX + 1);
+      renderComprasList(qEl ? qEl.value : "");
+    });
   }
 }
 
@@ -1698,26 +1809,29 @@ function renderFornecedor(){
   const aberto = inMonth; // sem status (módulo informativo)
 
   const today = new Date(); today.setHours(0,0,0,0);
+
+  // Sem status financeiro: usamos "Pago (mês)" como proxy de títulos já vencidos no mês.
   const vencido = aberto.filter(t => {
     const d = parseISO(t.vencimento);
     return d && d < today;
   });
+
   const pagarMes = sum(aberto);
-  const aVencer = aberto.filter(t => {
-    const d = parseISO(t.vencimento);
-    return d && d >= today;
-  });
-  const aVencerMes = sum(aVencer);
-  const vencidoMes = sum(vencido);
+  const pagoMes = sum(vencido);
   const kgMes = sumKg(inMonth);
+
+  // Preço médio (títulos do mês) — R$/kg do fornecedor no mês selecionado (com base nos títulos que vencem no mês)
+  // Regra: preço médio = (total do mês) / (kg do mês)
+  const precoMedio = (kgMes>0 ? (pagarMes/kgMes) : null);
 
   const elPagar = document.getElementById("fornPagarMes");
   const elPago = document.getElementById("fornPagoMes");
   const elVenc = document.getElementById("fornVencidoMes");
   const elKg = document.getElementById("fornKgMes");
+
   if (elPagar) elPagar.textContent = fmtBRL(pagarMes);
-  if (elPago) elPago.textContent = fmtBRL(aVencerMes);
-  if (elVenc) elVenc.textContent = fmtBRL(vencidoMes);
+  if (elPago) elPago.textContent = fmtBRL(pagoMes);
+  if (elVenc) elVenc.textContent = (precoMedio==null ? "—" : fmtBRL(precoMedio));
   if (elKg) elKg.textContent = `${kgMes.toLocaleString("pt-BR",{maximumFractionDigits:0})} kg`;
 
   const sub = document.getElementById("fornSub");
@@ -1776,68 +1890,9 @@ function renderFornecedor(){
   }
 }
 function renderComprasList(q=""){
+  // Tela Compras: mostrar apenas o calendário (as listas foram removidas)
   renderCalendar(q);
-  const term = String(q||"").trim().toLowerCase();
-
-  let list = TITULOS.slice();
-  if (term){
-    list = list.filter(t =>
-      String(t.fornecedor||"").toLowerCase().includes(term) ||
-      String(t.produto||"").toLowerCase().includes(term)
-    );
-  }
-
-  // byDay
-  const byDayMap = new Map();
-  for (const t of list){
-    const k = t.vencimento || "";
-    if (!k) continue;
-    const cur = byDayMap.get(k) || {vencimento:k, qtd:0, total:0};
-    cur.qtd += 1;
-    cur.total += Number(t.valor)||0;
-    byDayMap.set(k, cur);
-  }
-  const byDay = Array.from(byDayMap.values()).sort((a,b)=>a.vencimento.localeCompare(b.vencimento));
-
-  const byDayEl = document.getElementById("byDay");
-  byDayEl.innerHTML = byDay.length ? "" : `<div class="home-card"><div class="k">Sem dados</div><div class="s">Nada encontrado para a busca.</div></div>`;
-  for (const d of byDay){
-    const r = document.createElement("div");
-    r.className = "hrow";
-    r.innerHTML = `
-      <div>
-        <div class="m">${d.vencimento}</div>
-        <div style="color:var(--muted);font-size:12px;margin-top:4px;">${d.qtd} títulos</div>
-      </div>
-      <div class="nums">
-        <div class="line1">${fmtBRL(d.total)}</div>
-        <div class="line2">Total do dia</div>
-      </div>
-    `;
-    byDayEl.appendChild(r);
-  }
-
-  // titleList (top 60)
-  const titleEl = document.getElementById("titleList");
-  const top = list.slice(0,60);
-  titleEl.innerHTML = top.length ? "" : `<div class="home-card"><div class="k">Sem dados</div><div class="s">Cole sua base diária em <b>COMPRAS_BASE</b>.</div></div>`;
-  for (const t of top){
-    const r = document.createElement("div");
-    r.className = "hrow";
-    r.innerHTML = `
-      <div>
-        <div class="m">${t.fornecedor}</div>
-        <div style="color:var(--muted);font-size:12px;margin-top:4px;line-height:1.25;">
-          ${t.produto} • Venc: ${t.vencimento} • Parc: ${t.parcela}
-        </div>
-      </div>
-      <div class="nums">
-        <div class="line1">${fmtBRL(Number(t.valor)||0)}</div>
-        <div class="line2">Parc: ${t.parcela}/${t.parcelas_total}</div>
-      </div>
-    `;
-    titleEl.appendChild(r);
-  }
+  updateComprasMonthPill();
 }
 
 
@@ -1861,6 +1916,7 @@ function initNav(){
       const id = item.getAttribute("data-view");
       showView(id);
       if (id==="view-c-compras"){
+        setCalToCurrentMonth();
         renderComprasList(document.getElementById("q").value);
       }
     });
@@ -1898,6 +1954,7 @@ const _btnHoje = document.getElementById("btnHoje");
 if (_btnHoje){ _btnHoje.addEventListener("click", ()=>{ calcKPIs(); }); }
 
 initNav();
+  initComprasMonthNav();
 
 const _fornBack = document.getElementById("btnFornecedorBack");
 if (_fornBack){ _fornBack.addEventListener("click", ()=>{ showView("view-c-home"); }); }
@@ -1926,6 +1983,7 @@ document.getElementById("custoNextBtn")?.addEventListener("click", ()=> setCusto
 document.getElementById("dayModalClose").addEventListener("click", closeDayModal);
 document.getElementById("dayModalBack").addEventListener("click", closeDayModal);
 wireCustoModal();
+wireContaModal();
 document.addEventListener("keydown", (e)=>{ if (e.key==="Escape"){ closeDayModal(); closeCustoModal(); } });
 
 const _homePrev = document.getElementById("homePrevMonth");
