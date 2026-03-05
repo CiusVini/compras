@@ -973,14 +973,28 @@ select{width:100%;padding:11px 10px;border-radius:14px;border:1px solid var(--li
       <div class="home-card home-meta resCard" id="cardMetaAnual">
         <div>
           <div class="k">Meta (Ano)</div>
-          <div class="v" id="resMetaAnualVal">R$ 50.000.000</div>
-          <div class="sub">Faturado: <span id="resFatAno">—</span> • Falta: <span id="resFaltaMeta">—</span></div>
+          <div class="v" id="resMetaAnualVal">R$ 50.000.000,00</div>
+          <div class="sub">
+            <span>Faturamento acumulado</span>
+            <span style="float:right;font-weight:700;" id="resFatAnoMeta">—</span>
+          </div>
+          <div class="hbar" style="margin-top:10px;"><div id="resMetaBar"></div></div>
         </div>
         <svg class="ring" viewBox="0 0 100 100" aria-label="% da meta anual">
           <circle class="bg" cx="50" cy="50" r="42" stroke-width="10" fill="none" />
           <circle class="fg" id="resMetaRing" cx="50" cy="50" r="42" stroke-width="10" fill="none" stroke-dasharray="263.89" stroke-dashoffset="263.89" />
           <text class="txt" id="resMetaPct" x="50" y="56" text-anchor="middle">—</text>
         </svg>
+      </div>
+
+      <!-- Faturamento acumulado (Ano) (clicável) -->
+      <div class="home-card resCard" id="cardFatAno" style="cursor:pointer;">
+        <div class="k">Faturamento acumulado (Ano)</div>
+        <div class="v" id="resFatAnoVal">—</div>
+        <div class="s" style="margin-top:6px;font-weight:600;">
+          <span id="resKgAnoLine">—</span>
+        </div>
+        <div class="sub" style="margin-top:8px;">Clique para ver por mês.</div>
       </div>
 
       <!-- Ano (Resumo) -->
@@ -1025,7 +1039,7 @@ select{width:100%;padding:11px 10px;border-radius:14px;border:1px solid var(--li
         </div>
       </div>
 
-      <!-- Custo operacional (Mês) (toque para detalhar) -->
+      <!-- Custo operacional (Mês) (clicável para detalhar) -->
       <div class="home-card home-lucro resCard" id="cardCustoOpMes" style="cursor:pointer;">
         <div class="k">Custo operacional (Mês)</div>
         <div class="v" id="resCustoOpMes">—</div>
@@ -1035,8 +1049,8 @@ select{width:100%;padding:11px 10px;border-radius:14px;border:1px solid var(--li
             <div class="v2" id="resCustoOpKgMes">—</div>
           </div>
           <div class="mini">
-            <div class="k">Detalhe</div>
-            <div class="v2" id="resCustoHint">Toque para ver</div>
+            <div class="k">% Fat.</div>
+            <div class="v2" id="resCustoOpPctMes">—</div>
           </div>
         </div>
       </div>
@@ -1056,20 +1070,39 @@ select{width:100%;padding:11px 10px;border-radius:14px;border:1px solid var(--li
           </div>
         </div>
       </div>
-
-      <!-- Detalhe (abre/fecha por clique no card operacional) -->
-      <div class="home-card" id="resDetailWrap" style="display:none;">
-        <div class="h2" style="margin:0 0 10px 0;">
-          <div class="left">Detalhe do custo operacional</div>
-          <div class="right">R$/kg por conta</div>
-        </div>
-        <div class="plist" id="resCustoBreakdown"></div>
-      </div>
     </div>
+  </div>
   </div>
 
 
-  <div class="detail" id="cdetail">
+  
+<div class="detail" id="resAnoDetail">
+  <div class="back" id="btnBackResAno">← Voltar</div>
+  <div class="head" style="padding-bottom:0;">
+    <div class="nm">Resultados</div>
+    <div class="per" id="resAnoPeriodo">—</div>
+  </div>
+
+  <div class="section">
+    <div class="h2"><div class="left">Faturamento mês a mês</div><div class="right">Valores, peso, margem/kg e custo/kg</div></div>
+    <div class="plist" id="resAnoList"></div>
+  </div>
+</div>
+
+<div class="detail" id="resCustoDetail">
+  <div class="back" id="btnBackResCusto">← Voltar</div>
+  <div class="head" style="padding-bottom:0;">
+    <div class="nm">Custo operacional</div>
+    <div class="per" id="resCustoPeriodo">—</div>
+  </div>
+
+  <div class="section">
+    <div class="h2"><div class="left">Detalhe por conta</div><div class="right">R$/kg</div></div>
+    <div class="plist" id="resCustoBreakdown"></div>
+  </div>
+</div>
+
+<div class="detail" id="cdetail">
     <div class="back" id="btnBackCliente">← Voltar</div>
     <div class="errbox" id="cError" style="display:none"></div>
     <div class="head">
@@ -1190,6 +1223,7 @@ let VENDEDORES = [];
 
 const fmtBRL = (n) => (n==null || isNaN(n)) ? "—" : n.toLocaleString("pt-BR", {style:"currency", currency:"BRL"});
 const fmtNum = (n, d=0) => (n==null || isNaN(n)) ? "—" : n.toLocaleString("pt-BR", {minimumFractionDigits:d, maximumFractionDigits:d});
+const fmtKg  = (n, d=2) => (n==null || isNaN(n)) ? "—" : (n.toLocaleString("pt-BR", {minimumFractionDigits:d, maximumFractionDigits:d}) + " kg");
 const fmtPct = (n) => (n==null || isNaN(n)) ? "—" : (n*100).toLocaleString("pt-BR", {maximumFractionDigits:1}) + "%";
 const fmtDateBR = (d) => {
   if(!d) return "—";
@@ -1906,15 +1940,20 @@ const vendorList=distinct(empresaRows,"vendedor");
     // Ano respeita filtros (exceto mês): ano/time/produto/vendedor
     const rowsAno = getFilteredRows({ano:state.ano, time:state.time, produto:state.produto, vendedor:(state.vendedor||"")});
     const fatAno = sum(rowsAno,"valor_bruto");
+    const kgAno = sum(rowsAno,"peso");
     const lucroAno = sum(rowsAno,"lucro");
     const margemAno = (fatAno>0)?(lucroAno/fatAno):null;
 
     const falta = META_ANUAL - fatAno;
     const pct = (META_ANUAL>0)?(fatAno/META_ANUAL):null;
 
-    setTxt("resFatAno", fatAno>0 ? fmtBRL(fatAno) : fmtBRL(0));
-    setTxt("resFaltaMeta", (META_ANUAL>0) ? fmtBRL(Math.max(0,falta)) : "—");
+    setTxt("resFatAnoMeta", fatAno>0 ? fmtBRL(fatAno) : fmtBRL(0));
+    setTxt("resFatAnoVal", fatAno>0 ? fmtBRL(fatAno) : fmtBRL(0));
+    setTxt("resKgAnoLine", kgAno>0 ? (`Peso total: ${fmtKg(kgAno)}`) : "—");
     setTxt("resMetaPct", pct==null ? "—" : fmtPct(clamp01(pct)));
+    const mb=document.getElementById("resMetaBar");
+    if(mb) mb.style.width = (pct==null? "0%": `${Math.round(clamp01(pct)*100)}%`);
+
     (function(){
       const ring=document.getElementById("resMetaRing");
       if(!ring) return;
@@ -1962,11 +2001,10 @@ const vendorList=distinct(empresaRows,"vendedor");
 
     setTxt("resCustoOpKgMes", custoKgMes>0 ? (fmtBRL(custoKgMes)+"/kg") : "—");
     setTxt("resCustoOpMes", (kgMes>0 && custoKgMes>0) ? fmtBRL(custoOpMes) : "—");
+    setTxt("resCustoOpPctMes", (fatMes>0 && kgMes>0 && custoKgMes>0) ? fmtPct(custoOpMes/fatMes) : "—");
     setTxt("resLucroOperMes", (kgMes>0 && custoKgMes>0) ? fmtBRL(lucroOperMes) : "—");
     setTxt("resLucroOperKgMes", lucroOperKgMes==null ? "—" : (fmtBRL(lucroOperKgMes)+"/kg"));
     setTxt("resMargemOperMes", margemOperMes==null ? "—" : fmtPct(margemOperMes));
-    const ch=document.getElementById("resCustoHint");
-    if(ch) ch.textContent = state.resShowDetail ? "Toque para ocultar" : "Toque para ver";
 
     // Operacional (ano): soma mês a mês (1..mes selecionado), respeitando filtros do ano
     let custoOpAno = 0;
@@ -1981,20 +2019,6 @@ const vendorList=distinct(empresaRows,"vendedor");
     }
     const lucroOperAno = lucroAno - custoOpAno;
     setTxt("resLucroOperAno", custoOpAno>0 ? fmtBRL(lucroOperAno) : "—");
-
-    // detalhe toggle (clicável no card operacional)
-    if(state.resShowDetail==null) state.resShowDetail=false;
-    const detailWrap=document.getElementById("resDetailWrap");
-    const cardOp=document.getElementById("cardCustoOpMes");
-    if(cardOp){
-      cardOp.onclick = ()=>{
-        state.resShowDetail = !state.resShowDetail;
-        render();
-      };
-    }
-    if(detailWrap){
-      detailWrap.style.display = state.resShowDetail ? "" : "none";
-    }
 
     const b=document.getElementById("resCustoBreakdown");
     if(b){
@@ -2522,6 +2546,104 @@ window.initFilters = function initFilters(){
 document.getElementById("fab").addEventListener("click", ()=>openDrawer(true));
 document.querySelectorAll(".menuBtn").forEach(btn=>btn.addEventListener("click", ()=>openDrawer(true)));
 document.getElementById("backdrop").addEventListener("click", ()=>openDrawer(false));
+
+function openResAnoDetail(){
+  const el=document.getElementById("resAnoDetail");
+  if(el) el.classList.add("open");
+  const per=document.getElementById("resAnoPeriodo");
+  if(per) per.textContent = `Período: ${state.ano} (acumulado até ${getMesLabel(state.ano, state.mes_num)})`;
+
+  const list=document.getElementById("resAnoList");
+  if(!list) return;
+
+  // monta meses do ano até o mês selecionado
+  let out="";
+  for(let m=1; m<=state.mes_num; m++){
+    const rowsM = getFilteredRows({ano: state.ano, mes_num: m, time: state.time, produto: state.produto, vendedor: (state.vendedor||"")});
+    const fat = sum(rowsM, "valor_bruto");
+    const kg  = sum(rowsM, "peso");
+    const lucro = sum(rowsM, "lucro");
+    if(!(fat>0 || kg>0 || lucro!=0)) continue;
+
+    const margemKg = (kg>0) ? (lucro/kg) : null;
+
+    const ref = `${state.ano}-${String(m).padStart(2,"0")}`;
+    const costRows = (typeof CUSTOS_OP!=="undefined") ? CUSTOS_OP.filter(x=>x.mes_ref===ref) : [];
+    const custoKg = costRows.reduce((acc,x)=>acc+(Number(x.Custo_Kg)||0),0);
+
+    out += `
+      <div class="pitem" style="padding:16px; border-radius:16px;">
+        <div class="row" style="align-items:flex-start;">
+          <div>
+            <div class="pname">${getMesShortLabel(state.ano, m)}</div>
+            <div class="pbig">${fmtBRL(fat)}</div>
+            <div class="chips" style="margin-top:10px; display:flex; gap:10px; flex-wrap:wrap;">
+              <span class="chip">Peso&nbsp;&nbsp;<b>${fmtKg(kg)}</b></span>
+              <span class="chip">Margem/kg&nbsp;&nbsp;<b>${margemKg==null? "—" : fmtBRL(margemKg)}</b></span>
+              <span class="chip">Custo/kg&nbsp;&nbsp;<b>${custoKg>0? fmtBRL(custoKg) : "—"}</b></span>
+            </div>
+          </div>
+        </div>
+      </div>
+    `;
+  }
+  list.innerHTML = out || `<div class="pitem">Sem dados para os filtros atuais.</div>`;
+}
+
+function openResCustoDetail(){
+  const el=document.getElementById("resCustoDetail");
+  if(el) el.classList.add("open");
+  const per=document.getElementById("resCustoPeriodo");
+  if(per) per.textContent = `Período: ${getMesLabel(state.ano, state.mes_num)}`;
+
+  const wrap=document.getElementById("resCustoBreakdown");
+  if(!wrap) return;
+
+  const ref = `${state.ano}-${String(state.mes_num).padStart(2,"0")}`;
+  const costRows = (typeof CUSTOS_OP!=="undefined") ? CUSTOS_OP.filter(x=>x.mes_ref===ref) : [];
+  const items = costRows.map(r=>({
+    conta: r.conta || r.CONTA || "—",
+    custoKg: Number(r.Custo_Kg)||0,
+    pago: Number(r.pago)||0,
+    a_pagar: Number(r.a_pagar)||0
+  })).filter(x=>x.custoKg>0).sort((a,b)=>b.custoKg-a.custoKg);
+
+  if(items.length===0){
+    wrap.innerHTML = `<div class="pitem">Sem custos operacionais para este mês.</div>`;
+    return;
+  }
+
+  wrap.innerHTML = items.map(it=>`
+    <div class="pitem" style="display:flex;justify-content:space-between;align-items:center;">
+      <div>
+        <div class="pname">${it.conta}</div>
+        <div class="psub">Pago: ${fmtBRL(it.pago)} • A pagar: ${fmtBRL(it.a_pagar)}</div>
+      </div>
+      <div class="pval">${fmtBRL(it.custoKg)}/kg</div>
+    </div>
+  `).join("");
+}
+
+// Helpers para rótulos curtos de mês (Jan/26)
+function getMesShortLabel(ano, mes_num){
+  const short=["Jan","Fev","Mar","Abr","Mai","Jun","Jul","Ago","Set","Out","Nov","Dez"][mes_num-1]||"";
+  return `${short}/${String(ano).slice(2)}`;
+}
+
+
+document.getElementById("btnBackResAno").addEventListener("click", ()=>{ document.getElementById("resAnoDetail").classList.remove("open"); });
+document.getElementById("btnBackResCusto").addEventListener("click", ()=>{ document.getElementById("resCustoDetail").classList.remove("open"); });
+
+// Abre detalhes de Resultados (tela cheia, igual vendedores)
+const __cardFatAno = document.getElementById("cardFatAno");
+if(__cardFatAno){
+  __cardFatAno.addEventListener("click", ()=>{ document.getElementById("resAnoDetail").classList.add("open"); });
+}
+const __cardCustoOpMes = document.getElementById("cardCustoOpMes");
+if(__cardCustoOpMes){
+  __cardCustoOpMes.addEventListener("click", ()=>{ document.getElementById("resCustoDetail").classList.add("open"); });
+}
+
 document.getElementById("btnBack").addEventListener("click", ()=>{ document.getElementById("detail").classList.remove("open"); });
 document.getElementById("btnBackProduto").addEventListener("click", ()=>{ document.getElementById("pdetail").classList.remove("open"); });
 document.getElementById("btnBackCliente").addEventListener("click", ()=>{ document.getElementById("cdetail").classList.remove("open"); });
