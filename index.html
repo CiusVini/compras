@@ -1296,7 +1296,19 @@ function setView(v){
 function openDrawer(open=true){
   document.getElementById("drawer").classList.toggle("open", open);
   document.getElementById("backdrop").classList.toggle("open", open);
-  if(open && window.__syncFiltersUI){ try{ window.__syncFiltersUI(); }catch(e){ console.warn("sync filters UI", e); } }
+
+  // Garante que os filtros tenham opções sempre que o drawer abrir (evita selects vazios)
+  if(open){
+    try{
+      if(!window.__filtersInited && typeof window.initFilters === "function"){
+        window.initFilters();
+        window.__filtersInited = true;
+      }
+    }catch(e){
+      console.warn("init filters", e);
+    }
+    if(window.__syncFiltersUI){ try{ window.__syncFiltersUI(); }catch(e){ console.warn("sync filters UI", e); } }
+  }
 }
 function clamp01(x){ return Math.max(0, Math.min(1,x)); }
 function getFilteredRows({ano, mes_num, time, produto, vendedor} = {}){
@@ -2637,11 +2649,11 @@ document.getElementById("btnBackResCusto").addEventListener("click", ()=>{ docum
 // Abre detalhes de Resultados (tela cheia, igual vendedores)
 const __cardFatAno = document.getElementById("cardFatAno");
 if(__cardFatAno){
-  __cardFatAno.addEventListener("click", ()=>{ document.getElementById("resAnoDetail").classList.add("open"); });
+  __cardFatAno.addEventListener("click", ()=>{ openResAnoDetail(); });
 }
 const __cardCustoOpMes = document.getElementById("cardCustoOpMes");
 if(__cardCustoOpMes){
-  __cardCustoOpMes.addEventListener("click", ()=>{ document.getElementById("resCustoDetail").classList.add("open"); });
+  __cardCustoOpMes.addEventListener("click", ()=>{ openResCustoDetail(); });
 }
 
 document.getElementById("btnBack").addEventListener("click", ()=>{ document.getElementById("detail").classList.remove("open"); });
@@ -2650,7 +2662,7 @@ document.getElementById("btnBackCliente").addEventListener("click", ()=>{ docume
 
 }
 
-window.initFilters && window.initFilters();
+if(window.initFilters){ window.initFilters(); window.__filtersInited = true; }
 
 // Busca de produtos (UI)
 (function(){
