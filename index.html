@@ -983,6 +983,22 @@ select{width:100%;padding:11px 10px;border-radius:14px;border:1px solid var(--li
         </svg>
       </div>
 
+      <!-- Ano (Resumo) -->
+      <div class="home-card home-lucro resCard" id="cardAnoResumo">
+        <div class="k">Ano (Resumo)</div>
+        <div class="v" id="resLucroComercialAno">—</div>
+        <div class="home-lucro row2">
+          <div class="mini">
+            <div class="k">Margem</div>
+            <div class="v2" id="resMargemAno">—</div>
+          </div>
+          <div class="mini">
+            <div class="k">Lucro op.</div>
+            <div class="v2" id="resLucroOperAno">—</div>
+          </div>
+        </div>
+      </div>
+
       <!-- Faturamento (Mês) -->
       <div class="home-card resCard" id="cardFatMes">
         <div class="k">Faturamento (Mês)</div>
@@ -999,44 +1015,44 @@ select{width:100%;padding:11px 10px;border-radius:14px;border:1px solid var(--li
         <div class="v" id="resLucroComercialMes">—</div>
         <div class="home-lucro row2">
           <div class="mini">
-            <div class="k">Margem</div>
-            <div class="v2" id="resMargemMes">—</div>
-          </div>
-          <div class="mini">
             <div class="k">R$/kg</div>
             <div class="v2" id="resLucroKgMes">—</div>
+          </div>
+          <div class="mini">
+            <div class="k">Margem</div>
+            <div class="v2" id="resMargemMes">—</div>
           </div>
         </div>
       </div>
 
-      <!-- Operacional (Mês) -->
+      <!-- Custo operacional (Mês) (toque para detalhar) -->
+      <div class="home-card home-lucro resCard" id="cardCustoOpMes" style="cursor:pointer;">
+        <div class="k">Custo operacional (Mês)</div>
+        <div class="v" id="resCustoOpMes">—</div>
+        <div class="home-lucro row2">
+          <div class="mini">
+            <div class="k">R$/kg</div>
+            <div class="v2" id="resCustoOpKgMes">—</div>
+          </div>
+          <div class="mini">
+            <div class="k">Detalhe</div>
+            <div class="v2" id="resCustoHint">Toque para ver</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Resultado operacional (Mês) -->
       <div class="home-card home-lucro resCard" id="cardResOpMes">
         <div class="k">Resultado operacional (Mês)</div>
         <div class="v" id="resLucroOperMes">—</div>
         <div class="home-lucro row2">
           <div class="mini">
-            <div class="k">Custo op.</div>
-            <div class="v2" id="resCustoOpMes">—</div>
-          </div>
-          <div class="mini">
             <div class="k">R$/kg</div>
-            <div class="v2" id="resCustoOpKgMes">—</div>
+            <div class="v2" id="resLucroOperKgMes">—</div>
           </div>
-        </div>
-      </div>
-
-      <!-- Ano (Resumo) -->
-      <div class="home-card home-lucro resCard" id="cardAnoResumo">
-        <div class="k">Ano (Resumo)</div>
-        <div class="v" id="resLucroComercialAno">—</div>
-        <div class="home-lucro row2">
           <div class="mini">
             <div class="k">Margem</div>
-            <div class="v2" id="resMargemAno">—</div>
-          </div>
-          <div class="mini">
-            <div class="k">Lucro op.</div>
-            <div class="v2" id="resLucroOperAno">—</div>
+            <div class="v2" id="resMargemOperMes">—</div>
           </div>
         </div>
       </div>
@@ -1941,10 +1957,16 @@ const vendorList=distinct(empresaRows,"vendedor");
     const custoKgMes = costRowsMes.reduce((acc,x)=>acc+(Number(x.Custo_Kg)||0),0);
     const custoOpMes = (kgMes>0)?(kgMes*custoKgMes):0;
     const lucroOperMes = lucroMes - custoOpMes;
+    const lucroOperKgMes = (kgMes>0 && custoKgMes>0) ? (lucroOperMes/kgMes) : null;
+    const margemOperMes = (fatMes>0 && custoKgMes>0) ? (lucroOperMes/fatMes) : null;
 
     setTxt("resCustoOpKgMes", custoKgMes>0 ? (fmtBRL(custoKgMes)+"/kg") : "—");
     setTxt("resCustoOpMes", (kgMes>0 && custoKgMes>0) ? fmtBRL(custoOpMes) : "—");
     setTxt("resLucroOperMes", (kgMes>0 && custoKgMes>0) ? fmtBRL(lucroOperMes) : "—");
+    setTxt("resLucroOperKgMes", lucroOperKgMes==null ? "—" : (fmtBRL(lucroOperKgMes)+"/kg"));
+    setTxt("resMargemOperMes", margemOperMes==null ? "—" : fmtPct(margemOperMes));
+    const ch=document.getElementById("resCustoHint");
+    if(ch) ch.textContent = state.resShowDetail ? "Toque para ocultar" : "Toque para ver";
 
     // Operacional (ano): soma mês a mês (1..mes selecionado), respeitando filtros do ano
     let custoOpAno = 0;
@@ -1963,7 +1985,7 @@ const vendorList=distinct(empresaRows,"vendedor");
     // detalhe toggle (clicável no card operacional)
     if(state.resShowDetail==null) state.resShowDetail=false;
     const detailWrap=document.getElementById("resDetailWrap");
-    const cardOp=document.getElementById("cardResOpMes");
+    const cardOp=document.getElementById("cardCustoOpMes");
     if(cardOp){
       cardOp.onclick = ()=>{
         state.resShowDetail = !state.resShowDetail;
