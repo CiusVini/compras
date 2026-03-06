@@ -559,6 +559,55 @@ select{width:100%;padding:11px 10px;border-radius:14px;border:1px solid var(--li
 .delta.up{color:var(--green);}
 .delta.down{color:var(--red);}
 .delta.neutral{color:rgba(255,255,255,.55);}
+.clickable-card{cursor:pointer;}
+.inat-badge{
+  display:inline-flex; align-items:center; gap:8px;
+  padding:6px 10px; border-radius:999px;
+  font-size:12px; font-weight:900;
+  border:1px solid rgba(255,255,255,.10);
+  background:rgba(255,255,255,.04);
+}
+.inat-badge.d60{ color:var(--yellow); border-color:rgba(241,196,15,.30); background:rgba(241,196,15,.10); }
+.inat-badge.d90{ color:var(--red); border-color:rgba(231,76,60,.35); background:rgba(231,76,60,.10); }
+.delta-chip{
+  display:inline-flex; align-items:center; gap:6px;
+  padding:6px 10px; border-radius:999px;
+  font-weight:900; font-size:12px;
+  border:1px solid rgba(255,255,255,.10);
+  background:rgba(255,255,255,.04);
+}
+.delta-chip.up{ color:var(--green); border-color:rgba(46,204,113,.30); background:rgba(46,204,113,.10); }
+.delta-chip.down{ color:var(--red); border-color:rgba(231,76,60,.35); background:rgba(231,76,60,.10); }
+.delta-chip.neutral{ color:rgba(255,255,255,.70); }
+
+
+
+.seller-focus-wrap{display:none;margin-top:6px;}
+.seller-focus-card{position:relative;overflow:hidden;border:1px solid rgba(51,108,246,.22);border-radius:26px;background:linear-gradient(180deg,#101c34 0%,#0f1930 100%);padding:18px 18px 16px;box-shadow:0 12px 32px rgba(0,0,0,.18);}
+.seller-focus-card::before{content:"";position:absolute;left:0;top:0;bottom:0;width:5px;background:linear-gradient(180deg,var(--green),#1ea85c);}
+.seller-focus-top{display:flex;justify-content:space-between;gap:14px;align-items:flex-start;flex-wrap:wrap;}
+.seller-focus-title{font-size:15px;color:var(--muted)}
+.seller-focus-name{font-size:30px;font-weight:900;line-height:1.05;letter-spacing:-.02em;margin-top:4px}
+.seller-focus-badge{display:inline-flex;align-items:center;gap:8px;padding:10px 12px;border-radius:999px;background:rgba(46,204,113,.12);border:1px solid rgba(46,204,113,.25);color:#dff9ea;font-weight:800}
+.seller-focus-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin-top:16px}
+.seller-focus-kpi{border:1px solid rgba(255,255,255,.06);border-radius:18px;padding:14px 14px;background:rgba(255,255,255,.02)}
+.seller-focus-kpi .k{font-size:12px;color:var(--muted);margin-bottom:6px}
+.seller-focus-kpi .v{font-size:16px;font-weight:900}
+.seller-focus-foot{margin-top:12px;color:var(--muted);font-size:13px}
+@media (max-width: 780px){.seller-focus-grid{grid-template-columns:1fr}.seller-focus-name{font-size:24px}}
+
+.login-screen{position:fixed;inset:0;z-index:9999;background:#071428;display:flex;align-items:center;justify-content:center;padding:24px;box-sizing:border-box;}
+.login-box{width:100%;max-width:360px;text-align:center;}
+.login-select,.login-input{width:100%;box-sizing:border-box;padding:14px 16px;border-radius:16px;border:1px solid #24324f;background:#121a2b;color:#e8eefc;font-size:16px;outline:none;appearance:none;}
+.login-select{margin-bottom:14px;}
+.login-button{margin-top:16px;width:100%;box-sizing:border-box;padding:14px;border-radius:16px;border:none;background:#2ecc71;color:#0b1220;font-weight:900;font-size:16px;cursor:pointer;}
+.login-error{display:none;margin-top:14px;color:#ff8f8f;font-size:13px;}
+.user-badge{font-size:12px;color:var(--muted);border:1px solid var(--line);padding:8px 10px;border-radius:999px;background:rgba(18,26,43,.6);}
+.logout-fab{position:fixed;top:16px;right:16px;z-index:40;height:42px;padding:0 14px;border-radius:999px;background:rgba(18,26,43,.95);border:1px solid var(--line);box-shadow:var(--shadow);display:none;align-items:center;justify-content:center;gap:8px;cursor:pointer;color:var(--text);font-weight:700;font-size:13px;}
+.logout-fab span{display:inline-block;line-height:1;}
+@media (max-width: 720px){.logout-fab{top:12px;right:12px;height:40px;padding:0 12px;font-size:12px;}}
+.logout-fab svg{width:20px;height:20px;stroke:rgba(232,238,252,.85);fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;}
+.hidden-by-role{display:none !important;}
 
 </style>
 </head>
@@ -585,20 +634,21 @@ select{width:100%;padding:11px 10px;border-radius:14px;border:1px solid var(--li
 
 
 <!-- LOGIN SCREEN -->
-<div id="loginScreen" style="position:fixed;inset:0;z-index:9999;background:#0b1220;display:none;align-items:center;justify-content:center;">
-  <div style="width:100%;max-width:360px;padding:24px 18px;text-align:center;box-sizing:border-box;margin:0 auto;">
+<div id="loginScreen" class="login-screen">
+  <div class="login-box">
     <img src="logo.png" alt="VIMACOM" class="login-logo">
-    <input id="loginPassword" type="password" placeholder="Digite a senha"
-      style="width:100%;box-sizing:border-box;padding:14px 16px;border-radius:12px;border:1px solid #24324f;
-             background:#121a2b;color:#e8eefc;font-size:16px;outline:none;">
-    <button id="loginBtn"
-      style="margin-top:16px;width:100%;box-sizing:border-box;padding:14px;border-radius:12px;
-             border:none;background:#2ecc71;color:#0b1220;font-weight:800;font-size:16px;cursor:pointer;">
-      Acessar painel
-    </button>
-    <div id="loginError" style="display:none;margin-top:14px;color:#e74c3c;font-size:13px;">
-      Senha incorreta
-    </div>
+    <select id="loginUser" class="login-select">
+      <option value="diretoria">Diretoria</option>
+      <option value="vieira">Vieira</option>
+      <option value="debora">Débora</option>
+      <option value="ricardo">Ricardo</option>
+      <option value="nazareno">Nazareno</option>
+      <option value="osvaldo">Osvaldo</option>
+      <option value="brunadias">Bruna Dias</option>
+    </select>
+    <input id="loginPassword" class="login-input" type="password" placeholder="Digite a senha">
+    <button id="loginBtn" class="login-button">Acessar painel</button>
+    <div id="loginError" class="login-error">Usuário ou senha incorretos</div>
   </div>
 </div>
 
@@ -613,7 +663,8 @@ select{width:100%;padding:11px 10px;border-radius:14px;border:1px solid var(--li
       <div class="brand">
         <img src="logo.png" alt="VIMACOM" />
       </div>
-      <div style="display:flex;align-items:center;gap:10px;">
+      <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;justify-content:flex-end;">
+        <div class="user-badge" id="userBadgeHome">—</div>
         <div class="pill periodPill">Período: —</div>
         <button class="iconbtn menuBtn" aria-label="Abrir filtros" title="Filtros">
           <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -651,7 +702,7 @@ select{width:100%;padding:11px 10px;border-radius:14px;border:1px solid var(--li
       </div>
 
       <!-- Lucro -->
-      <div class="home-card home-lucro">
+      <div class="home-card home-lucro" id="homeLucroCard">
         <div class="k">Lucro</div>
         <div class="v" id="homeLucroVal">—</div>
         <div class="home-lucro row2">
@@ -727,7 +778,8 @@ select{width:100%;padding:11px 10px;border-radius:14px;border:1px solid var(--li
     
     <div class="topbar compact">
       <div class="titlePage">Produtos</div>
-      <div style="display:flex;align-items:center;gap:10px;">
+      <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;justify-content:flex-end;">
+        <div class="user-badge" id="userBadgeResultados">—</div>
         <div class="pill periodPill">Período: —</div>
         <button class="iconbtn menuBtn" aria-label="Abrir filtros" title="Filtros">
           <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -775,7 +827,8 @@ select{width:100%;padding:11px 10px;border-radius:14px;border:1px solid var(--li
     
     <div class="topbar compact">
       <div class="titlePage">Vendedores</div>
-      <div style="display:flex;align-items:center;gap:10px;">
+      <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;justify-content:flex-end;">
+        <div class="user-badge">—</div>
         <div class="pill periodPill">Período: —</div>
         <button class="iconbtn menuBtn" aria-label="Abrir filtros" title="Filtros">
           <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -787,6 +840,9 @@ select{width:100%;padding:11px 10px;border-radius:14px;border:1px solid var(--li
       </div>
     </div>
 
+    <div class="section seller-focus-wrap" id="sellerFocusWrap">
+      <div class="seller-focus-card" id="sellerFocusCard"></div>
+    </div>
 
     <div class="section">
     <div class="h2">
@@ -870,7 +926,8 @@ select{width:100%;padding:11px 10px;border-radius:14px;border:1px solid var(--li
   <div class="view" id="view-clientes">
     <div class="topbar compact">
       <div class="titlePage">Clientes</div>
-      <div style="display:flex;align-items:center;gap:10px;">
+      <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;justify-content:flex-end;">
+        <div class="user-badge">—</div>
         <div class="pill periodPill">Período: —</div>
         <button class="iconbtn menuBtn" aria-label="Abrir filtros" title="Filtros">
           <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -906,7 +963,7 @@ select{width:100%;padding:11px 10px;border-radius:14px;border:1px solid var(--li
 
 
       <!-- Clientes inativos -->
-      <div class="home-card" id="cardCliInativos">
+      <div class="home-card clickable-card" id="cardCliInativos">
         <div class="h2" style="margin:0 0 10px 0;">
           <div class="left">Clientes inativos</div>
           <div class="right" style="color:var(--muted);font-size:12px;">(base completa)</div>
@@ -921,7 +978,7 @@ select{width:100%;padding:11px 10px;border-radius:14px;border:1px solid var(--li
             <div class="v2" id="cliInat90">—</div>
           </div>
         </div>
-        <div class="sub" id="cliInatHint">Considera a última compra do cliente, respeitando os filtros de Time/Produto/Vendedor.</div>
+        <div class="sub" id="cliInatHint">Toque para abrir a lista +60 / +90 dias. Considera a última compra do cliente, respeitando os filtros de Time/Produto/Vendedor.</div>
       </div>
 
       <!-- Destaque -->
@@ -978,7 +1035,8 @@ select{width:100%;padding:11px 10px;border-radius:14px;border:1px solid var(--li
   <div class="view" id="view-resultados">
     <div class="topbar compact">
       <div class="titlePage">Resultados</div>
-      <div style="display:flex;align-items:center;gap:10px;">
+      <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;justify-content:flex-end;">
+        <div class="user-badge">—</div>
         <div class="pill periodPill">Período: —</div>
         <button class="iconbtn menuBtn" aria-label="Abrir filtros" title="Filtros">
           <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -1121,6 +1179,24 @@ select{width:100%;padding:11px 10px;border-radius:14px;border:1px solid var(--li
   <div class="section">
     <div class="h2"><div class="left">Detalhe por conta</div><div class="right">R$/kg</div></div>
     <div class="plist" id="resCustoBreakdown"></div>
+  </div>
+</div>
+
+<div class="detail" id="cliInatDetail">
+  <div class="back" id="btnBackCliInat">← Voltar</div>
+  <div class="head" style="padding-bottom:0;">
+    <div class="nm">Clientes inativos</div>
+    <div class="per" id="cliInatPeriodo">—</div>
+  </div>
+
+  <div class="section">
+    <div class="h2"><div class="left">+90 dias</div><div class="right" id="cliInat90Hint">Base completa</div></div>
+    <div class="plist" id="cliInatList90"></div>
+  </div>
+
+  <div class="section">
+    <div class="h2"><div class="left">+60 dias</div><div class="right" id="cliInat60Hint">Sem duplicar +90</div></div>
+    <div class="plist" id="cliInatList60"></div>
   </div>
 </div>
 
@@ -1293,7 +1369,50 @@ const __latest = BASE.reduce((acc,r)=>{
   if (a>acc.ano || (a===acc.ano && m>acc.mes_num)) return {ano:a, mes_num:m};
   return acc;
 },{ano:0, mes_num:0});
-const state = { ano: __latest.ano||2026, mes_num: __latest.mes_num||2, time:"", produto:"", vendedor:"" , view:"home", prodQuery:""};
+const state = { ano: __latest.ano||2026, mes_num: __latest.mes_num||2, time:"", produto:"", vendedor:"" , view:"home", prodQuery:"", auth:null, vendedorBloqueado:""};
+
+
+function normalizarTexto(texto){
+  return (texto||"").toString().trim().toUpperCase().normalize("NFD").replace(/[̀-ͯ]/g, "");
+}
+function isSellerMode(){
+  return !!(state.auth && state.auth.perfil === "vendedor");
+}
+function isSensitiveLabel(label){
+  const t = normalizarTexto(label);
+  return t.includes("MARGEM") || t.includes("LUCRO") || t.includes("RESULTADO") || t.includes("CUSTO OPERACIONAL") || t.includes("% DO LUCRO");
+}
+function applyRoleUI(){
+  const seller = isSellerMode();
+  const resView = document.getElementById("view-resultados");
+  const navRes = document.querySelector('#bottomNav .item[data-view="resultados"]');
+  const homeLucroCard = document.getElementById("homeLucroCard");
+  const logoutBtn = document.getElementById("logoutBtn");
+  if(resView) resView.classList.toggle("hidden-by-role", seller);
+  if(navRes) navRes.classList.toggle("hidden-by-role", seller);
+  if(homeLucroCard) homeLucroCard.classList.toggle("hidden-by-role", seller);
+  if(logoutBtn) logoutBtn.style.display = state.auth ? "flex" : "none";
+
+  const sellerFixed = seller && state.vendedorBloqueado;
+  const vendField = document.getElementById("fVendedor");
+  if(vendField){
+    vendField.disabled = !!sellerFixed;
+    vendField.style.opacity = sellerFixed ? ".65" : "1";
+  }
+  const vendLabel = vendField ? vendField.closest('.field') : null;
+  if(vendLabel){
+    const lb = vendLabel.querySelector('label');
+    if(lb) lb.textContent = sellerFixed ? "Vendedor (fixo no login)" : "Vendedor (opcional)";
+  }
+
+  const badgeTxt = state.auth ? `${state.auth.nome} • ${seller ? 'Visão individual' : 'Acesso total'}` : '—';
+  document.querySelectorAll('.user-badge').forEach(el => el.textContent = badgeTxt);
+
+  if(seller && state.view === 'resultados'){
+    state.view = 'home';
+    setView('home');
+  }
+}
 
 function setDefaultPeriodToCurrentMonth(){
   try{
@@ -1427,7 +1546,8 @@ function stripeColor(code){
 }
 function buildKpi(container, items){
   container.innerHTML="";
-  for(const it of items){
+  const visibleItems = isSellerMode() ? items.filter(it => !isSensitiveLabel(it.label)) : items;
+  for(const it of visibleItems){
     const div=document.createElement("div");
     div.className="kpi";
     div.innerHTML = `<div class="label">${it.label}</div><div class="value">${it.value}</div>`;
@@ -1445,6 +1565,7 @@ function computeVendorSummary(rowsVendor, vendedor, ano, mes_num){
   return {vendedor, fat, kg, lucro, percMeta, status:st.code, statusLabel:st.label};
 }
 function render(){
+  applyRoleUI();
   const mesLabel=getMesLabel(state.ano, state.mes_num);
   // subPeriod existia em versões anteriores; mantém compatibilidade sem quebrar o render.
   const sp=document.getElementById("subPeriod");
@@ -1626,7 +1747,11 @@ setBar("homeFatBar", percMetaEmp);
   setTxt("homePrevYearFat", (prevFat==null || prevFat===0) ? "—" : fmtBRL(prevFat));
   setTxt("homePrevYearPeso", (prevKg==null || prevKg===0) ? "—" : `${fmtNum(prevKg)} kg`);
 
-const vendorList=distinct(empresaRows,"vendedor");
+const vendorListBase=distinct(empresaRows,"vendedor");
+  const vendorList = isSellerMode() && state.vendedorBloqueado
+    ? vendorListBase.filter(v => normalizarTexto(v) === normalizarTexto(state.vendedorBloqueado))
+    : vendorListBase;
+
   let summaries=vendorList.map(v=>{
     const rowsV=empresaRows.filter(r=>r.vendedor===v);
     return computeVendorSummary(rowsV, v, state.ano, state.mes_num);
@@ -1637,6 +1762,47 @@ const vendorList=distinct(empresaRows,"vendedor");
     if(bp!==ap) return bp-ap;
     return b.lucro-a.lucro;
   });
+
+  const sellerFocusWrap=document.getElementById("sellerFocusWrap");
+  const sellerFocusCard=document.getElementById("sellerFocusCard");
+  if(sellerFocusWrap && sellerFocusCard){
+    if(isSellerMode() && state.vendedorBloqueado){
+      const sellerName = state.vendedorBloqueado;
+      const sellerRows = empresaRows.filter(r => normalizarTexto(r.vendedor) === normalizarTexto(sellerName));
+      const sellerSummary = computeVendorSummary(sellerRows, sellerName, state.ano, state.mes_num);
+      const meta = METAS[sellerName] || null;
+      const metaMensal = meta ? Number(meta.meta_mensal)||0 : 0;
+      const restante = metaMensal>0 ? Math.max(metaMensal - sellerSummary.fat, 0) : null;
+      sellerFocusWrap.style.display = "block";
+      sellerFocusCard.innerHTML = `
+        <div class="seller-focus-top">
+          <div>
+            <div class="seller-focus-title">Painel individual</div>
+            <div class="seller-focus-name">${sellerName}</div>
+          </div>
+          <div class="seller-focus-badge">${sellerSummary.statusLabel}</div>
+        </div>
+        <div class="seller-focus-grid">
+          <div class="seller-focus-kpi">
+            <div class="k">Meta do mês</div>
+            <div class="v">${metaMensal>0 ? fmtBRL(metaMensal) : "—"}</div>
+          </div>
+          <div class="seller-focus-kpi">
+            <div class="k">Realizado</div>
+            <div class="v">${fmtBRL(sellerSummary.fat)}</div>
+          </div>
+          <div class="seller-focus-kpi">
+            <div class="k">Faltam</div>
+            <div class="v">${restante!=null ? fmtBRL(restante) : "—"}</div>
+          </div>
+        </div>
+        <div class="seller-focus-foot">Acompanhamento individual de ${getMesLabel(state.ano, state.mes_num)} • ${sellerSummary.percMeta==null ? "Meta não definida" : (fmtPct(sellerSummary.percMeta) + " da meta")}</div>
+      `;
+    }else{
+      sellerFocusWrap.style.display = "none";
+      sellerFocusCard.innerHTML = "";
+    }
+  }
 
 
   // --- Produtos (no período) ---
@@ -1684,7 +1850,7 @@ const vendorList=distinct(empresaRows,"vendedor");
               <div class="sub">Mix no período: ${top.mix==null ? "—" : fmtPct(top.mix)} • ${top.preco==null ? "Preço —" : fmtBRL(top.preco) + "/kg"}</div>
             </div>
           </div>
-          <div class="pill">${top.margemPct==null ? "Margem —" : fmtPct(top.margemPct)}</div>
+          <div class="pill">${isSellerMode() ? "Visão individual" : (top.margemPct==null ? "Margem —" : fmtPct(top.margemPct))}</div>
         </div>
 
         <div class="kpis">
@@ -1697,8 +1863,8 @@ const vendorList=distinct(empresaRows,"vendedor");
             <div class="value">${fmtNum(top.kg,2)}</div>
           </div>
           <div class="kpi">
-            <div class="label">Lucro</div>
-            <div class="value">${fmtBRL(top.lucro)}</div>
+            <div class="label">${isSellerMode() ? "Pedidos" : "Lucro"}</div>
+            <div class="value">${isSellerMode() ? fmtNum(new Set(getFilteredRows({ano:state.ano, mes_num:state.mes_num, time:state.time, produto:top.produto, vendedor:state.vendedor}).map(r=>r.data+"|"+r.vendedor+"|"+r.valor_bruto+"|"+r.peso)).size,0) : fmtBRL(top.lucro)}</div>
           </div>
         </div>
       `;
@@ -1720,7 +1886,7 @@ const vendorList=distinct(empresaRows,"vendedor");
         </div>
         <div class="right">
           <div class="val">${fmtBRL(p.valor)}</div>
-          <div class="sub">Mix: ${p.mix==null ? "—" : fmtPct(p.mix)} • Margem: ${p.margemPct==null ? "—" : fmtPct(p.margemPct)}</div>
+          <div class="sub">Mix: ${p.mix==null ? "—" : fmtPct(p.mix)}${isSellerMode() ? "" : (" • Margem: " + (p.margemPct==null ? "—" : fmtPct(p.margemPct)))}</div>
         </div>
       `;
       row.addEventListener("click", ()=>openProductDetail(p.produto));
@@ -1728,8 +1894,15 @@ const vendorList=distinct(empresaRows,"vendedor");
     }
   }
 
+  const sellerHeaderLeft = document.querySelector('#view-vendedores .h2 .left');
+  const sellerHeaderRight = document.querySelector('#view-vendedores .h2 .right');
+  if(sellerHeaderLeft) sellerHeaderLeft.textContent = isSellerMode() ? 'Seu painel comercial' : 'Carrossel por vendedor';
+  if(sellerHeaderRight) sellerHeaderRight.textContent = isSellerMode() ? 'Somente seus indicadores' : 'Toque em um vendedor para ver detalhes';
+
   const carousel=document.getElementById("carousel");
   carousel.innerHTML="";
+  carousel.style.overflowX = isSellerMode() ? 'hidden' : 'auto';
+  carousel.style.scrollSnapType = isSellerMode() ? 'none' : 'x mandatory';
   for(const s of summaries){
     const card=document.createElement("div");
     card.className="card";
@@ -1772,7 +1945,14 @@ const vendorList=distinct(empresaRows,"vendedor");
         </div>
       </div>
     `;
-    card.addEventListener("click", ()=>openVendorDetail(s.vendedor));
+    if(isSellerMode()){
+      card.style.minWidth = '100%';
+      card.style.width = '100%';
+      card.style.scrollSnapAlign = 'unset';
+      card.style.cursor = 'default';
+    }else{
+      card.addEventListener("click", ()=>openVendorDetail(s.vendedor));
+    }
     carousel.appendChild(card);
   }
 
@@ -1850,17 +2030,20 @@ const vendorList=distinct(empresaRows,"vendedor");
     };
 
     // inicial
-    setVendHistory(summaries?.[0]?.vendedor || pickCenteredVendor());
+    const fixedVendor = isSellerMode() ? (state.vendedorBloqueado || summaries?.[0]?.vendedor || "") : "";
+    setVendHistory(fixedVendor || summaries?.[0]?.vendedor || pickCenteredVendor());
 
     // atualiza ao rolar
-    let t=null;
-    carousel.addEventListener("scroll", ()=>{
-      if(t) clearTimeout(t);
-      t=setTimeout(()=>{
-        const vend = pickCenteredVendor();
-        setVendHistory(vend);
-      }, 120);
-    });
+    if(!isSellerMode()){
+      let t=null;
+      carousel.addEventListener("scroll", ()=>{
+        if(t) clearTimeout(t);
+        t=setTimeout(()=>{
+          const vend = pickCenteredVendor();
+          setVendHistory(vend);
+        }, 120);
+      });
+    }
   }
 
   // --- Clientes (mês/ano) ---
@@ -1921,12 +2104,15 @@ const vendorList=distinct(empresaRows,"vendedor");
       return {cliente:c, valor:v, kg:k, lucro:l, margem, preco, lastAll, daysAll, vendedor:topVend, estado, regiao, mix:(fatBaseCli>0)?(v/fatBaseCli):null};
     }).sort((a,b)=>b.valor-a.valor);
 
-    // Clientes inativos (última compra na base inteira), respeitando filtros atuais de Time/Produto/Vendedor
+    // Clientes inativos (base completa), respeitando filtros atuais de Time/Produto/Vendedor
     (function(){
-      const c60 = cliAgg.filter(x=>x.daysAll!=null && x.daysAll>=60).length;
-      const c90 = cliAgg.filter(x=>x.daysAll!=null && x.daysAll>=90).length;
+      const inactiveAll = getInactiveClientsData();
+      const c90 = inactiveAll.filter(x=>x.daysAll!=null && x.daysAll>=90).length;
+      const c60 = inactiveAll.filter(x=>x.daysAll!=null && x.daysAll>=60 && x.daysAll<90).length;
       setTxt("cliInat60", String(c60));
       setTxt("cliInat90", String(c90));
+      const inatCard = document.getElementById("cardCliInativos");
+      if(inatCard) inatCard.onclick = ()=>openInactiveClientsDetail();
     })();
 
     const q = (state.cliQuery||"").trim().toLowerCase();
@@ -1957,7 +2143,7 @@ const vendorList=distinct(empresaRows,"vendedor");
         sub.textContent = `${top.regiao||"—"} • ${top.estado||"—"} • Vendedor: ${top.vendedor||"—"}`;
         val.textContent = fmtBRL(top.valor);
         kg.textContent  = `${fmtNum(top.kg,2)} kg`;
-        mg.textContent  = top.margem==null ? "—" : fmtPct(top.margem);
+        mg.textContent  = isSellerMode() ? "Oculto" : (top.margem==null ? "—" : fmtPct(top.margem));
         const lastTxt = top.lastAll ? fmtDateBR(top.lastAll) : "—";
         const diasTxt = (top.daysAll==null) ? "—" : `${top.daysAll}d`;
         last.textContent = `${lastTxt} (${diasTxt})`;
@@ -1993,7 +2179,7 @@ const vendorList=distinct(empresaRows,"vendedor");
             </div>
             <div class="right">
               <div class="val">${fmtBRL(c.valor)}</div>
-              <div class="sub">Kg: ${fmtNum(c.kg,2)} • Mix: ${c.mix==null ? "—" : fmtPct(c.mix)} • Margem: ${c.margem==null ? "—" : fmtPct(c.margem)}</div>
+              <div class="sub">Kg: ${fmtNum(c.kg,2)} • Mix: ${c.mix==null ? "—" : fmtPct(c.mix)}${isSellerMode() ? "" : (" • Margem: " + (c.margem==null ? "—" : fmtPct(c.margem)))}</div>
             </div>
           `;
           row.addEventListener("click", ()=>openClientDetail(c.cliente));
@@ -2107,11 +2293,19 @@ const vendorList=distinct(empresaRows,"vendedor");
       const prevLucroOp = prevLucroCom - prevCusto;
       const d = (prevKg>0 && prevCkg>0 && kgMes>0 && custoKgMes>0) ? pctDelta(lucroOperMes, prevLucroOp) : null;
       const lblPrev = getMesLabel(py, pm);
+      const deltaEl = document.getElementById("resLucroOperDelta");
       if(d==null){
-        setTxt("resLucroOperDelta","—");
+        if(deltaEl){
+          deltaEl.className = "sub delta-chip neutral";
+          deltaEl.textContent = "—";
+        }
       }else{
+        const dir = d>=0 ? "up" : "down";
         const arrow = d>=0 ? "▲" : "▼";
-        setTxt("resLucroOperDelta", `${arrow} ${fmtPct(Math.abs(d))} vs ${lblPrev}`);
+        if(deltaEl){
+          deltaEl.className = `sub delta-chip ${dir}`;
+          deltaEl.textContent = `${arrow} ${fmtPct(Math.abs(d))} vs ${lblPrev}`;
+        }
       }
     })();
 
@@ -2312,7 +2506,7 @@ function openVendorDetail(vendedor){
           <div class="box"><div class="l">Kg</div><div class="v">${fmtNum(p.kg,2)}</div></div>
           <div class="box"><div class="l">Valor</div><div class="v">${fmtBRL(p.valor)}</div></div>
           <div class="box"><div class="l">Preço médio</div><div class="v">${p.preco==null ? "—" : fmtBRL(p.preco)}</div></div>
-          <div class="box"><div class="l">Lucro</div><div class="v">${fmtBRL(p.lucro)}</div></div>
+          <div class="box"><div class="l">${isSellerMode() ? "Mix" : "Lucro"}</div><div class="v">${isSellerMode() ? (p.mix==null ? "—" : fmtPct(p.mix)) : fmtBRL(p.lucro)}</div></div>
         </div>
       `;
       dProdutos.appendChild(div);
@@ -2348,7 +2542,7 @@ function openProductDetail(produto){
     const mesLabel=getMesLabel(state.ano, state.mes_num);
 
     // linhas do produto no período + filtros (ano/mes/time). Não força vendedor.
-    const rowsP = getFilteredRows({ano:state.ano, mes_num:state.mes_num, time:state.time, produto:produto, vendedor:""});
+    const rowsP = getFilteredRows({ano:state.ano, mes_num:state.mes_num, time:state.time, produto:produto, vendedor:(state.vendedor||"")});
 
     // agregados
     const fat = sum(rowsP,"valor_bruto");
@@ -2426,7 +2620,7 @@ function openProductDetail(produto){
     const periods=getPeriodosDesc();
     let count=0;
     for(const per of periods){
-      const rowsM = getFilteredRows({ano:per.ano, mes_num:per.mes_num, time:state.time, produto:produto, vendedor:""});
+      const rowsM = getFilteredRows({ano:per.ano, mes_num:per.mes_num, time:state.time, produto:produto, vendedor:(state.vendedor||"")});
       const v=sum(rowsM,"valor_bruto");
       const k=sum(rowsM,"peso");
       if(v<=0 && k<=0) continue;
@@ -2463,6 +2657,104 @@ function openProductDetail(produto){
   }
 }
 
+
+function getClientBaseRowsForInactivity(){
+  return BASE.filter(r=>{
+    if(state.time && state.time!=="" && r.time!==state.time) return false;
+    if(state.produto && state.produto!=="" && r.produto!==state.produto) return false;
+    if(state.vendedor && state.vendedor!=="" && r.vendedor!==state.vendedor) return false;
+    return !!r.cliente;
+  });
+}
+
+function getInactiveClientsData(){
+  const rows = getClientBaseRowsForInactivity();
+  const byClient = {};
+  for(const r of rows){
+    const c = r.cliente;
+    if(!c) continue;
+    if(!byClient[c]) byClient[c] = [];
+    byClient[c].push(r);
+  }
+  const now = new Date();
+  return Object.entries(byClient).map(([cliente, arr])=>{
+    const ds = arr.map(x=>parseISO(x.data)).filter(Boolean);
+    const lastAll = ds.length ? ds.reduce((a,b)=>a>b?a:b) : null;
+    const daysAll = lastAll ? Math.floor((now.getTime() - lastAll.getTime())/86400000) : null;
+    const valorAll = sum(arr, "valor_bruto");
+    const kgAll = sum(arr, "peso");
+    const lucroAll = sum(arr, "lucro");
+    const margemAll = valorAll>0 ? (lucroAll/valorAll) : null;
+
+    const byVend = {};
+    for(const x of arr){
+      const key = x.vendedor || "—";
+      byVend[key] = (byVend[key]||0) + (Number(x.valor_bruto)||0);
+    }
+    let topVend = "—", topVendVal = -1;
+    for(const [vv,vvVal] of Object.entries(byVend)){
+      if(vvVal > topVendVal){ topVendVal = vvVal; topVend = vv; }
+    }
+
+    const estado = (arr.find(x=>x.estado)?.estado) || "";
+    const regiao = (arr.find(x=>x.regiao)?.regiao) || "";
+    return {cliente, lastAll, daysAll, valorAll, kgAll, margemAll, vendedor:topVend, estado, regiao};
+  }).filter(x=>x.daysAll!=null).sort((a,b)=>{
+    if(b.daysAll!==a.daysAll) return b.daysAll-a.daysAll;
+    return (b.valorAll||0)-(a.valorAll||0);
+  });
+}
+
+function renderInactiveClientList(listId, items, bucket){
+  const list = document.getElementById(listId);
+  if(!list) return;
+  if(!items.length){
+    list.innerHTML = `<div class="pline"><div class="left"><div class="name">Nenhum cliente nesta faixa</div><div class="meta">Sem ocorrências para os filtros atuais</div></div><div class="right"><div class="val">—</div></div></div>`;
+    return;
+  }
+  list.innerHTML = items.map(c=>{
+    const lastTxt = c.lastAll ? fmtDateBR(c.lastAll) : "—";
+    const badge = bucket===90
+      ? `<span class="inat-badge d90">+90 dias</span>`
+      : `<span class="inat-badge d60">+60 dias</span>`;
+    return `
+      <div class="pline" data-cliente="${String(c.cliente).replace(/"/g,'&quot;')}">
+        <div class="left">
+          <div class="name">${c.cliente}</div>
+          <div class="meta">${c.regiao || "—"} • ${c.estado || "—"} • Vendedor: ${c.vendedor || "—"}</div>
+        </div>
+        <div class="right">
+          <div class="val">${badge}</div>
+          <div class="sub">Última compra: ${lastTxt} (${c.daysAll}d)</div>
+        </div>
+      </div>
+    `;
+  }).join("");
+  list.querySelectorAll(".pline").forEach((row, idx)=>{
+    row.addEventListener("click", ()=>openClientDetail(items[idx].cliente));
+  });
+}
+
+function openInactiveClientsDetail(){
+  const el = document.getElementById("cliInatDetail");
+  if(el) el.classList.add("open");
+  const per = document.getElementById("cliInatPeriodo");
+  const filtroTxt = [
+    state.time ? `Time: ${state.time}` : null,
+    state.produto ? `Produto: ${state.produto}` : null,
+    state.vendedor ? `Vendedor: ${state.vendedor}` : null
+  ].filter(Boolean).join(" • ");
+  if(per) per.textContent = filtroTxt || "Base completa";
+  const all = getInactiveClientsData();
+  const list90 = all.filter(x=>x.daysAll>=90);
+  const list60 = all.filter(x=>x.daysAll>=60 && x.daysAll<90);
+  const h90 = document.getElementById("cliInat90Hint");
+  const h60 = document.getElementById("cliInat60Hint");
+  if(h90) h90.textContent = `${list90.length} cliente(s)`;
+  if(h60) h60.textContent = `${list60.length} cliente(s)`;
+  renderInactiveClientList("cliInatList90", list90, 90);
+  renderInactiveClientList("cliInatList60", list60, 60);
+}
 
 function openClientDetail(cliente){
   const detailEl = document.getElementById("cdetail");
@@ -2627,7 +2919,7 @@ window.initFilters = function initFilters(){
   fAno.addEventListener("change", ()=>{ state.ano=Number(fAno.value); refreshMesOptions(); });
   document.getElementById("btnAplicar").addEventListener("click", ()=>{
     state.mes_num=Number(fMes.value);
-    state.time=fTime.value; state.produto=fProduto.value; state.vendedor=fVendedor.value;
+    state.time=fTime.value; state.produto=fProduto.value; state.vendedor=isSellerMode() ? (state.vendedorBloqueado||"") : fVendedor.value;
     openDrawer(false);
     // mantém exatamente o período selecionado (não sobrescreve com mês atual)
     setView(state.view||'home');
@@ -2648,8 +2940,8 @@ window.initFilters = function initFilters(){
   };
 
   document.getElementById("btnLimpar").addEventListener("click", ()=>{
-    state.time=""; state.produto=""; state.vendedor="";
-    fTime.value=""; fProduto.value=""; fVendedor.value="";
+    state.time=""; state.produto=""; state.vendedor=isSellerMode() ? (state.vendedorBloqueado||"") : "";
+    fTime.value=""; fProduto.value=""; fVendedor.value=state.vendedor||"";
     openDrawer(false); render();
   });
 }
@@ -2757,6 +3049,7 @@ if(__cardCustoOpMes){
 document.getElementById("btnBack").addEventListener("click", ()=>{ document.getElementById("detail").classList.remove("open"); });
 document.getElementById("btnBackProduto").addEventListener("click", ()=>{ document.getElementById("pdetail").classList.remove("open"); });
 document.getElementById("btnBackCliente").addEventListener("click", ()=>{ document.getElementById("cdetail").classList.remove("open"); });
+document.getElementById("btnBackCliInat").addEventListener("click", ()=>{ document.getElementById("cliInatDetail").classList.remove("open"); });
 
 }
 
@@ -2837,6 +3130,7 @@ document.addEventListener('DOMContentLoaded', () => {
   // Agora inicializa período + primeira renderização
   try{
     setDefaultPeriodToCurrentMonth();
+    applyRoleUI();
     setView(state.view || 'home');
     render();
   }catch(e){
@@ -2848,27 +3142,84 @@ document.addEventListener('DOMContentLoaded', () => {
 
 <script>
   (function(){
-    const PASS = "diretoria@2026";
+    const USERS = {
+      diretoria: { nome:"Diretoria", senha:"diretoria@2026", perfil:"diretoria", vendedor:"" },
+      vieira: { nome:"Vieira", senha:"vieira", perfil:"vendedor", vendedor:"Vieira" },
+      debora: { nome:"Débora", senha:"debora", perfil:"vendedor", vendedor:"Débora" },
+      ricardo: { nome:"Ricardo", senha:"ricardo", perfil:"vendedor", vendedor:"Ricardo" },
+      nazareno: { nome:"Nazareno", senha:"nazareno", perfil:"vendedor", vendedor:"Nazareno" },
+      osvaldo: { nome:"Osvaldo", senha:"osvaldo", perfil:"vendedor", vendedor:"Osvaldo" },
+      brunadias: { nome:"Bruna Dias", senha:"brunadias", perfil:"vendedor", vendedor:"Bruna Dias" }
+    };
+
     const screen = document.getElementById("loginScreen");
     const btn = document.getElementById("loginBtn");
+    const userSel = document.getElementById("loginUser");
     const input = document.getElementById("loginPassword");
     const err = document.getElementById("loginError");
+    const logoutBtn = document.getElementById("logoutBtn");
 
+    function persistAuth(key){
+      try{ localStorage.setItem("vimacom_auth_user", key); }catch(e){}
+    }
+    function clearAuth(){
+      try{ localStorage.removeItem("vimacom_auth_user"); }catch(e){}
+    }
+    function applyAuth(key){
+      const user = USERS[key];
+      if(!user) return;
+      state.auth = { key, nome:user.nome, perfil:user.perfil };
+      state.vendedorBloqueado = user.perfil === "vendedor" ? user.vendedor : "";
+      state.vendedor = state.vendedorBloqueado || "";
+      screen.style.display = "none";
+      applyRoleUI();
+      setView((user.perfil === "vendedor" && state.view === "resultados") ? "home" : (state.view || "home"));
+      render();
+    }
     function tryLogin(){
-      if(input.value === PASS){
-        screen.style.display = "none";
-      } else {
+      const key = userSel.value;
+      const user = USERS[key];
+      const pass = normalizarTexto(input.value).replace(/\s+/g, "").toLowerCase();
+      const expected = normalizarTexto(user && user.senha).replace(/\s+/g, "").toLowerCase();
+      if(user && pass === expected){
+        err.style.display = "none";
+        input.value = "";
+        persistAuth(key);
+        applyAuth(key);
+      }else{
         err.style.display = "block";
       }
     }
+    const saved = (()=>{ try{ return localStorage.getItem("vimacom_auth_user"); }catch(e){ return null; } })();
+    if(saved && USERS[saved]){
+      applyAuth(saved);
+    }else{
+      screen.style.display = "flex";
+      applyRoleUI();
+    }
 
     btn.addEventListener("click", tryLogin);
-    input.addEventListener("keydown", e=>{
-      if(e.key==="Enter") tryLogin();
-    });
+    input.addEventListener("keydown", e=>{ if(e.key==="Enter") tryLogin(); });
+    window.__vimacomLogout = function(){
+      clearAuth();
+      state.auth = null;
+      state.vendedorBloqueado = "";
+      state.vendedor = "";
+      input.value = "";
+      err.style.display = "none";
+      screen.style.display = "flex";
+      applyRoleUI();
+    };
+    if(logoutBtn){
+      logoutBtn.addEventListener("click", window.__vimacomLogout);
+    }
   })();
 </script>
 
+<button class="logout-fab" id="logoutBtn" title="Sair" aria-label="Sair" onclick="window.__vimacomLogout && window.__vimacomLogout()">
+  <svg viewBox="0 0 24 24"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="M16 17l5-5-5-5"/><path d="M21 12H9"/></svg>
+  <span>Sair</span>
+</button>
 
 <div class="bottom-nav" id="bottomNav">
   <div class="item active" data-view="home">
