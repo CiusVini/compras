@@ -904,6 +904,26 @@ select{width:100%;padding:11px 10px;border-radius:14px;border:1px solid var(--li
         </div>
       </div>
 
+
+      <!-- Clientes inativos -->
+      <div class="home-card" id="cardCliInativos">
+        <div class="h2" style="margin:0 0 10px 0;">
+          <div class="left">Clientes inativos</div>
+          <div class="right" style="color:var(--muted);font-size:12px;">(base completa)</div>
+        </div>
+        <div class="home-lucro row2">
+          <div class="mini">
+            <div class="k">+60 dias</div>
+            <div class="v2" id="cliInat60">—</div>
+          </div>
+          <div class="mini">
+            <div class="k">+90 dias</div>
+            <div class="v2" id="cliInat90">—</div>
+          </div>
+        </div>
+        <div class="sub" id="cliInatHint">Considera a última compra do cliente, respeitando os filtros de Time/Produto/Vendedor.</div>
+      </div>
+
       <!-- Destaque -->
       <div class="home-card" id="cliFeaturedCard" style="cursor:pointer;">
         <div class="home-meta" style="align-items:flex-start;">
@@ -979,6 +999,7 @@ select{width:100%;padding:11px 10px;border-radius:14px;border:1px solid var(--li
             <span style="float:right;font-weight:700;" id="resFatAnoMeta">—</span>
           </div>
           <div class="hbar" style="margin-top:10px;"><div id="resMetaBar"></div></div>
+          <div class="sub" id="resProjLine">Projeção no ritmo atual: <span id="resProjVal">—</span> <span style="float:right;font-weight:700;" id="resProjPct">—</span></div>
         </div>
         <svg class="ring" viewBox="0 0 100 100" aria-label="% da meta anual">
           <circle class="bg" cx="50" cy="50" r="42" stroke-width="10" fill="none" />
@@ -1015,7 +1036,7 @@ select{width:100%;padding:11px 10px;border-radius:14px;border:1px solid var(--li
 
       <!-- Faturamento (Mês) -->
       <div class="home-card resCard" id="cardFatMes">
-        <div class="k">Faturamento (Mês)</div>
+        <div class="k" id="resTitleFatMes">Faturamento (Mês)</div>
         <div class="v" id="resFatMes">—</div>
         <div class="s" style="margin-top:6px;font-weight:600;">
           <span id="resKgMesLine">—</span>
@@ -1025,7 +1046,7 @@ select{width:100%;padding:11px 10px;border-radius:14px;border:1px solid var(--li
 
       <!-- Resultado Comercial (Mês) -->
       <div class="home-card home-lucro resCard" id="cardResComMes">
-        <div class="k">Resultado comercial (Mês)</div>
+        <div class="k" id="resTitleLucroMes">Resultado comercial (Mês)</div>
         <div class="v" id="resLucroComercialMes">—</div>
         <div class="home-lucro row2">
           <div class="mini">
@@ -1041,7 +1062,7 @@ select{width:100%;padding:11px 10px;border-radius:14px;border:1px solid var(--li
 
       <!-- Custo operacional (Mês) (clicável para detalhar) -->
       <div class="home-card home-lucro resCard" id="cardCustoOpMes" style="cursor:pointer;">
-        <div class="k">Custo operacional (Mês)</div>
+        <div class="k" id="resTitleCustoMes">Custo operacional (Mês)</div>
         <div class="v" id="resCustoOpMes">—</div>
         <div class="home-lucro row2">
           <div class="mini">
@@ -1057,8 +1078,9 @@ select{width:100%;padding:11px 10px;border-radius:14px;border:1px solid var(--li
 
       <!-- Resultado operacional (Mês) -->
       <div class="home-card home-lucro resCard" id="cardResOpMes">
-        <div class="k">Resultado operacional (Mês)</div>
+        <div class="k" id="resTitleOpMes">Resultado operacional (Mês)</div>
         <div class="v" id="resLucroOperMes">—</div>
+        <div class="sub" id="resLucroOperDelta">—</div>
         <div class="home-lucro row2">
           <div class="mini">
             <div class="k">R$/kg</div>
@@ -1224,6 +1246,36 @@ let VENDEDORES = [];
 const fmtBRL = (n) => (n==null || isNaN(n)) ? "—" : n.toLocaleString("pt-BR", {style:"currency", currency:"BRL"});
 const fmtNum = (n, d=0) => (n==null || isNaN(n)) ? "—" : n.toLocaleString("pt-BR", {minimumFractionDigits:d, maximumFractionDigits:d});
 const fmtKg  = (n, d=2) => (n==null || isNaN(n)) ? "—" : (n.toLocaleString("pt-BR", {minimumFractionDigits:d, maximumFractionDigits:d}) + " kg");
+
+// --- Status do mês (Parcial x Fechado) ---
+function monthKeyFromDate(d){
+  const y=d.getFullYear();
+  const m=String(d.getMonth()+1).padStart(2,"0");
+  return `${y}-${m}`;
+}
+function monthStatus(mesRef){
+  const cur = monthKeyFromDate(new Date());
+  if(!mesRef) return "FECHADO";
+  if(mesRef===cur) return "PARCIAL";
+  if(mesRef<cur) return "FECHADO";
+  return "FUTURO";
+}
+function monthTitle(base, mesRef){
+  const st = monthStatus(mesRef);
+  if(st==="PARCIAL") return `${base} (Parcial)`;
+  if(st==="FECHADO") return `${base} (Fechado)`;
+  return `${base} (Sem dados)`;
+}
+function pctDelta(curr, prev){
+  if(prev==null || isNaN(prev) || prev===0) return null;
+  return (curr-prev)/Math.abs(prev);
+}
+function prevMesRef(ano, mes_num){
+  let y=ano, m=mes_num-1;
+  if(m<=0){ y=ano-1; m=12; }
+  return `${y}-${String(m).padStart(2,"0")}`;
+}
+
 const fmtPct = (n) => (n==null || isNaN(n)) ? "—" : (n*100).toLocaleString("pt-BR", {maximumFractionDigits:1}) + "%";
 const fmtDateBR = (d) => {
   if(!d) return "—";
@@ -1869,6 +1921,14 @@ const vendorList=distinct(empresaRows,"vendedor");
       return {cliente:c, valor:v, kg:k, lucro:l, margem, preco, lastAll, daysAll, vendedor:topVend, estado, regiao, mix:(fatBaseCli>0)?(v/fatBaseCli):null};
     }).sort((a,b)=>b.valor-a.valor);
 
+    // Clientes inativos (última compra na base inteira), respeitando filtros atuais de Time/Produto/Vendedor
+    (function(){
+      const c60 = cliAgg.filter(x=>x.daysAll!=null && x.daysAll>=60).length;
+      const c90 = cliAgg.filter(x=>x.daysAll!=null && x.daysAll>=90).length;
+      setTxt("cliInat60", String(c60));
+      setTxt("cliInat90", String(c90));
+    })();
+
     const q = (state.cliQuery||"").trim().toLowerCase();
     const filteredCli = (!q) ? cliAgg : cliAgg.filter(x=>String(x.cliente||"").toLowerCase().includes(q));
 
@@ -1974,6 +2034,14 @@ const vendorList=distinct(empresaRows,"vendedor");
       ring.style.strokeDashoffset = String(off);
     })();
 
+    // Projeção anual dinâmica (no ritmo atual) = (faturado até o mês / meses decorridos) * 12
+    (function(){
+      const mesesDecorridos = Math.max(1, state.mes_num||1);
+      const proj = (fatAno>0) ? (fatAno/mesesDecorridos)*12 : 0;
+      setTxt("resProjVal", fatAno>0 ? fmtBRL(proj) : "—");
+      setTxt("resProjPct", (META_ANUAL>0 && fatAno>0) ? fmtPct(clamp01(proj/META_ANUAL)) : "—");
+    })();
+
     // Mês (mesmo critério do Home)
     const rowsMes = getFilteredRows({ano:state.ano, mes_num:state.mes_num, time:state.time, produto:state.produto, vendedor:(state.vendedor||"")});
     const fatMes = sum(rowsMes,"valor_bruto");
@@ -2004,6 +2072,12 @@ const vendorList=distinct(empresaRows,"vendedor");
 
     // Operacional (mês)
     const mesRef = `${state.ano}-${String(state.mes_num).padStart(2,"0")}`;
+
+    // Status do mês (Parcial/Fechado) nos cards mensais
+    setTxt("resTitleFatMes", monthTitle("Faturamento", mesRef));
+    setTxt("resTitleLucroMes", monthTitle("Resultado comercial", mesRef));
+    setTxt("resTitleCustoMes", monthTitle("Custo operacional", mesRef));
+    setTxt("resTitleOpMes", monthTitle("Resultado operacional", mesRef));
     const costRowsMes = (typeof CUSTOS_OP!=="undefined") ? CUSTOS_OP.filter(x=>x.mes_ref===mesRef) : [];
     const custoKgMes = costRowsMes.reduce((acc,x)=>acc+(Number(x.Custo_Kg)||0),0);
     const custoOpMes = (kgMes>0)?(kgMes*custoKgMes):0;
@@ -2017,6 +2091,30 @@ const vendorList=distinct(empresaRows,"vendedor");
     setTxt("resLucroOperMes", (kgMes>0 && custoKgMes>0) ? fmtBRL(lucroOperMes) : "—");
     setTxt("resLucroOperKgMes", lucroOperKgMes==null ? "—" : (fmtBRL(lucroOperKgMes)+"/kg"));
     setTxt("resMargemOperMes", margemOperMes==null ? "—" : fmtPct(margemOperMes));
+
+    // Comparação vs mês anterior (resultado operacional)
+    (function(){
+      const prevRef = prevMesRef(state.ano, state.mes_num||1);
+      // calcula lucro operacional do mês anterior com a mesma lógica
+      const [py,pm] = prevRef.split("-").map(x=>Number(x));
+      const prevRows = getFilteredRows({ano:py, mes_num:pm, time:state.time, produto:state.produto, vendedor:(state.vendedor||"")});
+      const prevFat = sum(prevRows,"valor_bruto");
+      const prevKg  = sum(prevRows,"peso");
+      const prevLucroCom = sum(prevRows,"lucro");
+      const prevCostRows = (typeof CUSTOS_OP!=="undefined") ? CUSTOS_OP.filter(x=>x.mes_ref===prevRef) : [];
+      const prevCkg = prevCostRows.reduce((acc,x)=>acc+(Number(x.Custo_Kg)||0),0);
+      const prevCusto = (prevKg>0)?(prevKg*prevCkg):0;
+      const prevLucroOp = prevLucroCom - prevCusto;
+      const d = (prevKg>0 && prevCkg>0 && kgMes>0 && custoKgMes>0) ? pctDelta(lucroOperMes, prevLucroOp) : null;
+      const lblPrev = getMesLabel(py, pm);
+      if(d==null){
+        setTxt("resLucroOperDelta","—");
+      }else{
+        const arrow = d>=0 ? "▲" : "▼";
+        setTxt("resLucroOperDelta", `${arrow} ${fmtPct(Math.abs(d))} vs ${lblPrev}`);
+      }
+    })();
+
 
     // Operacional (ano): soma mês a mês (1..mes selecionado), respeitando filtros do ano
     let custoOpAno = 0;
