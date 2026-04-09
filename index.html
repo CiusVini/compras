@@ -52,7 +52,32 @@ body{margin:0;font-family:ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,
 .search .sbtn{width:34px;height:34px;border-radius:999px;display:grid;place-items:center;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);cursor:pointer;color:var(--text);}
 .cards{display:flex;flex-direction:column;gap:12px;}
 .card{background:var(--card);border:1px solid var(--line);border-radius:22px;padding:16px;box-shadow:var(--shadow);}
-.card.clickable{cursor:pointer;}
+.card.clickable{cursor:pointer;position:relative;padding-bottom:72px;}
+.click-hint{
+  position:absolute;
+  right:16px;
+  bottom:16px;
+  width:44px;
+  height:44px;
+  border-radius:999px;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  background:radial-gradient(circle at 30% 30%, rgba(46,204,113,.16), rgba(46,204,113,.08) 55%, rgba(46,204,113,.04) 100%);
+  border:1px solid rgba(46,204,113,.28);
+  box-shadow:0 0 0 1px rgba(46,204,113,.10) inset, 0 10px 24px rgba(0,0,0,.24);
+  color:#2ecc71;
+  pointer-events:none;
+}
+.click-hint svg{width:18px;height:18px;stroke:currentColor;fill:none;stroke-width:2.6;stroke-linecap:round;stroke-linejoin:round;}
+.item.clickable-item{position:relative;padding-right:68px;}
+.item.clickable-item .click-hint{right:14px;bottom:50%;transform:translateY(50%);width:38px;height:38px;}
+@media (max-width:520px){
+  .card.clickable{padding-bottom:68px;}
+  .click-hint{width:42px;height:42px;right:14px;bottom:14px;}
+  .item.clickable-item{padding-right:62px;}
+  .item.clickable-item .click-hint{width:36px;height:36px;right:12px;}
+}
 .home-main{display:flex;justify-content:space-between;gap:12px;align-items:flex-start;}
 .k{color:var(--muted);font-size:12px;}
 .v{font-size:28px;font-weight:950;letter-spacing:.2px;margin-top:6px;}
@@ -232,6 +257,7 @@ body{margin:0;font-family:ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,
       </div>
 
       <div class="card clickable" id="weekCard">
+        <span class="click-hint" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="m9 6 6 6-6 6"/></svg></span>
         <div class="home-main">
           <div>
             <div class="k">Pagamentos da semana</div>
@@ -605,7 +631,7 @@ function renderHome() {
     topWrap.innerHTML = '<div class="empty-state">Sem dados no mês selecionado.</div>';
   } else {
     topWrap.innerHTML = topCenters.map(c => `
-      <div class="item" data-center="${safeText(c.centro)}">
+      <div class="item clickable-item" data-center="${safeText(c.centro)}">
         <div>
           <div class="name">${safeText(c.centro)}</div>
           <div class="meta">${c.count} títulos • ${c.share.toFixed(1).replace('.',',')}% do mês</div>
@@ -614,6 +640,7 @@ function renderHome() {
           <div class="val">${brl(c.total)}</div>
           <div class="subr">Participação</div>
         </div>
+        <span class="click-hint" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="m9 6 6 6-6 6"/></svg></span>
       </div>
     `).join('');
     topWrap.querySelectorAll('.item').forEach(el => el.addEventListener('click', () => openCenterDetail(el.dataset.center)));
@@ -691,6 +718,7 @@ function renderCenters() {
   }
   wrap.innerHTML = map.map(c => `
     <div class="card center-card clickable" data-center="${safeText(c.centro)}">
+      <span class="click-hint" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="m9 6 6 6-6 6"/></svg></span>
       <div class="top">
         <div>
           <div class="nm">${safeText(c.centro)}</div>
