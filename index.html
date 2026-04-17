@@ -274,6 +274,100 @@ body{margin:0;font-family:ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,
   .lme-supplier-desc{grid-column:1 / -1;}
 }
 
+.lme-week-card{background:var(--card);border:1px solid var(--line);border-radius:22px;padding:16px;box-shadow:var(--shadow);margin-top:2px;}
+.lme-week-card-head{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin-bottom:14px;}
+.lme-week-title{font-size:22px;font-weight:950;line-height:1.05;color:var(--text);}
+.lme-week-subtitle{font-size:12px;color:var(--muted);margin-top:6px;}
+.lme-week-badge{display:inline-flex;align-items:center;justify-content:center;padding:8px 12px;border-radius:999px;background:rgba(54,194,255,.10);border:1px solid rgba(54,194,255,.20);color:var(--cyan);font-size:11px;font-weight:900;white-space:nowrap;}
+.lme-week-inputs{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:14px;}
+.lme-week-grid{display:grid;grid-template-columns:1fr;gap:12px;}
+.lme-week-panel{border:1px solid rgba(255,255,255,.08);border-radius:18px;overflow:hidden;background:rgba(255,255,255,.025);}
+.lme-week-panel-head{display:grid;grid-template-columns:1fr 1fr;}
+.lme-week-panel-head .cost,.lme-week-panel-head .sale{padding:12px 14px;font-size:13px;font-weight:950;text-align:center;text-transform:uppercase;letter-spacing:.2px;}
+.lme-week-panel-head .cost{background:rgba(231,76,60,.16);color:#ff8f86;border-right:1px solid rgba(255,255,255,.06);}
+.lme-week-panel-head .sale{background:rgba(54,194,255,.16);color:#8bddff;}
+.lme-week-panel-body{padding:14px;}
+.lme-week-summary{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:12px;}
+.lme-week-mini{border:1px solid rgba(255,255,255,.06);border-radius:14px;padding:10px 12px;background:rgba(255,255,255,.03);}
+.lme-week-mini .k{font-size:11px;color:var(--muted);}
+.lme-week-mini .v2{font-size:17px;font-weight:950;margin-top:4px;}
+.lme-week-highlight{display:grid;grid-template-columns:1.2fr 1fr 1fr;gap:10px;margin-bottom:10px;}
+.lme-week-highlight-box{border:1px solid rgba(255,255,255,.07);border-radius:16px;padding:12px 14px;background:rgba(255,255,255,.03);}
+.lme-week-highlight-box .k{font-size:11px;color:var(--muted);}
+.lme-week-highlight-box .v2{font-size:16px;font-weight:950;margin-top:6px;}
+.lme-week-highlight-box .v2.red{color:#ff6f66;}
+.lme-week-highlight-box .v2.yellow{color:#ffd866;}
+.lme-week-lines{display:flex;flex-direction:column;gap:0;border-top:1px solid rgba(255,255,255,.06);border-bottom:1px solid rgba(255,255,255,.06);}
+.lme-week-line{display:grid;grid-template-columns:90px 1fr 1fr;gap:12px;align-items:center;padding:10px 0;border-bottom:1px solid rgba(255,255,255,.06);}
+.lme-week-line:last-child{border-bottom:0;}
+.lme-week-line .rate{font-size:12px;font-weight:900;color:var(--text);}
+.lme-week-line .cost-val,.lme-week-line .sale-val{font-size:14px;font-weight:900;}
+.lme-week-line .sale-val{text-align:right;}
+.lme-week-total{display:grid;grid-template-columns:1fr auto auto;gap:12px;align-items:center;padding:12px 0 2px;}
+.lme-week-total .eq{font-size:24px;font-weight:950;color:#ff5d5d;line-height:1;}
+.lme-week-total .label{font-size:13px;font-weight:950;color:var(--text);}
+.lme-week-total .val{font-size:18px;font-weight:950;color:#ff5d5d;}
+.lme-week-liquid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:14px;}
+.lme-week-liquid-box{border:1px solid rgba(255,255,255,.08);border-radius:16px;padding:12px 14px;background:rgba(255,255,255,.03);}
+.lme-week-liquid-box .k{font-size:11px;color:var(--muted);text-transform:uppercase;}
+.lme-week-liquid-box .v2{font-size:17px;font-weight:950;margin-top:6px;}
+.lme-week-liquid-box .v2.green{color:var(--green);}
+.lme-week-note{font-size:11px;color:var(--muted);line-height:1.35;margin-top:12px;}
+@media (max-width:760px){
+  .lme-week-inputs,.lme-week-summary,.lme-week-highlight,.lme-week-liquid{grid-template-columns:1fr;}
+  .lme-week-line{grid-template-columns:70px 1fr 1fr;gap:8px;}
+}
+
+
+.lme-week-premium{background:var(--card);border:1px solid var(--line);border-radius:22px;padding:16px;box-shadow:var(--shadow);}
+.lme-week-premium-top{display:grid;grid-template-columns:1.25fr .95fr;gap:12px;align-items:stretch;}
+.lme-week-kpi{border:1px solid rgba(46,204,113,.18);border-radius:20px;padding:16px;background:linear-gradient(180deg, rgba(46,204,113,.10), rgba(46,204,113,.04));display:flex;flex-direction:column;justify-content:space-between;min-height:160px;}
+.lme-week-kpi.neg{border-color:rgba(231,76,60,.20);background:linear-gradient(180deg, rgba(231,76,60,.10), rgba(231,76,60,.04));}
+.lme-week-kpi-label{font-size:12px;font-weight:900;letter-spacing:.3px;color:var(--muted);text-transform:uppercase;}
+.lme-week-kpi-value{font-size:38px;font-weight:950;line-height:1;margin-top:10px;color:var(--green);}
+.lme-week-kpi.neg .lme-week-kpi-value{color:#ff8f86;}
+.lme-week-kpi-sub{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-top:12px;}
+.lme-week-kpi-pill{display:inline-flex;align-items:center;gap:6px;padding:7px 10px;border-radius:999px;font-size:12px;font-weight:900;border:1px solid rgba(255,255,255,.08);background:rgba(255,255,255,.05);}
+.lme-week-kpi-pill.pos{color:var(--green);border-color:rgba(46,204,113,.22);background:rgba(46,204,113,.10);}
+.lme-week-kpi-pill.neg{color:#ff8f86;border-color:rgba(231,76,60,.22);background:rgba(231,76,60,.10);}
+.lme-week-kpi-pill.neu{color:#ffd866;border-color:rgba(241,196,15,.22);background:rgba(241,196,15,.10);}
+.lme-week-kpi-note{font-size:11px;color:var(--muted);margin-top:12px;line-height:1.35;}
+.lme-week-side{display:grid;grid-template-columns:1fr;gap:10px;}
+.lme-week-compact{border:1px solid rgba(255,255,255,.07);border-radius:18px;padding:12px 14px;background:rgba(255,255,255,.03);}
+.lme-week-compact-title{font-size:11px;font-weight:900;letter-spacing:.3px;color:var(--muted);text-transform:uppercase;margin-bottom:8px;}
+.lme-week-compact-line{display:flex;justify-content:space-between;gap:12px;align-items:center;padding:7px 0;font-size:14px;}
+.lme-week-compact-line strong{font-size:15px;color:var(--text);}
+.lme-week-compact-line .emph{font-weight:950;color:#ffd866;}
+.lme-week-compact-line .good{font-weight:950;color:var(--green);}
+.lme-week-compact-line .bad{font-weight:950;color:#ff8f86;}
+.lme-week-compact-line+.lme-week-compact-line{border-top:1px solid rgba(255,255,255,.06);}
+.lme-week-actions{display:flex;justify-content:flex-end;margin-top:12px;}
+.lme-week-detail-btn{border:1px solid rgba(54,194,255,.20);background:rgba(54,194,255,.10);color:var(--cyan);padding:11px 14px;border-radius:14px;font-size:12px;font-weight:900;cursor:pointer;box-shadow:var(--shadow);}
+.lme-week-detail-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:12px;}
+.lme-week-detail-box{border:1px solid rgba(255,255,255,.07);border-radius:16px;padding:12px 14px;background:rgba(255,255,255,.03);}
+.lme-week-detail-box .k{font-size:11px;color:var(--muted);text-transform:uppercase;}
+.lme-week-detail-box .v2{font-size:18px;font-weight:950;margin-top:6px;}
+.lme-week-detail-box .v2.green{color:var(--green);}
+.lme-week-detail-box .v2.red{color:#ff8f86;}
+.lme-week-tax-list{display:flex;flex-direction:column;gap:10px;margin-top:12px;}
+.lme-week-tax-row{display:grid;grid-template-columns:78px 1fr auto auto;gap:10px;align-items:center;padding:12px 14px;border:1px solid rgba(255,255,255,.06);border-radius:16px;background:rgba(255,255,255,.03);}
+.lme-week-tax-row .rate{font-size:12px;font-weight:900;color:var(--text);}
+.lme-week-tax-row .label{font-size:13px;font-weight:850;color:var(--text);}
+.lme-week-tax-row .cost{font-size:13px;font-weight:900;color:var(--muted);}
+.lme-week-tax-row .sale{font-size:14px;font-weight:950;color:var(--text);}
+.lme-week-diff{display:flex;justify-content:space-between;gap:12px;align-items:center;border:1px solid rgba(255,255,255,.07);border-radius:16px;padding:14px;background:rgba(255,255,255,.03);margin-top:12px;}
+.lme-week-diff .label{font-size:13px;font-weight:900;color:var(--text);}
+.lme-week-diff .value{font-size:22px;font-weight:950;color:#ff8f86;}
+@media (max-width:760px){
+  .lme-week-premium-top{grid-template-columns:1fr;}
+  .lme-week-kpi{min-height:auto;}
+  .lme-week-detail-grid{grid-template-columns:1fr;}
+  .lme-week-tax-row{grid-template-columns:64px 1fr;gap:6px;}
+  .lme-week-tax-row .sale,.lme-week-tax-row .cost{grid-column:2;}
+  .lme-week-actions{justify-content:stretch;}
+  .lme-week-detail-btn{width:100%;}
+}
+
 .app-shell{display:none;}
 .app-shell.authenticated{display:block;}
 .login-screen{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:24px 20px;background:radial-gradient(circle at center, rgba(54,194,255,.10), transparent 24%), linear-gradient(180deg,#061432 0%, #02122e 100%);}
@@ -664,6 +758,45 @@ body{margin:0;font-family:ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,
         <div class="lme-supplier-body" id="calcInfinitCard"></div>
       </div>
     </div>
+
+    <div class="lme-week-card">
+      <div class="lme-week-card-head">
+        <div>
+          <div class="lme-week-title">Preço da Semana</div>
+          <div class="lme-week-subtitle">Cálculo de margem líquida por kg no padrão do app</div>
+        </div>
+        <div class="lme-week-badge">Simulador</div>
+      </div>
+      <div class="lme-week-inputs">
+        <div class="lme-field">
+          <label for="calcSemanaVergalhao">Preço do vergalhão (R$)</label>
+          <input id="calcSemanaVergalhao" type="number" step="0.01"/>
+        </div>
+        <div class="lme-field">
+          <label for="calcSemanaMaoObra">Mão de obra (R$)</label>
+          <input id="calcSemanaMaoObra" type="number" step="0.01"/>
+        </div>
+        <div class="lme-field">
+          <label for="calcSemanaVenda">Preço de venda (R$)</label>
+          <input id="calcSemanaVenda" type="number" step="0.01"/>
+        </div>
+      </div>
+      <div id="calcSemanaCard"></div>
+    </div>
+  </div>
+
+</div>
+
+<div class="overlay" id="weekCalcDetailOverlay">
+  <div class="overlay-header">
+    <div class="back" data-close="weekCalcDetailOverlay">← Voltar</div>
+    <div class="head">
+      <div class="nm">Preço da Semana</div>
+      <div class="per">Detalhamento completo do simulador</div>
+    </div>
+  </div>
+  <div class="section">
+    <div id="calcSemanaDetailBody"></div>
   </div>
 </div>
 
@@ -706,7 +839,13 @@ let state = {
     financePct: 1.70,
     freteJF: 0.30,
     premioJF: 93.0,
-    premioInfinit: 94.0
+    premioInfinit: 94.0,
+    semanaVergalhao: 0,
+    semanaMaoObra: 2.00,
+    semanaVenda: 0,
+    semanaIcmsPct: 12.00,
+    semanaPisPct: 1.65,
+    semanaCofinsPct: 7.60
   }
 };
 
@@ -1440,12 +1579,62 @@ function calcVergalhaoValues() {
     };
   }
 
+  const jf = supplierCard(premioJF, freteJF);
+  const infinit = supplierCard(premioInfinit, 0);
+
+  const semanaVergalhao = Number(cfg.semanaVergalhao) || Math.min(jf.prazo || 0, infinit.prazo || 0);
+  const semanaMaoObra = Number(cfg.semanaMaoObra) || 0;
+  const semanaVenda = Number(cfg.semanaVenda) || 0;
+  const semanaIcmsPct = Number(cfg.semanaIcmsPct) || 0;
+  const semanaPisPct = Number(cfg.semanaPisPct) || 0;
+  const semanaCofinsPct = Number(cfg.semanaCofinsPct) || 0;
+  const semanaCusto = semanaVergalhao + semanaMaoObra;
+  const semanaMargemBruta = semanaVenda - semanaCusto;
+  const semanaMargemBrutaPct = semanaCusto ? (semanaMargemBruta / semanaCusto) * 100 : 0;
+  const custoIcms = semanaCusto * (semanaIcmsPct / 100);
+  const custoPis = semanaCusto * (semanaPisPct / 100);
+  const custoCofins = semanaCusto * (semanaCofinsPct / 100);
+  const vendaIcms = semanaVenda * (semanaIcmsPct / 100);
+  const vendaPis = semanaVenda * (semanaPisPct / 100);
+  const vendaCofins = semanaVenda * (semanaCofinsPct / 100);
+  const totalTributosCusto = custoIcms + custoPis + custoCofins;
+  const totalTributosVenda = vendaIcms + vendaPis + vendaCofins;
+  const resultadoTributario = totalTributosVenda - totalTributosCusto;
+  const custoLiquido = semanaCusto - totalTributosCusto;
+  const vendaLiquida = semanaVenda - totalTributosVenda;
+  const margemLiquida = vendaLiquida - custoLiquido;
+  const margemLiquidaPct = semanaVenda ? (margemLiquida / semanaVenda) * 100 : 0;
+
   return {
     basePrice,
     taxCoef,
     financePct,
-    jf: supplierCard(premioJF, freteJF),
-    infinit: supplierCard(premioInfinit, 0)
+    jf,
+    infinit,
+    semana: {
+      vergalhao: semanaVergalhao,
+      maoObra: semanaMaoObra,
+      venda: semanaVenda,
+      custo: semanaCusto,
+      margemBruta: semanaMargemBruta,
+      margemBrutaPct: semanaMargemBrutaPct,
+      icmsPct: semanaIcmsPct,
+      pisPct: semanaPisPct,
+      cofinsPct: semanaCofinsPct,
+      custoIcms,
+      custoPis,
+      custoCofins,
+      vendaIcms,
+      vendaPis,
+      vendaCofins,
+      totalTributosCusto,
+      totalTributosVenda,
+      resultadoTributario,
+      custoLiquido,
+      vendaLiquida,
+      margemLiquida,
+      margemLiquidaPct
+    }
   };
 }
 function supplierCalcHtml(data) {
@@ -1468,7 +1657,7 @@ function supplierCalcHtml(data) {
     <div class="lme-supplier-line">
       <div class="lme-supplier-left">${numBR(data.premioPct, 2)}%</div>
       <div class="lme-supplier-value emphasis">R$ ${numBR(data.premioValor, 2)}</div>
-      <div class="lme-supplier-desc">${data.premioLabel}</div>
+      <div class="lme-supplier-desc">PRÊMIO</div>
     </div>
     ${data.freteValue ? `
     <div class="lme-supplier-line">
@@ -1488,6 +1677,113 @@ function supplierCalcHtml(data) {
     </div>
   `;
 }
+
+function semanaCalcHtml(data) {
+  const kpiClass = data.margemLiquida < 0 ? 'neg' : '';
+  const margemBrutaClass = data.margemBruta < 0 ? 'bad' : 'good';
+  const kpiPctClass = data.margemLiquidaPct < 0 ? 'neg' : (data.margemLiquidaPct > 0 ? 'pos' : 'neu');
+  const tribClass = data.resultadoTributario < 0 ? 'bad' : 'good';
+  return `
+    <div class="lme-week-premium">
+      <div class="lme-week-premium-top">
+        <div class="lme-week-kpi ${kpiClass}">
+          <div>
+            <div class="lme-week-kpi-label">Margem líquida por kg</div>
+            <div class="lme-week-kpi-value">R$ ${numBR(data.margemLiquida, 2)}</div>
+            <div class="lme-week-kpi-sub">
+              <span class="lme-week-kpi-pill ${kpiPctClass}">${numBR(data.margemLiquidaPct, 2)}%</span>
+              <span class="lme-week-kpi-pill ${data.margemBruta >= 0 ? 'pos' : 'neg'}">Margem bruta R$ ${numBR(data.margemBruta, 2)}</span>
+            </div>
+          </div>
+          <div class="lme-week-kpi-note">Visão principal do simulador. O detalhamento fiscal completo fica no botão abaixo.</div>
+        </div>
+
+        <div class="lme-week-side">
+          <div class="lme-week-compact">
+            <div class="lme-week-compact-title">Resumo rápido</div>
+            <div class="lme-week-compact-line"><span>Custo</span><strong>R$ ${numBR(data.custo, 2)}</strong></div>
+            <div class="lme-week-compact-line"><span>Venda</span><strong>R$ ${numBR(data.venda, 2)}</strong></div>
+            <div class="lme-week-compact-line"><span>Margem bruta</span><span class="${margemBrutaClass}">R$ ${numBR(data.margemBruta, 2)} · ${numBR(data.margemBrutaPct, 2)}%</span></div>
+          </div>
+
+          <div class="lme-week-compact">
+            <div class="lme-week-compact-title">Base e tributos</div>
+            <div class="lme-week-compact-line"><span>Vergalhão</span><strong>R$ ${numBR(data.vergalhao, 2)}</strong></div>
+            <div class="lme-week-compact-line"><span>Mão de obra</span><strong>R$ ${numBR(data.maoObra, 2)}</strong></div>
+            <div class="lme-week-compact-line"><span>Total tributos</span><span class="${tribClass}">R$ ${numBR(data.resultadoTributario, 2)}</span></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="lme-week-actions">
+        <button type="button" class="lme-week-detail-btn" onclick="openWeekCalcDetail()">Ver detalhamento completo</button>
+      </div>
+    </div>
+  `;
+}
+function semanaCalcDetailHtml(data) {
+  const liquidClass = data.margemLiquida >= 0 ? 'green' : 'red';
+  const grossClass = data.margemBruta >= 0 ? 'green' : 'red';
+  return `
+    <div class="lme-week-premium">
+      <div class="lme-week-detail-grid">
+        <div class="lme-week-detail-box">
+          <div class="k">Preço custo</div>
+          <div class="v2">R$ ${numBR(data.custo, 2)}</div>
+        </div>
+        <div class="lme-week-detail-box">
+          <div class="k">Preço venda</div>
+          <div class="v2">R$ ${numBR(data.venda, 2)}</div>
+        </div>
+        <div class="lme-week-detail-box">
+          <div class="k">Margem bruta</div>
+          <div class="v2 ${grossClass}">R$ ${numBR(data.margemBruta, 2)} · ${numBR(data.margemBrutaPct, 2)}%</div>
+        </div>
+      </div>
+
+      <div class="lme-week-detail-grid">
+        <div class="lme-week-detail-box">
+          <div class="k">Preço custo líquido</div>
+          <div class="v2">R$ ${numBR(data.custoLiquido, 2)}</div>
+        </div>
+        <div class="lme-week-detail-box">
+          <div class="k">Preço venda líquido</div>
+          <div class="v2">R$ ${numBR(data.vendaLiquida, 2)}</div>
+        </div>
+        <div class="lme-week-detail-box">
+          <div class="k">Margem líquida por kg</div>
+          <div class="v2 ${liquidClass}">R$ ${numBR(data.margemLiquida, 2)} · ${numBR(data.margemLiquidaPct, 2)}%</div>
+        </div>
+      </div>
+
+      <div class="lme-week-tax-list">
+        <div class="lme-week-tax-row">
+          <div class="rate">${numBR(data.icmsPct, 2)}%</div>
+          <div class="label">ICMS</div>
+          <div class="cost">Custo · R$ ${numBR(data.custoIcms, 2)}</div>
+          <div class="sale">Venda · R$ ${numBR(data.vendaIcms, 2)}</div>
+        </div>
+        <div class="lme-week-tax-row">
+          <div class="rate">${numBR(data.pisPct, 2)}%</div>
+          <div class="label">PIS</div>
+          <div class="cost">Custo · R$ ${numBR(data.custoPis, 2)}</div>
+          <div class="sale">Venda · R$ ${numBR(data.vendaPis, 2)}</div>
+        </div>
+        <div class="lme-week-tax-row">
+          <div class="rate">${numBR(data.cofinsPct, 2)}%</div>
+          <div class="label">COFINS</div>
+          <div class="cost">Custo · R$ ${numBR(data.custoCofins, 2)}</div>
+          <div class="sale">Venda · R$ ${numBR(data.vendaCofins, 2)}</div>
+        </div>
+      </div>
+
+      <div class="lme-week-diff">
+        <div class="label">Diferença de tributos</div>
+        <div class="value">R$ ${numBR(data.resultadoTributario, 2)}</div>
+      </div>
+    </div>
+  `;
+}
 function renderLMECalc() {
   const cfg = state.lmeCalc;
   document.getElementById('calcBasePrice').value = Number(cfg.basePrice || 0).toFixed(4);
@@ -1498,7 +1794,14 @@ function renderLMECalc() {
   document.getElementById('calcPremioInfinit').value = Number(cfg.premioInfinit || 0).toFixed(2);
   document.getElementById('lmeCalcBaseDate').textContent = cfg.baseDate ? `Base ${cfg.baseDate}` : 'Base indisponível';
 
-  const calc = calcVergalhaoValues();
+  let calc = calcVergalhaoValues();
+  if (!cfg.semanaVergalhao) cfg.semanaVergalhao = Math.min(calc.jf.prazo || 0, calc.infinit.prazo || 0);
+  if (!cfg.semanaVenda) cfg.semanaVenda = cfg.semanaVergalhao + (Number(cfg.semanaMaoObra) || 0) + 8.68;
+  calc = calcVergalhaoValues();
+  document.getElementById('calcSemanaVergalhao').value = Number(cfg.semanaVergalhao || 0).toFixed(2);
+  document.getElementById('calcSemanaMaoObra').value = Number(cfg.semanaMaoObra || 0).toFixed(2);
+  document.getElementById('calcSemanaVenda').value = Number(cfg.semanaVenda || 0).toFixed(2);
+
   const jf = {
     basePrice: calc.basePrice,
     imposto: calc.jf.imposto,
@@ -1508,8 +1811,7 @@ function renderLMECalc() {
     freteValue: calc.jf.freteValue,
     avista: calc.jf.avista,
     prazo: calc.jf.prazo,
-    financePct: calc.financePct,
-    premioLabel: 'PRÊMIO'
+    financePct: calc.financePct
   };
   const infinit = {
     basePrice: calc.basePrice,
@@ -1520,11 +1822,13 @@ function renderLMECalc() {
     freteValue: calc.infinit.freteValue,
     avista: calc.infinit.avista,
     prazo: calc.infinit.prazo,
-    financePct: calc.financePct,
-    premioLabel: 'PRÊMIO'
+    financePct: calc.financePct
   };
   document.getElementById('calcJfCard').innerHTML = supplierCalcHtml(jf);
   document.getElementById('calcInfinitCard').innerHTML = supplierCalcHtml(infinit);
+  document.getElementById('calcSemanaCard').innerHTML = semanaCalcHtml(calc.semana);
+  const detailBody = document.getElementById('calcSemanaDetailBody');
+  if (detailBody) detailBody.innerHTML = semanaCalcDetailHtml(calc.semana);
 }
 function syncLMECalcFromInputs() {
   state.lmeCalc.basePrice = Number(document.getElementById('calcBasePrice').value) || 0;
@@ -1533,11 +1837,18 @@ function syncLMECalcFromInputs() {
   state.lmeCalc.freteJF = Number(document.getElementById('calcFreteJF').value) || 0;
   state.lmeCalc.premioJF = Number(document.getElementById('calcPremioJF').value) || 0;
   state.lmeCalc.premioInfinit = Number(document.getElementById('calcPremioInfinit').value) || 0;
+  state.lmeCalc.semanaVergalhao = Number(document.getElementById('calcSemanaVergalhao').value) || 0;
+  state.lmeCalc.semanaMaoObra = Number(document.getElementById('calcSemanaMaoObra').value) || 0;
+  state.lmeCalc.semanaVenda = Number(document.getElementById('calcSemanaVenda').value) || 0;
   renderLMECalc();
 }
 function openLMECalc() {
   renderLMECalc();
   openOverlay('lmeCalcOverlay');
+}
+function openWeekCalcDetail() {
+  renderLMECalc();
+  openOverlay('weekCalcDetailOverlay');
 }
 
 
@@ -1637,7 +1948,7 @@ document.getElementById('loginPass').addEventListener('input', () => document.ge
 document.querySelectorAll('.js-logout').forEach(el => el.addEventListener('click', logout));
 document.getElementById('lmeHistoricalBtn').addEventListener('click', openLMEHistorical);
 document.getElementById('openLmeCalcBtn').addEventListener('click', openLMECalc);
-['calcBasePrice','calcTaxCoef','calcFinancePct','calcFreteJF','calcPremioJF','calcPremioInfinit'].forEach(id => {
+['calcBasePrice','calcTaxCoef','calcFinancePct','calcFreteJF','calcPremioJF','calcPremioInfinit','calcSemanaVergalhao','calcSemanaMaoObra','calcSemanaVenda'].forEach(id => {
   document.getElementById(id).addEventListener('input', syncLMECalcFromInputs);
 });
 document.querySelectorAll('[data-lme-year]').forEach(el => el.addEventListener('click', () => { state.lmeHistoryYear = el.dataset.lmeYear; renderLMEHistoricalOverlay(LME_COBRE.slice().sort((a,b) => a.data.localeCompare(b.data))); }));
