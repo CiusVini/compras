@@ -1760,7 +1760,9 @@ function avgWeekDollar(rows) {
   if (!rows || !rows.length) return null;
   const valid = rows.map(x => toValidNumber(x.dolar)).filter(v => v !== null);
   if (!valid.length) return null;
-  return valid.reduce((a,b) => a + b, 0) / rows.length;
+  // Dólar pode vir como "Feriado" em alguns dias.
+  // A média do dólar deve considerar apenas as cotações válidas.
+  return valid.reduce((a,b) => a + b, 0) / valid.length;
 }
 function avgWeekBRL(rows) {
   const avgLME = avgValid(rows, x => x.lme);
